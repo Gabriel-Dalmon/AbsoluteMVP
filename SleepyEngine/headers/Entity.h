@@ -13,15 +13,13 @@ public:
 	void Init();
 
 	// SETTER / GETTER
-	template<typename T>
-	void AddComponent()
+	template<typename T> 
+	void AddComponent(T component)   
 	{
-		for (int i = 0; i < m_componentsList.size(); i++)
-		{
-			if (m_componentsList[i] == T)
-				return;
-		}
-		m_componentsList.push_back(T);
+		if (GetComponent<T>() != nullptr)
+			return;
+
+		m_componentsList.push_back(component); 
 	}
 
 	template<typename T>
@@ -29,12 +27,10 @@ public:
 	{
 		for (int i = 0; i < m_componentsList.size(); i++)
 		{
-			if (m_componentsList[i] == T)
+			if (dynamic_cast<T>(m_componentsList[i]) != NULL)
 			{
 				m_componentsList.erase(m_componentsList.begin() + i);
 			}
-
-			return;
 		}
 	}
 	
@@ -42,14 +38,14 @@ public:
 	T GetComponent() {
 		for (int i = 0; i < m_componentsList.size(); i++)
 		{
-			if (m_componentsList[i] == T)
+			if (dynamic_cast<T>(m_componentsList[i]) != NULL)  
 			{
 				return m_componentsList[i];
 			}
 		}
-		return nullptr;
+		return nullptr; 
 	}
-
+	// OUAIS
 	// CLEAR
 	void Clear();
 

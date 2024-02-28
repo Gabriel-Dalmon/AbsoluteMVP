@@ -10,24 +10,16 @@ Shader::Shader()
 
 void Shader::Release()
 {
-	delete m_pVSByteCode;
-	delete m_pPSByteCode;
-	m_pVSByteCode = nullptr;
-	m_pPSByteCode = nullptr; 
+	RELEASE(m_pVSByteCode);
+	RELEASE(m_pPSByteCode);
 }
 
 void Shader::CompileVS(std::wstring fileName)  
 {
-	m_pVSByteCode = nullptr;
-
-	D3DUtils::CompileFromFile(fileName, 
-		nullptr, "VS", "vs_5_0");
+	m_pVSByteCode = D3DUtils::CompileFromFile(fileName, nullptr, "VS", "vs_5_0");
 }
 
-void Shader::CompilePS()
+void Shader::CompilePS(std::wstring fileName)
 {
-	m_pVSByteCode = nullptr;
-
-	D3DUtils::CompileFromFile(L"Shaders\\color.hlsl",
-		nullptr, "PS", "vs_5_0");
+	m_pVSByteCode = D3DUtils::CompileFromFile(fileName, nullptr, "PS", "ps_5_0");
 }

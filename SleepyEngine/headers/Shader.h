@@ -21,7 +21,7 @@ public:
 
 private:
 	void CompileVS(std::wstring fileName);
-	void CompilePS();
+	void CompilePS(std::wstring fileName);
 
 	ID3DBlob* m_pVSByteCode;
 	ID3DBlob* m_pPSByteCode;

@@ -46,7 +46,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -140,7 +140,7 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameState.h" />
+    <ClInclude Include="headers\GameState.h" />
     <ClInclude Include="headers\Components.h" />
     <ClInclude Include="headers\D3DUtils.h" />
     <ClInclude Include="headers\Entity.h" />
@@ -152,17 +152,22 @@
     <ClInclude Include="headers\SleepyEngine.h" />
     <ClInclude Include="headers\targetver.h" />
     <ClInclude Include="headers\Transform.h" />
-    <ClInclude Include="utils\d3dx12.h" />
+    <ClInclude Include="src\utils\d3dx12.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="src\core\GameState.cpp" />
     <ClCompile Include="src\components\Components.cpp" />
     <ClCompile Include="src\core\Entity.cpp" />
     <ClCompile Include="src\core\SleepyEngine.cpp" />
     <ClCompile Include="src\core\Transform.cpp" />
     <ClCompile Include="src\shaders\Shader.cpp" />
-    <ClCompile Include="utils\D3DUtils.cpp" />
-    <ClCompile Include="utils\MathHelper.cpp" />
+    <ClCompile Include="src\utils\D3DUtils.cpp" />
+    <ClCompile Include="src\utils\MathHelper.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\shaders\shader.hlsl">
+      <FileType>Document</FileType>
+    </Text>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
