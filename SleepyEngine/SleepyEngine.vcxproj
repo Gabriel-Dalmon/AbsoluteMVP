@@ -139,6 +139,8 @@
     <ClInclude Include="headers\Component.h" />
     <ClInclude Include="headers\D3DUtils.h" />
     <ClInclude Include="headers\Entity.h" />
+    <ClInclude Include="headers\framework.h" />
+    <ClInclude Include="headers\Input.h" />
     <ClInclude Include="headers\MathHelper.h" />
     <ClInclude Include="headers\pch.h" />
     <ClInclude Include="headers\Resource.h" />
@@ -160,7 +162,9 @@
     <ClCompile Include="src\components\ShaderReference.cpp" />
     <ClCompile Include="src\core\GameState.cpp" />
     <ClCompile Include="src\core\Entity.cpp" />
+    <ClCompile Include="src\core\Input.cpp" />
     <ClCompile Include="src\core\SleepyEngine.cpp" />
+    <ClCompile Include="src\core\Time.cpp" />
     <ClCompile Include="src\core\Transform.cpp" />
     <ClCompile Include="src\shaders\Shader.cpp" />
     <ClCompile Include="src\utils\D3DUtils.cpp" />
