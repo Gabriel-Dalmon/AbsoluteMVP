@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\yoann\source\repos\Sleepy\SleepyEngine\headers;$(IncludePath)</IncludePath>
+    <IncludePath>headers;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -142,6 +142,7 @@
     <ClInclude Include="headers\Entity.h" />
     <ClInclude Include="headers\framework.h" />
     <ClInclude Include="headers\MathHelper.h" />
+    <ClInclude Include="headers\Mesh.h" />
     <ClInclude Include="headers\pch.h" />
     <ClInclude Include="headers\Resource.h" />
     <ClInclude Include="headers\Shader.h" />
@@ -152,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\components\Components.cpp" />
+    <ClCompile Include="src\components\Mesh.cpp" />
     <ClCompile Include="src\core\Entity.cpp" />
     <ClCompile Include="src\core\SleepyEngine.cpp" />
     <ClCompile Include="src\core\Transform.cpp" />
