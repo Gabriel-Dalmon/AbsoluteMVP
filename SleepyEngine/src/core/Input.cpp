@@ -7,7 +7,7 @@ template<typename Key, typename Value>
 std::ostream& operator << (std::ostream& os, std::map<Key, Value>& map)
 {
 	os << "{\n";
-	for (const auto& pair:map)
+	for (const auto& pair : map)
 	{
 		os << "\t{" << pair.first << " => " << pair.second << "}\n";
 	}
@@ -40,36 +40,62 @@ bool Input::Init()
 
 void Input::Update()
 {
-	for (auto& pair:InputList)
+	for (auto& pair : InputList)
 	{
 		SHORT keyState = GetAsyncKeyState(pair.first);
 		if (keyState & 0x8000 && pair.second >= 1)
-		{
-			if (pair.first>0x2E)
-				std::cout << "Key " << pair.first << " held: " << static_cast<char>(pair.first) << ". Current value: " << pair.second << std::endl;
-			else
-				std::cout << "Special key " << pair.first << " held! Current value:" << pair.second << std::endl;
-
 			pair.second = 2;
-		}
 		else if (keyState & 0x1 && pair.second == 0)
-		{
-			if (pair.first > 0x2E)
-				std::cout << "Key " << pair.first << " pressed: " << static_cast<char>(pair.first) << ". Current value: " << pair.second << std::endl;
-			else
-				std::cout << "Special key " << pair.first << " pressed! Current value:" << pair.second << std::endl;
-
 			pair.second = 1;
-		}
-		else if (pair.second > 0) {
-			if (pair.first > 0x2E)
-				std::cout << "Key " << pair.first << " released: " << static_cast<char>(pair.first) << std::endl;
-			else
-				std::cout << "Special key " << pair.first << " released" << std::endl;
-
+		else if (pair.second > 0)
+			pair.second = -1;
+		else
 			pair.second = 0;
+
+		if (pair.second > 0)
+			OnKeyPressed(pair.first);
+		else if (pair.second == -1)
+			OnKeyReleased(pair.first);
+	}
+}
+
+//#include <map>
+std::pair<int, int> getKeyPair(int key, std::map<int, int> InputList)
+{
+	for (const auto& pair : InputList)
+	{
+		if (pair.first == key) {
+			return pair;
 		}
 	}
-	std::cout << "-------------------" << std::endl;
-	std::cout << InputList << std::endl;
+}
+
+bool Input::IsPressed(int key, bool allow_hold)
+{
+	std::pair<int, int> pair = getKeyPair(key, InputList);
+	if (allow_hold)
+		return pair.second > 0;
+	return pair.second == 1;
+}
+
+bool Input::IsHeld(int key)
+{
+	std::pair<int, int> pair = getKeyPair(key, InputList);
+	return pair.second == 2;
+}
+
+bool Input::GotReleased(int key)
+{
+	std::pair<int, int> pair = getKeyPair(key, InputList);
+	return pair.second == -1;
+}
+
+void Input::OnKeyPressed(int key)
+{
+	std::cout << "Mating pressed " << key << std::endl;
+}
+
+void Input::OnKeyReleased(int key)
+{
+	std::cout << "Squeak " << key << std::endl;
 }
