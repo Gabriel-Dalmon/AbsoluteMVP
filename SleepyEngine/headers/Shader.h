@@ -1,7 +1,4 @@
 #pragma once
-#include "pch.h"
-#include <string>
-#include "d3dcommon.h"
 
 //struct Vertex {
 //	XMFLOAT3 Pos;

@@ -1,24 +1,16 @@
 // SleepyEngine.cpp : Defines the entry point for the application.
 //
-
-#include "framework.h"
+//#include "pch.h"
 #include "SleepyEngine.h"
+#include "Utils/HResultException.h"
 
 
-#define SWAP_CHAIN_BUFFER_COUNT 2
-
-// Link necessary d3d12 libraries.
-#pragma comment(lib,"d3dcompiler.lib")
-#pragma comment(lib, "D3D12.lib")
-#pragma comment(lib, "dxgi.lib")
 
 // Global Variables:
 
 // Forward declarations of functions included in this code module:
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
-
-
 
 SleepyEngine::SleepyEngine(HINSTANCE hInstance)
 {
@@ -46,22 +38,20 @@ void SleepyEngine::InitD3D()
 void SleepyEngine::EnableAdditionalD3D12Debug()
 {
     ID3D12Debug* pDebugController;
-    HRESULT hr = D3D12GetDebugInterface(__uuidof(ID3D12Debug), (void**)&pDebugController); //should throw error
-    std::cout << "hr: " << hr << "|" << pDebugController << std::endl;
+    ThrowIfFailed(D3D12GetDebugInterface(__uuidof(ID3D12Debug), (void**)&pDebugController)); //should throw error
     pDebugController->EnableDebugLayer();
 }
 
 void SleepyEngine::CreateDevice()
 {
-    CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&m_pDxgiFactory);
-    D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_11_0, _uuidof(ID3D12Device), (void**)&m_pDevice);
+    ThrowIfFailed(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&m_pDxgiFactory));
+    ThrowIfFailed(D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_11_0, _uuidof(ID3D12Device), (void**)&m_pDevice));
     //if failed, check book for "WARP_Adapters".
 }
 
 void SleepyEngine::CreateFence()
 {
-    int iResult;
-    iResult = m_pDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence), (void**)&m_pFence);
+    ThrowIfFailed(m_pDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence), (void**)&m_pFence));
 }
 
 void SleepyEngine::RecoverDescriptorsSize()
@@ -73,25 +63,24 @@ void SleepyEngine::RecoverDescriptorsSize()
 
 void SleepyEngine::Check4xMSAAQualitySupport()
 {
-    int iResult;
     D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS msQualityLevels; //will likely be moved to private member attribute
     msQualityLevels.Format = m_backBufferFormat;
     msQualityLevels.SampleCount = 4;
     msQualityLevels.Flags = D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE;
     msQualityLevels.NumQualityLevels = 0;
-    iResult = m_pDevice->CheckFeatureSupport(D3D12_FEATURE_MULTISAMPLE_QUALITY_LEVELS, &msQualityLevels, sizeof(msQualityLevels));
+    ThrowIfFailed(m_pDevice->CheckFeatureSupport(D3D12_FEATURE_MULTISAMPLE_QUALITY_LEVELS, &msQualityLevels, sizeof(msQualityLevels)));
+    m_4xMsaaQuality = msQualityLevels.NumQualityLevels;
     assert(m_4xMsaaQuality > 0 && "Unexpected MSAA quality level.");
 }
 
 void SleepyEngine::CreateCommandObjects()
 {
-    int iResult;
     D3D12_COMMAND_QUEUE_DESC queueDesc = {};
     queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
     queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-    iResult = m_pDevice->CreateCommandQueue(&queueDesc, __uuidof(ID3D12CommandQueue), (void**)&m_pCommandQueue);
-    iResult = m_pDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, __uuidof(ID3D12CommandAllocator), (void**)&m_pDirectCmdListAlloc);
-    iResult = m_pDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_pDirectCmdListAlloc, nullptr, __uuidof(ID3D12CommandList), (void**)&m_pCommandList);
+    ThrowIfFailed(m_pDevice->CreateCommandQueue(&queueDesc, __uuidof(ID3D12CommandQueue), (void**)&m_pCommandQueue));
+    ThrowIfFailed(m_pDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, __uuidof(ID3D12CommandAllocator), (void**)&m_pDirectCmdListAlloc));
+    ThrowIfFailed(m_pDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_pDirectCmdListAlloc, nullptr, __uuidof(ID3D12CommandList), (void**)&m_pCommandList));
     m_pCommandList->Close();
 }
 
@@ -115,7 +104,8 @@ void SleepyEngine::CreateSwapChain()
     swapChainDescriptor.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
     swapChainDescriptor.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-    m_pDxgiFactory->CreateSwapChain(m_pCommandQueue, &swapChainDescriptor, &m_pSwapChain); //CreateSwapChainForHwnd()
+    ThrowIfFailed(m_pDxgiFactory->CreateSwapChain(m_pCommandQueue, &swapChainDescriptor, &m_pSwapChain)); //CreateSwapChainForHwnd()
+    std::cout << (m_pSwapChain == nullptr);
 }
 
 void SleepyEngine::CreateDescriptorHeaps()
@@ -125,26 +115,26 @@ void SleepyEngine::CreateDescriptorHeaps()
     rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
     rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
     rtvHeapDesc.NodeMask = 0;
-    m_pDevice->CreateDescriptorHeap(&rtvHeapDesc, __uuidof(ID3D12DescriptorHeap), (void**)&m_pRtvHeap);
+    ThrowIfFailed(m_pDevice->CreateDescriptorHeap(&rtvHeapDesc, __uuidof(ID3D12DescriptorHeap), (void**)&m_pRtvHeap));
 
     D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc;
     dsvHeapDesc.NumDescriptors = 1;
     dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
     dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
     dsvHeapDesc.NodeMask = 0;
-    m_pDevice->CreateDescriptorHeap(&dsvHeapDesc, __uuidof(ID3D12DescriptorHeap), (void**)&m_pDsvHeap);
+    ThrowIfFailed(m_pDevice->CreateDescriptorHeap(&dsvHeapDesc, __uuidof(ID3D12DescriptorHeap), (void**)&m_pDsvHeap));
 }
 
 void SleepyEngine::CreateRenderTargetView()
 {
-    ID3D12Resource* m_pSwapChainBuffer[SWAP_CHAIN_BUFFER_COUNT]; // must be freed when finished
+    //ID3D12Resource* m_pSwapChainBuffer[SWAP_CHAIN_BUFFER_COUNT]; // must be freed when finished
     CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle(m_pRtvHeap->GetCPUDescriptorHandleForHeapStart());
 
     for (UINT i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
     {
         m_pSwapChain->GetBuffer(i, __uuidof(ID3D12Resource), (void**)&m_pSwapChainBuffer);
         m_pDevice->CreateRenderTargetView(m_pSwapChainBuffer[i], nullptr, rtvHeapHandle);
-        if (i < (SWAP_CHAIN_BUFFER_COUNT - 1)) { rtvHeapHandle.Offset(1, m_rtvDescriptorSize); };
+        rtvHeapHandle.Offset(1, m_rtvDescriptorSize); 
     }
 }
 
@@ -171,7 +161,7 @@ void SleepyEngine::CreateDepthStencilView()
     optClear.DepthStencil.Stencil = 0;
 
     CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_DEFAULT);
-    m_pDevice->CreateCommittedResource(
+    ThrowIfFailed(m_pDevice->CreateCommittedResource(
         &heapProperties,
         D3D12_HEAP_FLAG_NONE,
         &depthStencilDesc,
@@ -179,7 +169,7 @@ void SleepyEngine::CreateDepthStencilView()
         &optClear,
         __uuidof(ID3D12Resource),
         (void**)&m_pDepthStencilBuffer
-    );
+    ));
 
     /*D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc;
     dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
@@ -227,11 +217,19 @@ void SleepyEngine::SetScissorRect()
 
 int SleepyEngine::Initialize()
 {
-    LoadStringW(m_hAppInstance, IDS_APP_TITLE, m_szTitle, MAX_LOADSTRING);
-    LoadStringW(m_hAppInstance, IDC_SLEEPYENGINE, m_szWindowClass, MAX_LOADSTRING);
-    RegisterWindowClass();
-    InitWindow(SW_SHOW);
-    InitD3D();
+    try
+    {
+        LoadStringW(m_hAppInstance, IDS_APP_TITLE, m_szTitle, MAX_LOADSTRING);
+        LoadStringW(m_hAppInstance, IDC_SLEEPYENGINE, m_szWindowClass, MAX_LOADSTRING);
+        RegisterWindowClass();
+        InitWindow(SW_SHOW);
+        InitD3D();
+    }
+    catch (HResultException error)
+    {
+        std::wstring messageBoxText;
+        MessageBox(nullptr, error.ToString().c_str(), L"HRESULT ERROR", error.ErrorCode);
+    }
     return 0;
 }
 
@@ -328,23 +326,20 @@ ATOM SleepyEngine::RegisterWindowClass()
 
 void SleepyEngine::InitWindow(int nCmdShow)
 {
-    mhMainWnd = CreateWindowW(m_szWindowClass, m_szTitle, WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, m_hAppInstance, nullptr);
+    mhMainWnd = CreateWindow(m_szWindowClass, m_szTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, m_clientWidth, m_clientHeight, 0, 0, m_hAppInstance, 0);
+    //mhMainWnd = CreateWindowW(L"MainWindowName", L"MainWnd", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, m_hAppInstance, nullptr);
+    //mhMainWnd = CreateWindowW(m_szWindowClass, m_szTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, m_hAppInstance, nullptr);
 
+    if (mhMainWnd == NULL)
+    {
+        MessageBox(0, L"CreateWindow FAILED", 0, 0);
+        return;
+    }
     ShowWindow(mhMainWnd, nCmdShow);
     UpdateWindow(mhMainWnd);
+
 }
 
-//
-//  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
-//
-//  PURPOSE: Processes messages for the main window.
-//
-//  WM_COMMAND  - process the application menu
-//  WM_PAINT    - Paint the main window
-//  WM_DESTROY  - post a quit message and return
-//
-//
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
@@ -382,24 +377,3 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
     return 0;
 }
-
-/*
-// Message handler for about box.
-INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    UNREFERENCED_PARAMETER(lParam);
-    switch (message)
-    {
-    case WM_INITDIALOG:
-        return (INT_PTR)TRUE;
-
-    case WM_COMMAND:
-        if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
-        {
-            EndDialog(hDlg, LOWORD(wParam));
-            return (INT_PTR)TRUE;
-        }
-        break;
-    }
-    return (INT_PTR)FALSE;
-}*/
