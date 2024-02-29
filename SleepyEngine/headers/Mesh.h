@@ -26,8 +26,6 @@ public:
 
 	char* name;
 
-	//yet clueless about parting following stuff in  gpu / cpu / uploader
-
 	std::vector<Vertex>* m_CPUVertexBuffer;
 	std::vector<int>* m_CPUIndexBuffer;
 	
@@ -40,7 +38,7 @@ public:
 
 	int m_vertexByteStride = 0;
 	int m_vertexBufferByteSize = 0;
-	DXGI_FORMAT IndexFormat = DXGI_FORMAT_R16_UINT; // clueless about it but seems usefull somewhere
+	DXGI_FORMAT IndexFormat = DXGI_FORMAT_R16_UINT;
 	int m_indexBufferByteSize = 0;
 	int m_indexCount;
 
