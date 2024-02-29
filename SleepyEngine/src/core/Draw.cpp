@@ -44,5 +44,5 @@ void Draw(ID3D12GraphicsCommandList* pCommandList, ID3D12DescriptorHeap* pCBVHea
 	ID3D12CommandList* cmdsLists[] = { pCommandList };
 	pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
-	//swap chain and flush command queu
+	//swap chain
 }
