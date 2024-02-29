@@ -61,7 +61,7 @@ void SleepyEngine::CreateDevice()
 void SleepyEngine::CreateFence()
 {
     int iResult;
-    iResult = m_pDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Device), (void**)&m_pFence);
+    iResult = m_pDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence), (void**)&m_pFence);
 }
 
 void SleepyEngine::RecoverDescriptorsSize()
@@ -144,7 +144,7 @@ void SleepyEngine::CreateRenderTargetView()
     {
         m_pSwapChain->GetBuffer(i, __uuidof(ID3D12Resource), (void**)&m_pSwapChainBuffer);
         m_pDevice->CreateRenderTargetView(m_pSwapChainBuffer[i], nullptr, rtvHeapHandle);
-        if (i < SWAP_CHAIN_BUFFER_COUNT - 1) { rtvHeapHandle.Offset(1, m_rtvDescriptorSize); };
+        if (i < (SWAP_CHAIN_BUFFER_COUNT - 1)) { rtvHeapHandle.Offset(1, m_rtvDescriptorSize); };
     }
 }
 

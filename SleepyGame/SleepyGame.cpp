@@ -18,35 +18,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
-
-
-    //https://stackoverflow.com/questions/191842/how-do-i-get-console-output-in-c-with-a-windows-program
-    HWND consoleWindowHandle = GetConsoleWindow();
-    if (consoleWindowHandle == nullptr)
-    {
-        AllocConsole();
-        CONSOLE_SCREEN_BUFFER_INFO coninfo;
-        GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &coninfo);
-        coninfo.dwSize.Y = 500;
-        SetConsoleScreenBufferSize(GetStdHandle(STD_OUTPUT_HANDLE), coninfo.dwSize);
-
-        HANDLE hSTDOut = GetStdHandle(STD_OUTPUT_HANDLE);
-        int hConHandle = _open_osfhandle((long)hSTDOut, _O_TEXT);
-        FILE* fp = _fdopen(hConHandle, "w");
-        setvbuf(fp, NULL, _IONBF, 0);
-        std::cout << "Console Enabled";
-        std::ios::sync_with_stdio();
-    }
-    else
-    {
-        ShowWindow(consoleWindowHandle, SW_SHOW);
-        std::cout << "Message 2";
-    }
-
+    
+    AllocConsole();
+    FILE* consoleOut;
+    freopen_s(&consoleOut, "CONOUT$", "w", stdout);
 
     SleepyEngine engine(hInstance);
     engine.Initialize();
     engine.Run();
-
+    fclose(consoleOut);
+    FreeConsole();
     return 0;
 }
