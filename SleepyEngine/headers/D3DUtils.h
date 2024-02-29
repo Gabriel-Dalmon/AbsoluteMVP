@@ -1,11 +1,5 @@
 #pragma once
 
-#include <windows.h>
-#include <wrl.h>
-#include <d3d12.h>
-#include <D3Dcompiler.h>
-#include <DirectXMath.h>
-#include <string>
 #include "MathHelper.h"
 
 

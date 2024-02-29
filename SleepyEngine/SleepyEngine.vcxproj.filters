@@ -95,6 +95,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="src\shaders\shader.hlsl" />
+    <Text Include="src\shaders\Shader.hlsl" />
   </ItemGroup>
 </Project>

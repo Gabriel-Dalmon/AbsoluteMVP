@@ -165,7 +165,7 @@
     <ClCompile Include="src\utils\MathHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="src\shaders\shader.hlsl">
+    <Text Include="src\shaders\Shader.hlsl">
       <FileType>Document</FileType>
     </Text>
   </ItemGroup>
