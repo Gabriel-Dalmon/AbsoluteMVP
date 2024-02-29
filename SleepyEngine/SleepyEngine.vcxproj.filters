@@ -61,10 +61,13 @@
     <ClInclude Include="headers\Transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="utils\d3dx12.h">
+    <ClInclude Include="headers\d3dx12.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="headers\Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\PSO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -91,6 +94,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\components\Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\PSO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="headers\Draw.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\Draw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

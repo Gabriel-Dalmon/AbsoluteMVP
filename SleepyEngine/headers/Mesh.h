@@ -42,6 +42,11 @@ public:
 	int m_vertexBufferByteSize = 0;
 	DXGI_FORMAT IndexFormat = DXGI_FORMAT_R16_UINT; // clueless about it but seems usefull somewhere
 	int m_indexBufferByteSize = 0;
+	int m_indexCount;
+
+	D3D12_VERTEX_BUFFER_VIEW VertexBufferView()const;
+	D3D12_INDEX_BUFFER_VIEW IndexBufferView()const;
+	
 
 	// Physic stuff below, letting it in comment to treat it later
 	//DirectX::BoundingBox Bounds;
