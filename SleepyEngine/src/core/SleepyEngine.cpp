@@ -278,6 +278,11 @@ D3D12_CPU_DESCRIPTOR_HANDLE SleepyEngine::GetCurrentBackBufferView()const
         m_rtvDescriptorSize); // byte size of descriptor
 }
 
+ID3D12Resource* SleepyEngine::GetCurrentBackBuffer()const
+{
+    return m_pSwapChainBuffer[m_currentBackBuffer];
+}
+
 D3D12_CPU_DESCRIPTOR_HANDLE SleepyEngine::GetDepthStencilView()const
 {
     return m_pDsvHeap->GetCPUDescriptorHandleForHeapStart();

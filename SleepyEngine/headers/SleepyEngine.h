@@ -21,6 +21,11 @@ public:
     SleepyEngine(HINSTANCE hInstance);
     int Initialize();
     int Run();
+
+    // GETTERS / SETTERS
+    D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferView()const;
+    ID3D12Resource* GetCurrentBackBuffer()const;
+    D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView()const;
 private:
     void InitWindow(int nCmdShow);
     ATOM RegisterWindowClass();
@@ -40,9 +45,7 @@ private:
     void SetViewport();
     void SetScissorRect();
 
-    // GETTERS / SETTERS
-    D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferView()const;
-    D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView()const;
+    
 private:
     WCHAR m_szTitle[MAX_LOADSTRING];                  // The title bar text
     WCHAR m_szWindowClass[MAX_LOADSTRING];            // the main window class name
