@@ -15,20 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="SleepyEngine.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="small.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="SleepyEngine.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="headers\Components.h">
+    <ClInclude Include="headers\Component.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="headers\D3DUtils.h">
@@ -52,9 +39,6 @@
     <ClInclude Include="headers\SleepyEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="headers\Transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -67,11 +51,23 @@
     <ClInclude Include="headers\Utils\HResultException.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="headers\ShaderReference.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\MeshRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\Collider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\Script.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\components\Components.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\core\Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -96,8 +92,39 @@
     <ClCompile Include="src\utils\HResultException.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\components\ShaderReference.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\Component.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\MeshRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\Collider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\components\Script.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\shaders\Shader.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SleepyEngine.aps" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="SleepyEngine.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="small.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SleepyEngine.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

@@ -134,15 +134,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ResourceCompile Include="SleepyEngine.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="SleepyEngine.ico" />
-    <Image Include="small.ico" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClInclude Include="headers\Collider.h" />
     <ClInclude Include="headers\GameState.h" />
-    <ClInclude Include="headers\Components.h" />
+    <ClInclude Include="headers\Component.h" />
     <ClInclude Include="headers\D3DUtils.h" />
     <ClInclude Include="headers\Entity.h" />
     <ClInclude Include="headers\MathHelper.h" />
@@ -153,11 +147,18 @@
     <ClInclude Include="headers\targetver.h" />
     <ClInclude Include="headers\Transform.h" />
     <ClInclude Include="headers\Utils\HResultException.h" />
+    <ClInclude Include="headers\ShaderReference.h" />
+    <ClInclude Include="headers\MeshRenderer.h" />
+    <ClInclude Include="headers\Script.h" />
     <ClInclude Include="src\utils\d3dx12.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\components\Collider.cpp" />
+    <ClCompile Include="src\components\MeshRenderer.cpp" />
+    <ClCompile Include="src\components\Script.cpp" />
+    <ClCompile Include="src\components\Component.cpp" />
+    <ClCompile Include="src\components\ShaderReference.cpp" />
     <ClCompile Include="src\core\GameState.cpp" />
-    <ClCompile Include="src\components\Components.cpp" />
     <ClCompile Include="src\core\Entity.cpp" />
     <ClCompile Include="src\core\SleepyEngine.cpp" />
     <ClCompile Include="src\core\Transform.cpp" />
@@ -170,6 +171,16 @@
     <Text Include="src\shaders\Shader.hlsl">
       <FileType>Document</FileType>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SleepyEngine.aps" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="SleepyEngine.ico" />
+    <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SleepyEngine.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
