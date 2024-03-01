@@ -1,7 +1,4 @@
 #pragma once
-#include <string>
-
-using namespace DirectX;
 
 struct Vertex {
 	XMFLOAT3 Pos;
@@ -34,7 +31,7 @@ protected:
 	void CompilePS(std::wstring fileName);
 
 	// STOCKING SHADERS BYTE CODE
-	ID3DBlob* m_pVSByteCode;
-	ID3DBlob* m_pPSByteCode;
+	ID3DBlob* m_pVSByteCode; 
+	ID3DBlob* m_pPSByteCode; 
 };
 

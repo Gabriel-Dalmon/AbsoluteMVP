@@ -2,14 +2,17 @@
 
 class Entity;
 
-class Components
+class Component
 {
 public:
-	Components();
-	~Components() {};
+	Component();
+	~Component() {};
 
 	// Init
 	virtual void Init() {};
+
+	// Update 
+	virtual void Update() {};
 
 	// SETTER / GETTER 
 

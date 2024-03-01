@@ -1,5 +1,10 @@
 #pragma once
 
+// FORWARD DECLARATIONS
+class Entity;
+class Component;
+class Mesh;
+
 // LIBS
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
