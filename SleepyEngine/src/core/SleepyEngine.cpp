@@ -5,7 +5,9 @@
 #include "Utils/HResultException.h"
 #include <comdef.h>
 
-
+// I don't know where to put them
+#include "Input.h"
+#include "Timer.h"
 
 // Global Variables:
 
@@ -257,9 +259,16 @@ int SleepyEngine::Run()
 
     MSG msg;
 
+    Input input = Input();
+    input.Init();
+    Timer timer = Timer();
+    timer.Init();
+
     // Main message loop:
     while (GetMessage(&msg, nullptr, 0, 0))
     {
+        input.Update();
+        timer.UpdateTimer();
         if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
         {
             TranslateMessage(&msg);

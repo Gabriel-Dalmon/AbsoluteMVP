@@ -1,6 +1,6 @@
 #pragma once
 
-//#include <map>
+#include <map> // Ca marchait sans au campus mais plus maintenant. <map> est supposé être importé dans "pch.h" par Input.cpp
 //#include <string>
 
 class Input

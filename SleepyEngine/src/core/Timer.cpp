@@ -18,7 +18,6 @@ bool Timer::Init()
 	prevTime = 0.f;
 
 	std::cout << timeGetTime() << std::endl;
-	std::cout << "HEYYYYY" << std::endl;
 
 	return true;
 }
@@ -35,16 +34,6 @@ float Timer::GetDeltaTime()
 
 void Timer::UpdateTimer()
 {
-	//__int64 countPerSecs;
-	//QueryPerformanceFrequency((LARGE_INTEGER*)&countPerSecs);
-	//
-	//SecondsPerCount = 1.0 / countPerSecs;
-	//
-	//__int64 currTime;
-	//QueryPerformanceCounter((LARGE_INTEGER*)& currTime);
-	//
-	//DeltaTime = currTime - PrevTime;
-
 	currTime = GetTotalTime();
 
 	DeltaTime = currTime - prevTime;

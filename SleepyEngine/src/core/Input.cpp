@@ -28,7 +28,7 @@ bool Input::Init()
 		// Left, right and middle buttons. Have a gamer mouse with 14 buttons? Too bad!
 		VK_LBUTTON, VK_RBUTTON, VK_MBUTTON,
 		VK_RETURN, VK_SPACE, VK_DELETE,
-		VK_CONTROL, VK_SHIFT, VK_MENU, VK_TAB
+		VK_CONTROL, VK_SHIFT, VK_MENU, VK_TAB, VK_ESCAPE
 	};
 
 	for (int i = 0; i < GodDamnLongInputIdList.size(); i++)
@@ -93,10 +93,10 @@ bool Input::GotReleased(int key)
 
 void Input::OnKeyPressed(int key)
 {
-	std::cout << "Mating pressed " << key << std::endl;
+	std::cout << "Key pressed: " << key << std::endl;
 }
 
 void Input::OnKeyReleased(int key)
 {
-	std::cout << "Squeak " << key << std::endl;
+	std::cout << "Key released: " << key << std::endl;
 }
