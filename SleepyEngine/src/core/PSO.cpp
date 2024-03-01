@@ -7,11 +7,11 @@ PSODescriptor InitPSO(std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout,
 	ID3D12RootSignature* pRootSignature, 
 	ID3DBlob* pVSByteCode, 
 	ID3DBlob* pPSByteCode, 
-	D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE,
 	DXGI_FORMAT backBufferFormat,
 	bool m4xMsaaState,
 	int m4xMsaaQuality,
-	DXGI_FORMAT depthStencilFormat)
+	DXGI_FORMAT depthStencilFormat,
+	D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE)
 {
 	PSODescriptor descriptor;
 	descriptor.InputLayout = { inputLayout.data(), (UINT)inputLayout.size() };

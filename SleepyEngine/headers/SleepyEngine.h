@@ -5,7 +5,7 @@
 #include <windows.h>
 #include <wrl.h> //ComPtr
 #include <dxgi1_4.h>
-#include "../src/utils/d3dx12.h"
+#include "d3dx12.h"
 
 #include <d3d12.h>
 #include <cassert>
