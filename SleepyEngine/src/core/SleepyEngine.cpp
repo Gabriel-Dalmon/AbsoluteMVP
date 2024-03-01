@@ -384,18 +384,7 @@ void SleepyEngine::FlushCommandQueue()
 
 void SleepyEngine::Draw()//const GameTimer& gt)
 {
-    CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(
-        GetCurrentBackBuffer(),
-        D3D12_RESOURCE_STATE_PRESENT,
-        D3D12_RESOURCE_STATE_RENDER_TARGET
-    );
-    CD3DX12_RESOURCE_BARRIER resourceBarrier2 = CD3DX12_RESOURCE_BARRIER::Transition(
-        GetCurrentBackBuffer(),
-        D3D12_RESOURCE_STATE_PRESENT,
-        D3D12_RESOURCE_STATE_RENDER_TARGET
-    );
-    D3D12_CPU_DESCRIPTOR_HANDLE currentBackBufferView = GetCurrentBackBufferView();
-    D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView = GetDepthStencilView();
+
 
     // Reuse the memory associated with command recording.
     // We can only reset when the associated command lists have finished
@@ -405,6 +394,15 @@ void SleepyEngine::Draw()//const GameTimer& gt)
     // command queue via ExecuteCommandList. Reusing the command list 
     // reuses memory.
     ThrowIfFailed(m_pCommandList->Reset(m_pDirectCmdListAlloc, nullptr));
+
+    CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(
+        GetCurrentBackBuffer(),
+        D3D12_RESOURCE_STATE_PRESENT,
+        D3D12_RESOURCE_STATE_RENDER_TARGET
+    );
+
+    
+
     // Indicate a state transition on the resource usage.
     m_pCommandList->ResourceBarrier(1, &resourceBarrier);
     // Set the viewport and scissor rect. This needs to be reset 
@@ -416,13 +414,22 @@ void SleepyEngine::Draw()//const GameTimer& gt)
         GetCurrentBackBufferView(),
         DirectX::Colors::DarkRed, 0, nullptr
     );
+
     m_pCommandList->ClearDepthStencilView(
         GetDepthStencilView(), D3D12_CLEAR_FLAG_DEPTH |
         D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr
     );
+
     // Specify the buffers we are going to render to.
+    D3D12_CPU_DESCRIPTOR_HANDLE currentBackBufferView = GetCurrentBackBufferView();
+    D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView = GetDepthStencilView();
     m_pCommandList->OMSetRenderTargets(1, &currentBackBufferView, true, &depthStencilView);
     // Indicate a state transition on the resource usage.
+    CD3DX12_RESOURCE_BARRIER resourceBarrier2 = CD3DX12_RESOURCE_BARRIER::Transition(
+        GetCurrentBackBuffer(),
+        D3D12_RESOURCE_STATE_RENDER_TARGET,
+        D3D12_RESOURCE_STATE_PRESENT
+    );
     m_pCommandList->ResourceBarrier(1, &resourceBarrier2);
     // Done recording commands.
     ThrowIfFailed(m_pCommandList->Close());
