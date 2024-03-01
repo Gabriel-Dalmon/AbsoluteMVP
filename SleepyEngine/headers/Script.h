@@ -3,5 +3,14 @@
 
 class Script : public Component
 {
+public:
+	Script();
+	~Script() {};
+
+	// INIT
+	void Init();
+
+private:
+
 };
 
