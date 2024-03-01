@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SleepyEngine", "SleepyEngine\SleepyEngine.vcxproj", "{75A68ABE-552F-4E73-B6E1-A29416F1D7DD}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SleepyGame", "SleepyGame\SleepyGame.vcxproj", "{CEA0649C-D1FC-4FEE-B430-1BDCEC65EBD5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{75A68ABE-552F-4E73-B6E1-A29416F1D7DD} = {75A68ABE-552F-4E73-B6E1-A29416F1D7DD}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

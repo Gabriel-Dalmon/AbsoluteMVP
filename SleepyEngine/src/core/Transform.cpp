@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Transform.h"
 
 Transform::Transform(){}
@@ -8,13 +9,13 @@ Transform::~Transform(){}
 void Transform::Identity()
 {
 	XMStoreFloat4x4(&m_scaleMatrix, XMMatrixIdentity());
-	(m_scaleQuat.x, m_scaleQuat.y, m_scaleQuat.z, m_scaleQuat.w) = (0, 0, 0, 1);
-	(m_dir.x, m_dir.y, m_dir.z) = (1, 0, 0);
-	(m_right.x, m_right.y, m_right.z) = (0, 1, 0);
-	(m_up.x, m_up.y, m_up.z) = (0, 0, 1);
-	(m_currentRotateQuat.x, m_currentRotateQuat.y, m_currentRotateQuat.z, m_currentRotateQuat.w) = (0, 0, 0, 1);
+	(m_scaleQuat.x, m_scaleQuat.y, m_scaleQuat.z, m_scaleQuat.w) = (0.0f, 0.0f, 0.0f, 1.0f);
+	(m_dir.x, m_dir.y, m_dir.z) = (1.0f, 0.0f, 0.0f);
+	(m_right.x, m_right.y, m_right.z) = (0.0f, 1.0f, 0.0f);
+	(m_up.x, m_up.y, m_up.z) = (0.0f, 0.0f, 1.0f);
+	(m_currentRotateQuat.x, m_currentRotateQuat.y, m_currentRotateQuat.z, m_currentRotateQuat.w) = (0.0f, 0.0f, 0.0f, 1.0f);
 	XMStoreFloat4x4(&m_currentRotateMatrix, XMMatrixIdentity());
-	(m_positionQuat.x, m_positionQuat.y, m_positionQuat.z, m_positionQuat.w) = (0, 0, 0, 1);
+	(m_positionQuat.x, m_positionQuat.y, m_positionQuat.z, m_positionQuat.w) = (0.0f, 0.0f, 0.0f, 1.0f);
 	XMStoreFloat4x4(&m_positionMatrix, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_transformMatrix, XMMatrixIdentity());
 }

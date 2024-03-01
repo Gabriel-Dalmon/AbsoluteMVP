@@ -727,7 +727,8 @@ struct CD3DX12_ROOT_DESCRIPTOR_TABLE : public D3D12_ROOT_DESCRIPTOR_TABLE
         UINT numDescriptorRanges,
         _In_reads_opt_(numDescriptorRanges) const D3D12_DESCRIPTOR_RANGE* _pDescriptorRanges)
     {
-        Init(numDescriptorRanges, _pDescriptorRanges);
+        if (_pDescriptorRanges != 0)
+            Init(numDescriptorRanges, _pDescriptorRanges);
     }
 
     inline void Init(
