@@ -61,10 +61,10 @@
     <ClInclude Include="headers\Transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\utils\d3dx12.h">
+    <ClInclude Include="headers\GameState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\GameState.h">
+    <ClInclude Include="src\utils\d3dx12.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -84,14 +84,17 @@
     <ClCompile Include="src\shaders\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\utils\D3DUtils.cpp">
+    <ClCompile Include="src\core\GameState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\utils\MathHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\GameState.cpp">
+    <ClCompile Include="src\utils\D3DUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\shaders\Shader.hlsl" />
   </ItemGroup>
 </Project>
