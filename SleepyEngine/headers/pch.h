@@ -40,7 +40,7 @@ class Mesh;
 #include <DirectXPackedVector.h>
 #include <DirectXColors.h>
 #include <DirectXCollision.h>
-#include "../utils/d3dx12.h"
+#include "../src/utils/d3dx12.h"
 
 
 

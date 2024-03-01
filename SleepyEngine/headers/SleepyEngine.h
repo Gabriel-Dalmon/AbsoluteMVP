@@ -10,6 +10,8 @@
 #include <d3d12.h>
 #include <cassert>
 
+#include <DirectXColors.h>
+
 #include <DXGI.h>
 
 #define MAX_LOADSTRING 100
@@ -40,15 +42,21 @@ private:
     void SetViewport();
     void SetScissorRect();
 
+    void FlushCommandQueue();
+    void Draw();
+
     // GETTERS / SETTERS
     D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferView()const;
     D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView()const;
+    ID3D12Resource* GetCurrentBackBuffer()const;
 private:
     WCHAR m_szTitle[MAX_LOADSTRING];                  // The title bar text
     WCHAR m_szWindowClass[MAX_LOADSTRING];            // the main window class name
 
     ID3D12Device* m_pDevice = nullptr;
+
     ID3D12Fence* m_pFence = nullptr;
+    UINT64 m_currentFence = 0;
 
     UINT m_rtvDescriptorSize = 0;
     UINT m_dsvDescriptorSize = 0;
@@ -58,7 +66,9 @@ private:
     ID3D12DescriptorHeap* m_pDsvHeap = nullptr;
 
     DXGI_FORMAT m_backBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
-    int m_currentBackBuffer = 0;
+    int m_currentBackBufferOffset = 0;
+
+    D3D12_VIEWPORT* m_pViewPort = new D3D12_VIEWPORT();
 
     UINT m_4xMsaaQuality = 0;
     bool m_4xMsaaState = false;
