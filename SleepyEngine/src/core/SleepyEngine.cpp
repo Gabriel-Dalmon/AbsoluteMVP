@@ -199,28 +199,22 @@ void SleepyEngine::CreateDepthStencilView()
 
 void SleepyEngine::SetViewport()
 {
-    D3D12_VIEWPORT viewPort;
-    viewPort.TopLeftX = 0.0f;
-    viewPort.TopLeftY = 0.0f;
-    viewPort.Width = static_cast<float>(m_clientWidth);
-    viewPort.Height = static_cast<float>(m_clientHeight);
-    viewPort.MinDepth = 0.0f;
-    viewPort.MaxDepth = 1.0f;
-
-    D3D12_RECT scissorRect;
-    scissorRect.left = 0;
-    scissorRect.top = 0;
-    scissorRect.right = m_clientWidth;
-    scissorRect.bottom = m_clientHeight;
-
-    m_pCommandList->RSSetViewports(1, &viewPort);
-    m_pCommandList->RSSetScissorRects(1, &scissorRect);
+    m_pViewPort->TopLeftX = 0.0f;
+    m_pViewPort->TopLeftY = 0.0f;
+    m_pViewPort->Width = static_cast<float>(m_clientWidth);
+    m_pViewPort->Height = static_cast<float>(m_clientHeight);
+    m_pViewPort->MinDepth = 0.0f;
+    m_pViewPort->MaxDepth = 1.0f;
+    m_pCommandList->RSSetViewports(1, m_pViewPort);
 }
 
 // Scissor rect is used to clip pixels to a certain area of the render target and avoid rendering them (ex: pixels below UI).
 void SleepyEngine::SetScissorRect()
 {
-    m_scissorRect = { 0, 0, m_clientWidth / 2, m_clientHeight / 2 };
+    m_scissorRect.left = 0;
+    m_scissorRect.top = 0;
+    m_scissorRect.right = m_clientWidth;
+    m_scissorRect.bottom = m_clientHeight;
     m_pCommandList->RSSetScissorRects(1, &m_scissorRect);
 }
 
@@ -274,53 +268,21 @@ D3D12_CPU_DESCRIPTOR_HANDLE SleepyEngine::GetCurrentBackBufferView()const
     // CD3DX12 constructor to offset to the RTV of the current back buffer.
     return CD3DX12_CPU_DESCRIPTOR_HANDLE(
         m_pRtvHeap->GetCPUDescriptorHandleForHeapStart(),// handle start
-        m_currentBackBuffer, // index to offset
+        m_currentBackBufferOffset, // index to offset
         m_rtvDescriptorSize); // byte size of descriptor
 }
+
+
+ID3D12Resource* SleepyEngine::GetCurrentBackBuffer()const
+{
+    return m_pSwapChainBuffer[m_currentBackBufferOffset];
+}
+
 
 D3D12_CPU_DESCRIPTOR_HANDLE SleepyEngine::GetDepthStencilView()const
 {
     return m_pDsvHeap->GetCPUDescriptorHandleForHeapStart();
 }
-
-/*int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
-{
-    UNREFERENCED_PARAMETER(hPrevInstance);
-    UNREFERENCED_PARAMETER(lpCmdLine);
-
-    // TODO: Place code here.
-
-    // Initialize global strings
-    LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_SLEEPYENGINE, szWindowClass, MAX_LOADSTRING);
-    MyRegisterClass(hInstance);
-
-    // Perform application initialization:
-    if (!InitInstance (hInstance, nCmdShow))
-    {
-        return FALSE;
-    }
-
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SLEEPYENGINE));
-
-    MSG msg;
-
-    // Main message loop:
-    while (GetMessage(&msg, nullptr, 0, 0))
-    {
-        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
-    }
-
-    return (int) msg.wParam;
-}
-*/
 
 ATOM SleepyEngine::RegisterWindowClass()
 {
@@ -394,4 +356,59 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
     return 0;
+}
+
+void SleepyEngine::FlushCommandQueue()
+{
+}
+
+void SleepyEngine::Draw()//const GameTimer& gt)
+{
+    // Reuse the memory associated with command recording.
+    // We can only reset when the associated command lists have finished
+    // execution on the GPU.
+    ThrowIfFailed(m_pDirectCmdListAlloc->Reset());
+    // A command list can be reset after it has been added to the 
+    // command queue via ExecuteCommandList. Reusing the command list 
+    // reuses memory.
+        ThrowIfFailed(m_pCommandList->Reset(
+            m_pDirectCmdListAlloc, nullptr));
+    // Indicate a state transition on the resource usage.
+        m_pCommandList->ResourceBarrier(
+        1, &CD3DX12_RESOURCE_BARRIER::Transition(
+            GetCurrentBackBuffer(),
+            D3D12_RESOURCE_STATE_PRESENT,
+            D3D12_RESOURCE_STATE_RENDER_TARGET));
+    // Set the viewport and scissor rect. This needs to be reset 
+    // whenever the command list is reset.
+    m_pCommandList->RSSetViewports(1, m_pViewPort);
+    m_pCommandList->RSSetScissorRects(1, &m_scissorRect);
+    // Clear the back buffer and depth buffer.
+    m_pCommandList->ClearRenderTargetView(
+        GetCurrentBackBufferView(),
+        DirectX::Colors::LightSteelBlue, 0, nullptr);
+    m_pCommandList->ClearDepthStencilView(
+        GetDepthStencilView(), D3D12_CLEAR_FLAG_DEPTH |
+        D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+    // Specify the buffers we are going to render to.
+    m_pCommandList->OMSetRenderTargets(1, &GetCurrentBackBufferView(),
+        true, &GetDepthStencilView());
+    // Indicate a state transition on the resource usage.
+    m_pCommandList->ResourceBarrier(
+        1, &CD3DX12_RESOURCE_BARRIER::Transition(
+            GetCurrentBackBuffer(),
+            D3D12_RESOURCE_STATE_RENDER_TARGET,
+            D3D12_RESOURCE_STATE_PRESENT));
+    // Done recording commands.
+    ThrowIfFailed(m_pCommandList->Close());
+    // Add the command list to the queue for execution.
+    ID3D12CommandList* cmdsLists[] = { m_pCommandList };
+    m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+    // swap the back and front buffers
+    ThrowIfFailed(m_pSwapChain->Present(0, 0));
+    m_currentBackBufferOffset = (m_currentBackBufferOffset + 1) % SWAP_CHAIN_BUFFER_COUNT;
+    // Wait until frame commands are complete. This waiting is 
+    // inefficient and is done for simplicity. Later we will show how to 
+    // organize our rendering code so we do not have to wait per frame.
+    FlushCommandQueue();
 }
