@@ -4,10 +4,7 @@
 #include "SleepyEngine.h"
 #include "Utils/HResultException.h"
 #include <comdef.h>
-
-
-
-// Global Variables:
+#include <iostream>
 
 // Forward declarations of functions included in this code module:
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -35,7 +32,6 @@ void SleepyEngine::InitD3D()
     SetViewport();
     SetScissorRect();
 }
-#include <iostream>
 void SleepyEngine::EnableAdditionalD3D12Debug()
 {
     ID3D12Debug* pDebugController;
@@ -91,7 +87,7 @@ void SleepyEngine::CreateCommandObjects()
     // Seems like we need the commandlist opened before we reset it 
     // again for the ressource barrier and viewport inits
 
-    //m_pCommandList->Close(); 
+    m_pCommandList->Close(); 
 }
 
 void SleepyEngine::CreateSwapChain()
@@ -250,15 +246,21 @@ int SleepyEngine::Run()
     HACCEL hAccelTable = LoadAccelerators(m_hAppInstance, MAKEINTRESOURCE(IDC_SLEEPYENGINE));
 
     MSG msg;
-
+    //Draw();
     // Main message loop:
     while (GetMessage(&msg, nullptr, 0, 0))
     {
-        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+        if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
         {
+        /*if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+        {*/
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
+        else {
+            Draw();
+        }
+        
     }
     return (int)msg.wParam;
 }
@@ -307,8 +309,6 @@ ATOM SleepyEngine::RegisterWindowClass()
 void SleepyEngine::InitWindow(int nCmdShow)
 {
     mhMainWnd = CreateWindow(m_szWindowClass, m_szTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, m_clientWidth, m_clientHeight, 0, 0, m_hAppInstance, 0);
-    //mhMainWnd = CreateWindowW(L"MainWindowName", L"MainWnd", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, m_hAppInstance, nullptr);
-    //mhMainWnd = CreateWindowW(m_szWindowClass, m_szTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, m_hAppInstance, nullptr);
 
     if (mhMainWnd == NULL)
     {
@@ -360,10 +360,43 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 void SleepyEngine::FlushCommandQueue()
 {
+    // Advance the fence value to mark commands up to this fence point.
+    m_currentFence++;
+
+    // Add an instruction to the command queue to set a new fence point.  Because we 
+    // are on the GPU timeline, the new fence point won't be set until the GPU finishes
+    // processing all the commands prior to this Signal().
+    ThrowIfFailed(m_pCommandQueue->Signal(m_pFence, m_currentFence));
+
+    // Wait until the GPU has completed commands up to this fence point.
+    if (m_pFence->GetCompletedValue() < m_currentFence)
+    {
+        HANDLE eventHandle = CreateEventEx(nullptr, nullptr, false, EVENT_ALL_ACCESS);
+
+        // Fire event when GPU hits current fence.  
+        ThrowIfFailed(m_pFence->SetEventOnCompletion(m_currentFence, eventHandle));
+
+        // Wait until the GPU hits current fence event is fired.
+        WaitForSingleObject(eventHandle, INFINITE);
+        CloseHandle(eventHandle);
+    }
 }
 
 void SleepyEngine::Draw()//const GameTimer& gt)
 {
+    CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(
+        GetCurrentBackBuffer(),
+        D3D12_RESOURCE_STATE_PRESENT,
+        D3D12_RESOURCE_STATE_RENDER_TARGET
+    );
+    CD3DX12_RESOURCE_BARRIER resourceBarrier2 = CD3DX12_RESOURCE_BARRIER::Transition(
+        GetCurrentBackBuffer(),
+        D3D12_RESOURCE_STATE_PRESENT,
+        D3D12_RESOURCE_STATE_RENDER_TARGET
+    );
+    D3D12_CPU_DESCRIPTOR_HANDLE currentBackBufferView = GetCurrentBackBufferView();
+    D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView = GetDepthStencilView();
+
     // Reuse the memory associated with command recording.
     // We can only reset when the associated command lists have finished
     // execution on the GPU.
@@ -371,14 +404,9 @@ void SleepyEngine::Draw()//const GameTimer& gt)
     // A command list can be reset after it has been added to the 
     // command queue via ExecuteCommandList. Reusing the command list 
     // reuses memory.
-        ThrowIfFailed(m_pCommandList->Reset(
-            m_pDirectCmdListAlloc, nullptr));
+    ThrowIfFailed(m_pCommandList->Reset(m_pDirectCmdListAlloc, nullptr));
     // Indicate a state transition on the resource usage.
-        m_pCommandList->ResourceBarrier(
-        1, &CD3DX12_RESOURCE_BARRIER::Transition(
-            GetCurrentBackBuffer(),
-            D3D12_RESOURCE_STATE_PRESENT,
-            D3D12_RESOURCE_STATE_RENDER_TARGET));
+    m_pCommandList->ResourceBarrier(1, &resourceBarrier);
     // Set the viewport and scissor rect. This needs to be reset 
     // whenever the command list is reset.
     m_pCommandList->RSSetViewports(1, m_pViewPort);
@@ -386,19 +414,16 @@ void SleepyEngine::Draw()//const GameTimer& gt)
     // Clear the back buffer and depth buffer.
     m_pCommandList->ClearRenderTargetView(
         GetCurrentBackBufferView(),
-        DirectX::Colors::LightSteelBlue, 0, nullptr);
+        DirectX::Colors::DarkRed, 0, nullptr
+    );
     m_pCommandList->ClearDepthStencilView(
         GetDepthStencilView(), D3D12_CLEAR_FLAG_DEPTH |
-        D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+        D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr
+    );
     // Specify the buffers we are going to render to.
-    m_pCommandList->OMSetRenderTargets(1, &GetCurrentBackBufferView(),
-        true, &GetDepthStencilView());
+    m_pCommandList->OMSetRenderTargets(1, &currentBackBufferView, true, &depthStencilView);
     // Indicate a state transition on the resource usage.
-    m_pCommandList->ResourceBarrier(
-        1, &CD3DX12_RESOURCE_BARRIER::Transition(
-            GetCurrentBackBuffer(),
-            D3D12_RESOURCE_STATE_RENDER_TARGET,
-            D3D12_RESOURCE_STATE_PRESENT));
+    m_pCommandList->ResourceBarrier(1, &resourceBarrier2);
     // Done recording commands.
     ThrowIfFailed(m_pCommandList->Close());
     // Add the command list to the queue for execution.

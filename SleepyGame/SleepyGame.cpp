@@ -26,6 +26,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     SleepyEngine engine(hInstance);
     engine.Initialize();
     engine.Run();
+
     fclose(consoleOut);
     FreeConsole();
     return 0;
