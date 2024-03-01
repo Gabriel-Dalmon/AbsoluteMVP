@@ -1,6 +1,5 @@
+#include "pch.h" 
 #include "D3DUtils.h"
-#include <comdef.h> 
-#include <iostream>
 
 
 
@@ -20,7 +19,9 @@ ID3DBlob* D3DUtils::CompileFromFile(const std::wstring& filename, const D3D_SHAD
 
 	if (errors != nullptr)
 		OutputDebugStringA((char*)errors->GetBufferPointer());
-	   
+	
+
+	// ThrowIfFailed(x)
 	if (hr != S_OK)
 	{
 		std::cout << "HR MARCHE PAS !!!" << std::endl;
