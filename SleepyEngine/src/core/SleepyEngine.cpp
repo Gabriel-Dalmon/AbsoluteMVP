@@ -3,6 +3,7 @@
 //#include "pch.h"
 #include "SleepyEngine.h"
 #include "Utils/HResultException.h"
+#include <comdef.h>
 
 
 
@@ -40,6 +41,7 @@ void SleepyEngine::EnableAdditionalD3D12Debug()
     ID3D12Debug* pDebugController;
     ThrowIfFailed(D3D12GetDebugInterface(__uuidof(ID3D12Debug), (void**)&pDebugController)); //should throw error
     pDebugController->EnableDebugLayer();
+    std::cout << "Debug Layer Enabled" << std::endl;
 }
 
 void SleepyEngine::CreateDevice()
@@ -81,7 +83,15 @@ void SleepyEngine::CreateCommandObjects()
     ThrowIfFailed(m_pDevice->CreateCommandQueue(&queueDesc, __uuidof(ID3D12CommandQueue), (void**)&m_pCommandQueue));
     ThrowIfFailed(m_pDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, __uuidof(ID3D12CommandAllocator), (void**)&m_pDirectCmdListAlloc));
     ThrowIfFailed(m_pDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_pDirectCmdListAlloc, nullptr, __uuidof(ID3D12CommandList), (void**)&m_pCommandList));
-    m_pCommandList->Close();
+    
+    // Start off in a closed state. This is because the first time we 
+    // refer to the command list we will Reset it, and it needs to be 
+    // closed before calling Reset.
+    
+    // Seems like we need the commandlist opened before we reset it 
+    // again for the ressource barrier and viewport inits
+
+    //m_pCommandList->Close(); 
 }
 
 void SleepyEngine::CreateSwapChain()
@@ -105,7 +115,6 @@ void SleepyEngine::CreateSwapChain()
     swapChainDescriptor.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
     ThrowIfFailed(m_pDxgiFactory->CreateSwapChain(m_pCommandQueue, &swapChainDescriptor, &m_pSwapChain)); //CreateSwapChainForHwnd()
-    std::cout << (m_pSwapChain == nullptr);
 }
 
 void SleepyEngine::CreateDescriptorHeaps()
@@ -132,7 +141,7 @@ void SleepyEngine::CreateRenderTargetView()
 
     for (UINT i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
     {
-        m_pSwapChain->GetBuffer(i, __uuidof(ID3D12Resource), (void**)&m_pSwapChainBuffer);
+        ThrowIfFailed(m_pSwapChain->GetBuffer(i, __uuidof(ID3D12Resource), (void**)&m_pSwapChainBuffer[i]));
         m_pDevice->CreateRenderTargetView(m_pSwapChainBuffer[i], nullptr, rtvHeapHandle);
         rtvHeapHandle.Offset(1, m_rtvDescriptorSize); 
     }
@@ -147,7 +156,7 @@ void SleepyEngine::CreateDepthStencilView()
     depthStencilDesc.Height = m_clientHeight;
     depthStencilDesc.DepthOrArraySize = 1;
     depthStencilDesc.MipLevels = 1;
-    depthStencilDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
+    depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
     depthStencilDesc.SampleDesc.Count = m_4xMsaaState ? 4 : 1;
     depthStencilDesc.SampleDesc.Quality = m_4xMsaaState ? (m_4xMsaaQuality - 1) : 0;
     depthStencilDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
@@ -228,7 +237,16 @@ int SleepyEngine::Initialize()
     catch (HResultException error)
     {
         std::wstring messageBoxText;
-        MessageBox(nullptr, error.ToString().c_str(), L"HRESULT ERROR", error.ErrorCode);
+        MessageBox(nullptr, error.ToString().c_str(), L"HRESULT ERROR", MB_OK);
+    	HRESULT hr = m_pDevice->GetDeviceRemovedReason();
+        if (FAILED(hr))
+        {
+            _com_error error(hr);
+            std::string errorMessage = "Device Removed Reason:\n" + D3DUtils::HrToString(hr);
+            MessageBoxA(nullptr, errorMessage.c_str(), "Device Removed", MB_OK | MB_ICONERROR);
+            MessageBox(nullptr, error.ErrorMessage(),L"Device Removed", MB_OK);
+        }
+        return 1;
     }
     return 0;
 }

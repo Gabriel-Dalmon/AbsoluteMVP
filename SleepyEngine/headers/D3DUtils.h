@@ -20,5 +20,11 @@ public:
         MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, buffer, 512);
         return std::wstring(buffer);
     }
+    static inline std::string HrToString(HRESULT hr)
+    {
+        char errorMsg[256];
+        FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, nullptr, hr, 0, errorMsg, sizeof(errorMsg), nullptr);
+        return errorMsg;
+    }
 };
 
