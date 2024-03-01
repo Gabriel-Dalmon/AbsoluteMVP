@@ -11,6 +11,9 @@ public:
 	// Init
 	virtual void Init() {};
 
+	// Update 
+	virtual void Update() {};
+
 	// SETTER / GETTER 
 
 
