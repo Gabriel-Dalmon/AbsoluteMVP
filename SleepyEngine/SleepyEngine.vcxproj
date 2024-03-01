@@ -145,7 +145,6 @@
     <ClInclude Include="headers\Components.h" />
     <ClInclude Include="headers\D3DUtils.h" />
     <ClInclude Include="headers\Entity.h" />
-    <ClInclude Include="headers\framework.h" />
     <ClInclude Include="headers\MathHelper.h" />
     <ClInclude Include="headers\pch.h" />
     <ClInclude Include="headers\Resource.h" />
@@ -153,6 +152,7 @@
     <ClInclude Include="headers\SleepyEngine.h" />
     <ClInclude Include="headers\targetver.h" />
     <ClInclude Include="headers\Transform.h" />
+    <ClInclude Include="headers\Utils\HResultException.h" />
     <ClInclude Include="src\utils\d3dx12.h" />
   </ItemGroup>
   <ItemGroup>
@@ -163,6 +163,7 @@
     <ClCompile Include="src\core\Transform.cpp" />
     <ClCompile Include="src\shaders\Shader.cpp" />
     <ClCompile Include="src\utils\D3DUtils.cpp" />
+    <ClCompile Include="src\utils\HResultException.cpp" />
     <ClCompile Include="src\utils\MathHelper.cpp" />
   </ItemGroup>
   <ItemGroup>

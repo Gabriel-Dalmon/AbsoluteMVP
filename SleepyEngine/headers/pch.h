@@ -9,17 +9,6 @@
 #include <Windows.h>
 #include <wrl.h>
 
-// DIRECTX
-#include <comdef.h> 
-#include <dxgi1_4.h>
-#include <d3d12.h>
-#include <D3Dcompiler.h>
-#include <DirectXMath.h>
-#include <DirectXPackedVector.h>
-#include <DirectXColors.h>
-#include <DirectXCollision.h>
-#include "../utils/d3dx12.h"
-
 // STD
 #include <string>
 #include <iostream>
@@ -33,8 +22,25 @@
 #include <sstream>
 #include <cassert>
 
+#include <float.h>
+#include <cmath>
+
+// DIRECTX
+#include <comdef.h> 
+#include <dxgi1_4.h>
+#include <DXGI.h>
+#include <d3d12.h>
+#include <D3Dcompiler.h>
+#include <DirectXMath.h>
+#include <DirectXPackedVector.h>
+#include <DirectXColors.h>
+#include <DirectXCollision.h>
+#include "../utils/d3dx12.h"
+
+
+
 // MACROS
-#define RELEASE(p) {if (p){	p->Release();p = nullptr;}}
+#define RELEASE(p) {if (p){    p->Release();p = nullptr;}}
 
 // NAMESPACES
 using namespace DirectX;

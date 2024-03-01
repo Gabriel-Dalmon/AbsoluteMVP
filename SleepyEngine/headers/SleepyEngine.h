@@ -13,7 +13,7 @@
 #include <DXGI.h>
 
 #define MAX_LOADSTRING 100
-
+#define SWAP_CHAIN_BUFFER_COUNT 2
 
 class SleepyEngine
 {
@@ -71,9 +71,10 @@ private:
 
     IDXGIFactory4* m_pDxgiFactory = nullptr;
     IDXGISwapChain* m_pSwapChain = nullptr;
+    ID3D12Resource* m_pSwapChainBuffer[SWAP_CHAIN_BUFFER_COUNT] = {nullptr, nullptr};
 
-    int m_clientWidth;
-    int m_clientHeight;
+    int m_clientWidth = 200;
+    int m_clientHeight = 200;
 
     tagRECT m_scissorRect;
 

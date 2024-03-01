@@ -1,9 +1,6 @@
 #include "pch.h"
 #include "Shader.h"
 
-using namespace DirectX;
-
-
 Shader::Shader()
 {
 }
