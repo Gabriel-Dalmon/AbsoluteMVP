@@ -46,7 +46,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -72,6 +72,10 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>headers;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(ProjectDir)\headers;$(IncludePath)</IncludePath>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -137,10 +141,10 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="headers\GameState.h" />
     <ClInclude Include="headers\Components.h" />
     <ClInclude Include="headers\D3DUtils.h" />
     <ClInclude Include="headers\Entity.h" />
-    <ClInclude Include="headers\framework.h" />
     <ClInclude Include="headers\MathHelper.h" />
     <ClInclude Include="headers\Mesh.h" />
     <ClInclude Include="headers\pch.h" />
@@ -151,8 +155,11 @@
     <ClInclude Include="headers\targetver.h" />
     <ClInclude Include="headers\Transform.h" />
     <ClInclude Include="headers\d3dx12.h" />
+    <ClInclude Include="headers\Utils\HResultException.h" />
+    <ClInclude Include="src\utils\d3dx12.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\GameState.cpp" />
     <ClCompile Include="headers\Draw.h" />
     <ClCompile Include="src\components\Components.cpp" />
     <ClCompile Include="src\components\Mesh.cpp" />
@@ -162,8 +169,9 @@
     <ClCompile Include="src\core\SleepyEngine.cpp" />
     <ClCompile Include="src\core\Transform.cpp" />
     <ClCompile Include="src\shaders\Shader.cpp" />
-    <ClCompile Include="utils\D3DUtils.cpp" />
-    <ClCompile Include="utils\MathHelper.cpp" />
+    <ClCompile Include="src\utils\D3DUtils.cpp" />
+    <ClCompile Include="src\utils\HResultException.cpp" />
+    <ClCompile Include="src\utils\MathHelper.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
