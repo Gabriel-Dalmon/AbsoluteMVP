@@ -48,12 +48,16 @@
     <ClInclude Include="src\utils\d3dx12.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="headers\Input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="headers\Utils\HResultException.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\ShaderReference.h">
+    <ClInclude Include="headers\framework.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="headers\Timer.h">
     <ClInclude Include="headers\targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -116,7 +120,10 @@
     <ClCompile Include="src\core\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\Time.cpp">
+    <ClCompile Include="src\utils\HResultException.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\Timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

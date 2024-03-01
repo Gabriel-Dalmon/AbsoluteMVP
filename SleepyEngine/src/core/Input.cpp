@@ -1,7 +1,8 @@
+#include "pch.h"
 #include "Input.h"
-#include <vector>
-#include <iostream>
-#include <Windows.h>
+//#include <vector>
+//#include <iostream>
+//#include <Windows.h>
 
 template<typename Key, typename Value>
 std::ostream& operator << (std::ostream& os, std::map<Key, Value>& map)
