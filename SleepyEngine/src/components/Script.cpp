@@ -5,3 +5,7 @@ Script::Script()
 {
 
 }
+
+void Script::Init()
+{
+}
