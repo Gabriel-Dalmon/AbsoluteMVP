@@ -3,6 +3,8 @@
 
 Shader::Shader()
 {
+	m_pVSByteCode = nullptr;
+	m_pPSByteCode = nullptr;
 }
 
 void Shader::Init()
