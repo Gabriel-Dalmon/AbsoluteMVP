@@ -87,6 +87,7 @@ private:
     ID3D12Resource* m_pSwapChainBuffer[SWAP_CHAIN_BUFFER_COUNT] = {nullptr, nullptr};
 
     ID3D12PipelineState* m_PSO = nullptr;
+    ID3D12RootSignature* m_pRootSignature = nullptr;
 
     int m_clientWidth = 200;
     int m_clientHeight = 200;

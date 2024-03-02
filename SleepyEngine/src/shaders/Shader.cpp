@@ -19,6 +19,12 @@ void Shader::Init()
 	// descriptor range consisting of a single constant buffer.
 	HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &m_pSerializedRootSig, NULL);
 
+	m_pInputLayout =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+	};
+
 	// ThrowIfFailed(x) page 234
 }
 
@@ -38,12 +44,6 @@ ID3DBlob* Shader::CompileShader(const std::wstring& filename, const D3D_SHADER_M
 
 	if (errors != nullptr)
 		OutputDebugStringA((char*)errors->GetBufferPointer());
-
-	std::vector<D3D12_INPUT_ELEMENT_DESC> m_pInputLayout =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
-	};
 
 
 	// ThrowIfFailed(x)
@@ -69,5 +69,5 @@ void Shader::CompileVS(std::wstring fileName)
 
 void Shader::CompilePS(std::wstring fileName)
 {
-	m_pVSByteCode = CompileShader(fileName, nullptr, "PS", "ps_5_0");
+	m_pPSByteCode = CompileShader(fileName, nullptr, "PS", "ps_5_0");
 }

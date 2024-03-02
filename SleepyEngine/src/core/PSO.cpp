@@ -2,7 +2,6 @@
 
 #include "PSO.h"
 
-
 ID3D12PipelineState* InitPSO(std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout,
 	ID3D12RootSignature* pRootSignature, 
 	ID3DBlob* pVSByteCode, 
@@ -15,6 +14,7 @@ ID3D12PipelineState* InitPSO(std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout,
 	D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType)
 {
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC descriptor;
+	ZeroMemory(&descriptor, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
 	descriptor.InputLayout = { inputLayout.data(), (UINT)inputLayout.size() };
 	descriptor.pRootSignature = pRootSignature;
 	descriptor.VS =
@@ -41,7 +41,7 @@ ID3D12PipelineState* InitPSO(std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout,
 
 	ID3D12PipelineState* PSO;
 	device->CreateGraphicsPipelineState(&descriptor, IID_PPV_ARGS(&PSO));
-
+	
 	return PSO;
 }
 

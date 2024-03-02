@@ -34,6 +34,7 @@ void SleepyEngine::InitD3D()
     CreateDepthStencilView();
     SetViewport();
     SetScissorRect();
+    ThrowIfFailed(m_pCommandList->Reset(m_pDirectCmdListAlloc, nullptr));
 }
 void SleepyEngine::EnableAdditionalD3D12Debug()
 {
@@ -306,11 +307,22 @@ int SleepyEngine::Run()
 
     Shader shader;
     shader.Init();
-    shader.CompileVS(L"Shader.hlsl");
-    shader.CompilePS(L"Shader.hlsl");
+    ThrowIfFailed(m_pDevice->CreateRootSignature(
+        0,
+        shader.m_pSerializedRootSig->GetBufferPointer(),
+        shader.m_pSerializedRootSig->GetBufferSize(),
+        IID_PPV_ARGS(&m_pRootSignature))
+    );
+    shader.CompileVS(L"C:\\Users\\Deadly Sins\\source\\repos\\yoannklt\\Sleepy\\SleepyEngine\\src\\shaders\\Shader.hlsl");
+    shader.CompilePS(L"C:\\Users\\Deadly Sins\\source\\repos\\yoannklt\\Sleepy\\SleepyEngine\\src\\shaders\\Shader.hlsl");
 
-    m_PSO = InitPSO(shader.m_pInputLayout, (ID3D12RootSignature*)shader.m_pSerializedRootSig, shader.m_pVSByteCode, shader.m_pPSByteCode, m_backBufferFormat, false, 0, 
+    m_PSO = InitPSO(shader.m_pInputLayout, m_pRootSignature, shader.m_pVSByteCode, shader.m_pPSByteCode, m_backBufferFormat, false, 0,
         DXGI_FORMAT_D24_UNORM_S8_UINT, m_pDevice, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+
+    ThrowIfFailed(m_pCommandList->Close());
+    ID3D12CommandList* cmdsLists[] = { m_pCommandList };
+    m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+    FlushCommandQueue();
 
     // Main message loop:
     while (GetMessage(&msg, nullptr, 0, 0))
