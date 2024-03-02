@@ -4,6 +4,7 @@
 #include "SleepyEngine.h"
 #include "Utils/HResultException.h"
 #include <comdef.h>
+#include <iostream>
 
 // I don't know where to put them
 #include "Input.h"
