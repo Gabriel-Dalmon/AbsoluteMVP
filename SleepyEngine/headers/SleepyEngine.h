@@ -17,6 +17,8 @@
 #define MAX_LOADSTRING 100
 #define SWAP_CHAIN_BUFFER_COUNT 2
 
+class Mesh;
+
 class SleepyEngine
 {
 public:
@@ -47,7 +49,9 @@ private:
     void SetViewport();
     void SetScissorRect();
 
-    
+    void FlushCommandQueue();
+    void Draw();
+    void Draw(ID3D12DescriptorHeap* pCBVHeap, Mesh* mesh);
 private:
     WCHAR m_szTitle[MAX_LOADSTRING];                  // The title bar text
     WCHAR m_szWindowClass[MAX_LOADSTRING];            // the main window class name
@@ -81,6 +85,8 @@ private:
     IDXGIFactory4* m_pDxgiFactory = nullptr;
     IDXGISwapChain* m_pSwapChain = nullptr;
     ID3D12Resource* m_pSwapChainBuffer[SWAP_CHAIN_BUFFER_COUNT] = {nullptr, nullptr};
+
+    ID3D12PipelineState* m_PSO = nullptr;
 
     int m_clientWidth = 200;
     int m_clientHeight = 200;

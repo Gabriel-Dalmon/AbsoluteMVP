@@ -9,8 +9,8 @@ Mesh::~Mesh() {}
 
 void Mesh::Init(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, std::vector<Vertex>* vertices, std::vector<int>* indices)
 {
-	m_GPUVertexBuffer = D3DUtils::CreateDefaultBuffer(device, commandList, vertices, sizeof(Vertex), *m_uploaderVertexBuffer);
-	m_GPUVertexBuffer = D3DUtils::CreateDefaultBuffer(device, commandList, vertices, sizeof(Vertex), *m_uploaderIndexBuffer);
+	m_GPUVertexBuffer = D3DUtils::CreateDefaultBuffer(device, commandList, vertices, sizeof(Vertex), m_uploaderVertexBuffer);
+	m_GPUIndexBuffer = D3DUtils::CreateDefaultBuffer(device, commandList, vertices, sizeof(Vertex), m_uploaderIndexBuffer);
 
 	m_vertexByteStride = sizeof(Vertex);
 	m_vertexBufferByteSize = sizeof(Vertex) * vertices->size();

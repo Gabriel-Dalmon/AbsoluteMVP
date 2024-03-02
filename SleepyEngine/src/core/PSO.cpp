@@ -3,7 +3,7 @@
 #include "PSO.h"
 
 
-PSODescriptor InitPSO(std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout, 
+ID3D12PipelineState* InitPSO(std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout,
 	ID3D12RootSignature* pRootSignature, 
 	ID3DBlob* pVSByteCode, 
 	ID3DBlob* pPSByteCode, 
@@ -11,9 +11,10 @@ PSODescriptor InitPSO(std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout,
 	bool m4xMsaaState,
 	int m4xMsaaQuality,
 	DXGI_FORMAT depthStencilFormat,
-	D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE)
+	ID3D12Device* device,
+	D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType)
 {
-	PSODescriptor descriptor;
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC descriptor;
 	descriptor.InputLayout = { inputLayout.data(), (UINT)inputLayout.size() };
 	descriptor.pRootSignature = pRootSignature;
 	descriptor.VS =
@@ -38,11 +39,14 @@ PSODescriptor InitPSO(std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout,
 	descriptor.SampleDesc.Quality = m4xMsaaState ? (m4xMsaaQuality - 1) : 0;
 	descriptor.DSVFormat = depthStencilFormat;
 
-	return descriptor;
+	ID3D12PipelineState* PSO;
+	device->CreateGraphicsPipelineState(&descriptor, IID_PPV_ARGS(&PSO));
+
+	return PSO;
 }
 
 
-void DeletePSO(PSODescriptor* pso)
+void DeletePSO(ID3D12PipelineState* pso)
 {
 
 }

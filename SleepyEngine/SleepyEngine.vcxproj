@@ -164,7 +164,6 @@
     <ClCompile Include="src\core\Draw.cpp" />
     <ClCompile Include="src\core\GameState.cpp" />
     <ClCompile Include="headers\Draw.h" />
-    <ClCompile Include="src\components\Components.cpp" />
     <ClCompile Include="src\components\Mesh.cpp" />
     <ClCompile Include="src\core\Entity.cpp" />
     <ClCompile Include="src\core\PSO.cpp" />

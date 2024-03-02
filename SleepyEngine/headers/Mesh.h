@@ -4,7 +4,7 @@
 #include <d3d12.h>
 #include <unordered_map>
 
-#include "Components.h"
+#include "Component.h"
 
 
 using namespace DirectX;
@@ -16,7 +16,7 @@ struct Vertex
 };
 
 
-class Mesh : Components
+class Mesh : Component
 {
 public:
 	Mesh();

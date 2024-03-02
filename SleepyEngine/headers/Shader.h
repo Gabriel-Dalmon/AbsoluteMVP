@@ -1,9 +1,9 @@
 #pragma once
 
-struct Vertex {
-	XMFLOAT3 Pos;
-	XMFLOAT4 Color;
-};
+//struct Vertex {
+//	XMFLOAT3 Pos;
+//	XMFLOAT4 Color;
+//};
 
 class Shader
 {
@@ -20,7 +20,7 @@ public:
 	// CALLING RELEASE MACRO (pch.h)
 	void Release();
 
-protected:
+//protected:
 	// FOR ROOT SIGNATURE
 	// Root parameter can be a table, root descriptor or root constants
 	ID3DBlob* m_pSerializedRootSig = nullptr;
@@ -33,5 +33,7 @@ protected:
 	// STOCKING SHADERS BYTE CODE
 	ID3DBlob* m_pVSByteCode; 
 	ID3DBlob* m_pPSByteCode; 
+
+	std::vector<D3D12_INPUT_ELEMENT_DESC> m_pInputLayout;
 };
 

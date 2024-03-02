@@ -3,6 +3,9 @@
 //#include "pch.h"
 #include "SleepyEngine.h"
 #include "Utils/HResultException.h"
+#include "Mesh.h"
+#include "PSO.h"
+#include "Shader.h"
 #include <comdef.h>
 #include <iostream>
 
@@ -247,6 +250,68 @@ int SleepyEngine::Run()
 
     MSG msg;
 
+    //create 2 blobs
+    //call the 2 shaders (vs & ps) to store shaders in blobs
+    //root signature ?
+
+    std::vector<Vertex> vertices =
+    {
+        Vertex({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::White) }),
+        Vertex({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Black) }),
+        Vertex({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Red) }),
+        Vertex({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Green) }),
+        Vertex({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Blue) }),
+        Vertex({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Yellow) }),
+        Vertex({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Cyan) }),
+        Vertex({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Magenta) })
+    };
+
+    std::vector<int> indices =
+    {
+        // front face
+        0, 1, 2,
+        0, 2, 3,
+
+        // back face
+        4, 6, 5,
+        4, 7, 6,
+
+        // left face
+        4, 5, 1,
+        4, 1, 0,
+
+        // right face
+        3, 2, 6,
+        3, 6, 7,
+
+        // top face
+        1, 5, 6,
+        1, 6, 2,
+
+        // bottom face
+        4, 0, 3,
+        4, 3, 7
+    };
+
+    Mesh mesh;
+    mesh.Init(m_pDevice, m_pCommandList, &vertices, &indices);
+
+    D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDesc;
+    cbvHeapDesc.NumDescriptors = 1;
+    cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+    cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+    cbvHeapDesc.NodeMask = 0;
+    ID3D12DescriptorHeap* mCbvHeap;
+    m_pDevice->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(&mCbvHeap));
+
+    Shader shader;
+    shader.Init();
+    shader.CompileVS(L"Shader.hlsl");
+    shader.CompilePS(L"Shader.hlsl");
+
+    m_PSO = InitPSO(shader.m_pInputLayout, (ID3D12RootSignature*)shader.m_pSerializedRootSig, shader.m_pVSByteCode, shader.m_pPSByteCode, m_backBufferFormat, false, 0, 
+        DXGI_FORMAT_D24_UNORM_S8_UINT, m_pDevice, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+
     // Main message loop:
     while (GetMessage(&msg, nullptr, 0, 0))
     {
@@ -258,7 +323,8 @@ int SleepyEngine::Run()
             DispatchMessage(&msg);
         }
         else {
-            Draw();
+            //Draw();
+            Draw(mCbvHeap, &mesh);
         }
         
     }
@@ -276,24 +342,14 @@ D3D12_CPU_DESCRIPTOR_HANDLE SleepyEngine::GetCurrentBackBufferView()const
 
 ID3D12Resource* SleepyEngine::GetCurrentBackBuffer()const
 {
-    return m_pSwapChainBuffer[m_currentBackBuffer];
-}
-
-D3D12_CPU_DESCRIPTOR_HANDLE SleepyEngine::GetDepthStencilView()const
-{
-    return m_pDsvHeap->GetCPUDescriptorHandleForHeapStart();
-}
-
-ID3D12Resource* SleepyEngine::GetCurrentBackBuffer()const
-{
     return m_pSwapChainBuffer[m_currentBackBufferOffset];
 }
 
-
 D3D12_CPU_DESCRIPTOR_HANDLE SleepyEngine::GetDepthStencilView()const
 {
     return m_pDsvHeap->GetCPUDescriptorHandleForHeapStart();
 }
+
 
 ATOM SleepyEngine::RegisterWindowClass()
 {
@@ -451,5 +507,62 @@ void SleepyEngine::Draw()//const GameTimer& gt)
     // Wait until frame commands are complete. This waiting is 
     // inefficient and is done for simplicity. Later we will show how to 
     // organize our rendering code so we do not have to wait per frame.
+    FlushCommandQueue();
+}
+
+//void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, ID3D12RootSignature* pRootSignature, Mesh* mesh)
+void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, Mesh* mesh)
+{
+    CD3DX12_RESOURCE_BARRIER barrier;
+
+    barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+    D3D12_CPU_DESCRIPTOR_HANDLE currentBackBufferView = GetCurrentBackBufferView();
+    D3D12_CPU_DESCRIPTOR_HANDLE dephtStencilView = GetDepthStencilView();
+
+    m_pDirectCmdListAlloc->Reset();
+
+    m_pCommandList->Reset(m_pDirectCmdListAlloc, m_PSO);
+
+    // bcareful, may have problems using a single initialization of barrier
+    m_pCommandList->ResourceBarrier(1, &barrier);
+
+    m_pCommandList->ClearRenderTargetView(currentBackBufferView, Colors::LightSteelBlue, 0, nullptr);
+    m_pCommandList->ClearDepthStencilView(dephtStencilView, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+    m_pCommandList->OMSetRenderTargets(1, &currentBackBufferView, true, &dephtStencilView);
+
+    ID3D12DescriptorHeap* descriptorHeaps[] = { pCBVHeap };
+    m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+
+    //m_pCommandList->SetGraphicsRootSignature(pRootSignature);
+
+    D3D12_VERTEX_BUFFER_VIEW vertexBufferView = mesh->VertexBufferView();
+    D3D12_INDEX_BUFFER_VIEW indexBufferView = mesh->IndexBufferView();
+
+    m_pCommandList->IASetVertexBuffers(0, 1, &vertexBufferView);
+    m_pCommandList->IASetIndexBuffer(&indexBufferView);
+
+    m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    m_pCommandList->SetGraphicsRootDescriptorTable(0, pCBVHeap->GetGPUDescriptorHandleForHeapStart());
+
+    /* the following code is the one that comse from the book
+    * we would like to iterate in the submesh if we had one, maybe later
+    *pCommandList->DrawIndexedInstanced(
+    *	mesh->DrawArgs["box"].IndexCount,
+    *	1, 0, 0, 0);*/
+
+    m_pCommandList->DrawIndexedInstanced(mesh->m_indexCount, 1, 0, 0, 0);
+
+    barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+    m_pCommandList->ResourceBarrier(1, &barrier);
+
+    m_pCommandList->Close();
+
+    ID3D12CommandList* cmdsLists[] = { m_pCommandList };
+    m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+
+    ThrowIfFailed(m_pSwapChain->Present(0, 0));
+    m_currentBackBufferOffset = (m_currentBackBufferOffset + 1) % SWAP_CHAIN_BUFFER_COUNT;
     FlushCommandQueue();
 }
