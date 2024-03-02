@@ -31,10 +31,10 @@ void SleepyEngine::InitD3D()
     CreateSwapChain();
     CreateDescriptorHeaps();
     CreateRenderTargetView();
+    ThrowIfFailed(m_pCommandList->Reset(m_pDirectCmdListAlloc, nullptr));
     CreateDepthStencilView();
     SetViewport();
     SetScissorRect();
-    ThrowIfFailed(m_pCommandList->Reset(m_pDirectCmdListAlloc, nullptr));
 }
 void SleepyEngine::EnableAdditionalD3D12Debug()
 {
@@ -313,8 +313,8 @@ int SleepyEngine::Run()
         shader.m_pSerializedRootSig->GetBufferSize(),
         IID_PPV_ARGS(&m_pRootSignature))
     );
-    shader.CompileVS(L"C:\\Users\\Deadly Sins\\source\\repos\\yoannklt\\Sleepy\\SleepyEngine\\src\\shaders\\Shader.hlsl");
-    shader.CompilePS(L"C:\\Users\\Deadly Sins\\source\\repos\\yoannklt\\Sleepy\\SleepyEngine\\src\\shaders\\Shader.hlsl");
+    shader.CompileVS(L"C:\\Users\\gabri\\source\\repos\\yoannklt\\Sleepy\\SleepyEngine\\src\\shaders\\Shader.hlsl");
+    shader.CompilePS(L"C:\\Users\\gabri\\source\\repos\\yoannklt\\Sleepy\\SleepyEngine\\src\\shaders\\Shader.hlsl");
 
     m_PSO = InitPSO(shader.m_pInputLayout, m_pRootSignature, shader.m_pVSByteCode, shader.m_pPSByteCode, m_backBufferFormat, false, 0,
         DXGI_FORMAT_D24_UNORM_S8_UINT, m_pDevice, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
@@ -546,7 +546,7 @@ void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, Mesh* mesh)
     ID3D12DescriptorHeap* descriptorHeaps[] = { pCBVHeap };
     m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
-    //m_pCommandList->SetGraphicsRootSignature(pRootSignature);
+    m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
 
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView = mesh->VertexBufferView();
     D3D12_INDEX_BUFFER_VIEW indexBufferView = mesh->IndexBufferView();
