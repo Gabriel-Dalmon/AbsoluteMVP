@@ -28,10 +28,16 @@ void SleepyEngine::InitD3D()
     CreateSwapChain();
     CreateDescriptorHeaps();
     CreateRenderTargetView();
+    ThrowIfFailed(m_pCommandList->Reset(m_pDirectCmdListAlloc, nullptr));
     CreateDepthStencilView();
     SetViewport();
     SetScissorRect();
+    ThrowIfFailed(m_pCommandList->Close()); 
+    ID3D12CommandList* cmdsLists[] = { m_pCommandList };
+    m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+    FlushCommandQueue();
 }
+
 void SleepyEngine::EnableAdditionalD3D12Debug()
 {
     ID3D12Debug* pDebugController;
@@ -83,11 +89,8 @@ void SleepyEngine::CreateCommandObjects()
     // Start off in a closed state. This is because the first time we 
     // refer to the command list we will Reset it, and it needs to be 
     // closed before calling Reset.
-    
-    // Seems like we need the commandlist opened before we reset it 
-    // again for the ressource barrier and viewport inits
 
-    m_pCommandList->Close(); 
+    ThrowIfFailed(m_pCommandList->Close()); 
 }
 
 void SleepyEngine::CreateSwapChain()
@@ -384,8 +387,6 @@ void SleepyEngine::FlushCommandQueue()
 
 void SleepyEngine::Draw()//const GameTimer& gt)
 {
-
-
     // Reuse the memory associated with command recording.
     // We can only reset when the associated command lists have finished
     // execution on the GPU.
@@ -400,8 +401,6 @@ void SleepyEngine::Draw()//const GameTimer& gt)
         D3D12_RESOURCE_STATE_PRESENT,
         D3D12_RESOURCE_STATE_RENDER_TARGET
     );
-
-    
 
     // Indicate a state transition on the resource usage.
     m_pCommandList->ResourceBarrier(1, &resourceBarrier);
