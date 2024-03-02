@@ -4,7 +4,12 @@
 #include "SleepyEngine.h"
 #include "Utils/HResultException.h"
 #include <comdef.h>
-#include <iostream>
+
+// I don't know where to put them
+#include "Input.h"
+#include "Timer.h"
+
+// Global Variables:
 
 // Forward declarations of functions included in this code module:
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -249,10 +254,18 @@ int SleepyEngine::Run()
     HACCEL hAccelTable = LoadAccelerators(m_hAppInstance, MAKEINTRESOURCE(IDC_SLEEPYENGINE));
 
     MSG msg;
+
+    Input input = Input();
+    input.Init();
+    Timer timer = Timer();
+    timer.Init();
+
     //Draw();
     // Main message loop:
     while (GetMessage(&msg, nullptr, 0, 0))
     {
+        input.Update();
+        timer.UpdateTimer();
         if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
         {
         /*if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
