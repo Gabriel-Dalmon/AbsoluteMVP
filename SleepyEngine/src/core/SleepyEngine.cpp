@@ -55,7 +55,18 @@ void SleepyEngine::EnableAdditionalD3D12Debug()
 void SleepyEngine::CreateDevice()
 {
     ThrowIfFailed(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&m_pDxgiFactory));
+    //ThrowIfFailed(pDxgiFactory->EnumAdapters(0, &pAdapter));
     ThrowIfFailed(D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_11_0, _uuidof(ID3D12Device), (void**)&m_pDevice));
+    /*
+    UINT i = 0; 
+    IDXGIAdapter * pAdapter; 
+    std::vector <IDXGIAdapter*> vAdapters; 
+    while(pFactory->EnumAdapters(i, &pAdapter) != DXGI_ERROR_NOT_FOUND) 
+    { 
+	    vAdapters.push_back(pAdapter); 
+	    ++i; 
+    }
+    */
     //if failed, check book for "WARP_Adapters".
 }
 

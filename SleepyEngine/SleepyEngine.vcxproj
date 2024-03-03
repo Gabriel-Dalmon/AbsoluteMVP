@@ -143,6 +143,11 @@
     <ClInclude Include="headers\D3DUtils.h" />
     <ClInclude Include="headers\Entity.h" />
     <ClInclude Include="headers\framework.h" />
+    <ClInclude Include="headers\Graphics\Device.h" />
+    <ClInclude Include="headers\Graphics\FrameResource.h" />
+    <ClInclude Include="headers\Graphics\Renderer.h" />
+    <ClInclude Include="headers\Graphics\SwapChain.h" />
+    <ClInclude Include="headers\Graphics\Window.h" />
     <ClInclude Include="headers\Input.h" />
     <ClInclude Include="headers\MathHelper.h" />
     <ClInclude Include="headers\pch.h" />
@@ -170,6 +175,11 @@
     <ClCompile Include="src\core\SleepyEngine.cpp" />
     <ClCompile Include="src\core\Timer.cpp" />
     <ClCompile Include="src\core\Transform.cpp" />
+    <ClCompile Include="src\graphics\Device.cpp" />
+    <ClCompile Include="src\graphics\FrameResource.cpp" />
+    <ClCompile Include="src\graphics\Renderer.cpp" />
+    <ClCompile Include="src\graphics\SwapChain.cpp" />
+    <ClCompile Include="src\graphics\Window.cpp" />
     <ClCompile Include="src\shaders\Shader.cpp" />
     <ClCompile Include="src\utils\D3DUtils.cpp" />
     <ClCompile Include="src\utils\HResultException.cpp" />
