@@ -10,7 +10,10 @@ Shader::Shader()
 void Shader::Init()
 {  	
 	CD3DX12_ROOT_PARAMETER slotRootParameter[1]; 
-	slotRootParameter[0].InitAsConstantBufferView(0);    
+	CD3DX12_DESCRIPTOR_RANGE cbvTable;
+	cbvTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
+	slotRootParameter[0].InitAsDescriptorTable(1, &cbvTable);
+	//slotRootParameter[0].InitAsConstantBufferView(0);    
 
 	// A root signature is an array of root parameters.
 	CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(1, slotRootParameter, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);

@@ -89,8 +89,8 @@ private:
     ID3D12PipelineState* m_PSO = nullptr;
     ID3D12RootSignature* m_pRootSignature = nullptr;
 
-    int m_clientWidth = 200;
-    int m_clientHeight = 200;
+    int m_clientWidth = 600;
+    int m_clientHeight = 600;
 
     tagRECT m_scissorRect;
 
