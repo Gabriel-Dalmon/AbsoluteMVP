@@ -6,7 +6,7 @@
     <ClCompile Include="src\components\Script.cpp" />
     <ClCompile Include="src\components\Component.cpp" />
     <ClCompile Include="src\components\ShaderReference.cpp" />
-    <ClCompile Include="src\core\GameState.cpp" />
+    <ClCompile Include="src\GameStates\GameState.cpp" />
     <ClCompile Include="src\components\Mesh.cpp" />
     <ClCompile Include="src\core\Entity.cpp" />
     <ClCompile Include="src\core\PSO.cpp" />
@@ -18,6 +18,8 @@
     <ClCompile Include="src\utils\MathHelper.cpp" />
     <ClCompile Include="src\components\ColliderOBB.cpp" />
     <ClCompile Include="src\components\ColliderSphere.cpp" />
+    <ClCompile Include="src\GameStates\Menu.cpp" />
+    <ClCompile Include="src\GameStates\Pause.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Collider.h" />
@@ -43,6 +45,8 @@
     <ClInclude Include="headers\UploadBuffer.h" />
     <ClInclude Include="headers\ColliderOBB.h" />
     <ClInclude Include="headers\ColliderSphere.h" />
+    <ClInclude Include="headers\Menu.h" />
+    <ClInclude Include="headers\Pause.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SleepyEngine.rc" />

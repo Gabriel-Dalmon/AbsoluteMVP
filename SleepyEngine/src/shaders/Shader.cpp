@@ -37,6 +37,7 @@ ID3DBlob* Shader::CompileShader(const std::wstring& filename, const D3D_SHADER_M
 #if defined(DEBUG) || defined(_DEBUG)  
 	compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
+	std::cout << &filename << "  " << filename.c_str() << std::endl;
 
 	HRESULT hr = S_OK;
 

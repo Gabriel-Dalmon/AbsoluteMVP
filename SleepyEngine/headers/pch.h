@@ -1,10 +1,5 @@
 #pragma once
 
-// FORWARD DECLARATIONS
-class Entity;
-class Component;
-class Mesh;
-
 // LIBS
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
@@ -42,6 +37,10 @@ class Mesh;
 #include <DirectXCollision.h>
 #include "d3dx12.h"
 
+// FORWARD DECLARATIONS
+class Component;
+class Entity;
+class Mesh;
 
 
 // MACROS
