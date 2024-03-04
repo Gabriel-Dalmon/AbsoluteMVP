@@ -16,6 +16,8 @@
     <ClCompile Include="src\utils\D3DUtils.cpp" />
     <ClCompile Include="src\utils\HResultException.cpp" />
     <ClCompile Include="src\utils\MathHelper.cpp" />
+    <ClCompile Include="src\components\ColliderOBB.cpp" />
+    <ClCompile Include="src\components\ColliderSphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Collider.h" />
@@ -39,6 +41,8 @@
     <ClInclude Include="headers\Script.h" />
     <ClInclude Include="src\utils\d3dx12.h" />
     <ClInclude Include="headers\UploadBuffer.h" />
+    <ClInclude Include="headers\ColliderOBB.h" />
+    <ClInclude Include="headers\ColliderSphere.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SleepyEngine.rc" />

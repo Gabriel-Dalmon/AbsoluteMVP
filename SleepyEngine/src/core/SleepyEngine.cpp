@@ -594,7 +594,6 @@ void SleepyEngine::Draw(Mesh* mesh)
 
     m_pCommandList->Reset(m_pDirectCmdListAlloc, m_PSO);
 
-    // bcareful, may have problems using a single initialization of barrier
     m_pCommandList->ResourceBarrier(1, &barrier);
 
     m_pCommandList->ClearRenderTargetView(currentBackBufferView, Colors::LightSteelBlue, 0, nullptr);

@@ -17,7 +17,7 @@ public:
 	// SETTER / GETTER 
 
 
-private:
+protected:
 	Entity* m_pEntity; 
 };
 
