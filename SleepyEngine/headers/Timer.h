@@ -24,4 +24,5 @@ class Timer
 
 		float FPSTimer;
 		int FrameCount;
+		int MaxFPS;
 };
