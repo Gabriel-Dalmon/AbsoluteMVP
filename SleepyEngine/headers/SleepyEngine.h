@@ -110,7 +110,7 @@ private:
     HINSTANCE m_hAppInstance = nullptr;
 
     // To delete/Refactor: 
-    ID3D12DescriptorHeap* m_pCbvHeap;
+    ID3D12DescriptorHeap* m_pCbvHeap = nullptr;
     UploadBuffer<ObjectConstants>* m_pObjectCB = nullptr;
     DirectX::XMFLOAT4X4 mWorld = MathHelper::Identity4x4();
     DirectX::XMFLOAT4X4 mView = MathHelper::Identity4x4();

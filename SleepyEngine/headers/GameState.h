@@ -22,6 +22,7 @@ public:
 	// Entities
 	void AddEntity(Entity* entity);
 	void RemoveEntity(Entity* entity);
+	bool CheckEntity(Entity* entity);
 	
 private:
 	std::vector<Entity*> m_EntityList;

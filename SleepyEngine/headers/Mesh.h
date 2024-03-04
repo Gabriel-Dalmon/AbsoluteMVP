@@ -23,11 +23,11 @@ public:
 	std::vector<Vertex>* m_CPUVertexBuffer;
 	std::vector<int>* m_CPUIndexBuffer;
 	
-	ID3D12Resource* m_GPUVertexBuffer;
-	ID3D12Resource* m_GPUIndexBuffer;
+	ID3D12Resource* m_GPUVertexBuffer = nullptr;
+	ID3D12Resource* m_GPUIndexBuffer = nullptr;
 	
-	ID3D12Resource* m_uploaderVertexBuffer;
-	ID3D12Resource* m_uploaderIndexBuffer;
+	ID3D12Resource* m_uploaderVertexBuffer = nullptr;
+	ID3D12Resource* m_uploaderIndexBuffer = nullptr;
 
 
 	int m_vertexByteStride = 0;
