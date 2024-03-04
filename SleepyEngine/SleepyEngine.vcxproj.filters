@@ -63,7 +63,6 @@
     <ClInclude Include="headers\Camera.h" />
     <ClInclude Include="headers\Engine.h" />
     <ClInclude Include="headers\UploadBuffer.h" />
-    <ClInclude Include="headers\ColliderOBB.h" />
     <ClInclude Include="headers\ColliderSphere.h" />
     <ClInclude Include="headers\Menu.h" />
     <ClInclude Include="headers\Pause.h" />

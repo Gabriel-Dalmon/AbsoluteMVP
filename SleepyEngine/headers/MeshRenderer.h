@@ -11,6 +11,8 @@ public:
 
 	void Release();
 
+	Mesh* GetMesh();
+
 private:
 	Mesh* m_pMesh = nullptr;
 };
