@@ -1,5 +1,6 @@
 #include <vector>
 
+#include "Transform.h"
 #include "Mesh.h"
 #include "D3DUtils.h"
 

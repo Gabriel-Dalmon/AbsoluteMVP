@@ -372,8 +372,8 @@ int SleepyEngine::Run()
         shader.m_pSerializedRootSig->GetBufferSize(),
         IID_PPV_ARGS(&m_pRootSignature))
     );
-    shader.CompileVS(L"C:\\Users\\gabri\\source\\repos\\yoannklt\\Sleepy\\SleepyEngine\\src\\shaders\\Shader.hlsl");
-    shader.CompilePS(L"C:\\Users\\gabri\\source\\repos\\yoannklt\\Sleepy\\SleepyEngine\\src\\shaders\\Shader.hlsl");
+    shader.CompileVS(L"C:\\Users\\vgautier\\source\\repos\\yoannklt\\Sleepy\\SleepyEngine\\src\\shaders\\Shader.hlsl");
+    shader.CompilePS(L"C:\\Users\\vgautier\\source\\repos\\yoannklt\\Sleepy\\SleepyEngine\\src\\shaders\\Shader.hlsl");
 
     m_PSO = InitPSO(shader.m_pInputLayout, m_pRootSignature, shader.m_pVSByteCode, shader.m_pPSByteCode, m_backBufferFormat, false, 0,
         DXGI_FORMAT_D24_UNORM_S8_UINT, m_pDevice, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
@@ -395,7 +395,7 @@ int SleepyEngine::Run()
         }
         else {
             //Draw();
-            Draw(m_pCbvHeap, &mesh);
+            Draw(&mesh);
         }
         
     }
@@ -582,7 +582,7 @@ void SleepyEngine::Draw()//const GameTimer& gt)
 }
 
 //void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, ID3D12RootSignature* pRootSignature, Mesh* mesh)
-void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, Mesh* mesh)
+void SleepyEngine::Draw(Mesh* mesh)
 {
     CD3DX12_RESOURCE_BARRIER barrier;
 
@@ -602,7 +602,7 @@ void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, Mesh* mesh)
 
     m_pCommandList->OMSetRenderTargets(1, &currentBackBufferView, true, &dephtStencilView);
 
-    ID3D12DescriptorHeap* descriptorHeaps[] = { pCBVHeap };
+    ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvHeap };
     m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
     m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
@@ -615,7 +615,7 @@ void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, Mesh* mesh)
 
     m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    m_pCommandList->SetGraphicsRootDescriptorTable(0, pCBVHeap->GetGPUDescriptorHandleForHeapStart());
+    m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
 
     /* the following code is the one that comse from the book
     * we would like to iterate in the submesh if we had one, maybe later

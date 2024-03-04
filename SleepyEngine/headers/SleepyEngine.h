@@ -63,7 +63,7 @@ private:
 
     void FlushCommandQueue();
     void Draw();
-    void Draw(ID3D12DescriptorHeap* pCBVHeap, Mesh* mesh);
+    void Draw(Mesh* mesh);
 private:
     WCHAR m_szTitle[MAX_LOADSTRING];                  // The title bar text
     WCHAR m_szWindowClass[MAX_LOADSTRING];            // the main window class name
