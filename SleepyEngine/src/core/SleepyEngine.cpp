@@ -518,8 +518,11 @@ void SleepyEngine::FlushCommandQueue()
         ThrowIfFailed(m_pFence->SetEventOnCompletion(m_currentFence, eventHandle));
 
         // Wait until the GPU hits current fence event is fired.
-        WaitForSingleObject(eventHandle, INFINITE);
-        CloseHandle(eventHandle);
+        if (eventHandle != 0)
+        {
+            WaitForSingleObject(eventHandle, INFINITE);
+            CloseHandle(eventHandle); 
+        }
     }
 }
 

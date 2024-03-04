@@ -38,9 +38,9 @@
 #include "d3dx12.h"
 
 // FORWARD DECLARATIONS
+class Mesh;
 class Component;
 class Entity;
-class Mesh;
 
 
 // MACROS
