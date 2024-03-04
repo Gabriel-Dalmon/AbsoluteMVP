@@ -13,6 +13,7 @@
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
+
 SleepyEngine::SleepyEngine(HINSTANCE hInstance)
 {
     m_hAppInstance = hInstance;
@@ -35,6 +36,8 @@ void SleepyEngine::InitD3D()
     CreateDepthStencilView();
     SetViewport();
     SetScissorRect();
+    BuildDescriptorHeaps();
+    BuildConstantBuffers();
 }
 void SleepyEngine::EnableAdditionalD3D12Debug()
 {
@@ -245,6 +248,39 @@ int SleepyEngine::Initialize()
     return 0;
 }
 
+
+void SleepyEngine::BuildDescriptorHeaps()
+{
+    D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDesc;
+    cbvHeapDesc.NumDescriptors = 1;
+    cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+    cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+    cbvHeapDesc.NodeMask = 0;
+    ThrowIfFailed(m_pDevice->CreateDescriptorHeap(&cbvHeapDesc,
+        IID_PPV_ARGS(&m_pCbvHeap)));
+}
+
+void SleepyEngine::BuildConstantBuffers()
+{
+    m_pObjectCB = new UploadBuffer<ObjectConstants>(m_pDevice, 1, true);
+
+    UINT objCBByteSize = ((sizeof(ObjectConstants) + 255) & ~255);
+
+    D3D12_GPU_VIRTUAL_ADDRESS cbAddress = m_pObjectCB->Resource()->GetGPUVirtualAddress();
+    // Offset to the ith object constant buffer in the buffer.
+    int boxCBufIndex = 0;
+    cbAddress += boxCBufIndex * objCBByteSize;
+
+    D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc;
+    cbvDesc.BufferLocation = cbAddress;
+    cbvDesc.SizeInBytes = ((sizeof(ObjectConstants) + 255) & ~255);
+
+    m_pDevice->CreateConstantBufferView(
+        &cbvDesc,
+        m_pCbvHeap->GetCPUDescriptorHandleForHeapStart());
+
+}
+
 int SleepyEngine::Run()
 {
     HACCEL hAccelTable = LoadAccelerators(m_hAppInstance, MAKEINTRESOURCE(IDC_SLEEPYENGINE));
@@ -302,8 +338,31 @@ int SleepyEngine::Run()
     cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
     cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
     cbvHeapDesc.NodeMask = 0;
-    ID3D12DescriptorHeap* mCbvHeap;
-    m_pDevice->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(&mCbvHeap));
+
+    m_pDevice->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(&m_pCbvHeap));
+
+    // Convert Spherical to Cartesian coordinates.
+    float x = mRadius * sinf(mPhi) * cosf(mTheta);
+    float z = mRadius * sinf(mPhi) * sinf(mTheta);
+    float y = mRadius * cosf(mPhi);
+
+    // Build the view matrix.
+    XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);
+    XMVECTOR target = XMVectorZero();
+    XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+
+    XMMATRIX view = XMMatrixLookAtLH(pos, target, up);
+    XMStoreFloat4x4(&mView, view);
+
+    XMMATRIX world = XMLoadFloat4x4(&mWorld);
+    XMMATRIX proj = XMLoadFloat4x4(&mProj);
+    XMMATRIX worldViewProj = world * view * proj;
+
+    // Update the constant buffer with the latest worldViewProj matrix.
+    ObjectConstants objConstants;
+    XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
+    m_pObjectCB->CopyData(0, objConstants);
+
 
     Shader shader;
     shader.Init();
@@ -336,7 +395,7 @@ int SleepyEngine::Run()
         }
         else {
             //Draw();
-            Draw(mCbvHeap, &mesh);
+            Draw(m_pCbvHeap, &mesh);
         }
         
     }

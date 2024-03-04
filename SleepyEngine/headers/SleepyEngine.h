@@ -14,10 +14,20 @@
 
 #include <DXGI.h>
 
+#include "MathHelper.h"
+#include "UploadBuffer.h"
+
+
 #define MAX_LOADSTRING 100
 #define SWAP_CHAIN_BUFFER_COUNT 2
 
 class Mesh;
+
+struct ObjectConstants
+{
+    DirectX::XMFLOAT4X4 WorldViewProj = MathHelper::Identity4x4();
+};
+
 
 class SleepyEngine
 {
@@ -48,6 +58,8 @@ private:
     void CreateDepthStencilView();
     void SetViewport();
     void SetScissorRect();
+    void BuildDescriptorHeaps();
+    void BuildConstantBuffers();
 
     void FlushCommandQueue();
     void Draw();
@@ -96,4 +108,15 @@ private:
 
     HWND mhMainWnd = nullptr;
     HINSTANCE m_hAppInstance = nullptr;
+
+    // To delete/Refactor: 
+    ID3D12DescriptorHeap* m_pCbvHeap;
+    UploadBuffer<ObjectConstants>* m_pObjectCB = nullptr;
+    DirectX::XMFLOAT4X4 mWorld = MathHelper::Identity4x4();
+    DirectX::XMFLOAT4X4 mView = MathHelper::Identity4x4();
+    DirectX::XMFLOAT4X4 mProj = MathHelper::Identity4x4();
+
+    float mTheta = 1.5f * DirectX::XM_PI;
+    float mPhi = DirectX::XM_PIDIV4;
+    float mRadius = 5.0f;
 };

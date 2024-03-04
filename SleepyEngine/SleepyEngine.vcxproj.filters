@@ -1,149 +1,56 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
+    <ClCompile Include="src\components\Collider.cpp" />
+    <ClCompile Include="src\components\MeshRenderer.cpp" />
+    <ClCompile Include="src\components\Script.cpp" />
+    <ClCompile Include="src\components\Component.cpp" />
+    <ClCompile Include="src\components\ShaderReference.cpp" />
+    <ClCompile Include="src\core\GameState.cpp" />
+    <ClCompile Include="src\components\Mesh.cpp" />
+    <ClCompile Include="src\core\Entity.cpp" />
+    <ClCompile Include="src\core\PSO.cpp" />
+    <ClCompile Include="src\core\SleepyEngine.cpp" />
+    <ClCompile Include="src\core\Transform.cpp" />
+    <ClCompile Include="src\shaders\Shader.cpp" />
+    <ClCompile Include="src\utils\D3DUtils.cpp" />
+    <ClCompile Include="src\utils\HResultException.cpp" />
+    <ClCompile Include="src\utils\MathHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="headers\Component.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\D3DUtils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\Entity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\MathHelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\pch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\Resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\Shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\SleepyEngine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\Transform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\GameState.h">
-    <ClInclude Include="headers\d3dx12.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\GameState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\Utils\HResultException.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\Mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\PSO.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\ShaderReference.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\MeshRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\Collider.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\Script.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="headers\Collider.h" />
+    <ClInclude Include="headers\GameState.h" />
+    <ClInclude Include="headers\Component.h" />
+    <ClInclude Include="headers\D3DUtils.h" />
+    <ClInclude Include="headers\Entity.h" />
+    <ClInclude Include="headers\MathHelper.h" />
+    <ClInclude Include="headers\Mesh.h" />
+    <ClInclude Include="headers\pch.h" />
+    <ClInclude Include="headers\PSO.h" />
+    <ClInclude Include="headers\Resource.h" />
+    <ClInclude Include="headers\Shader.h" />
+    <ClInclude Include="headers\SleepyEngine.h" />
+    <ClInclude Include="headers\targetver.h" />
+    <ClInclude Include="headers\Transform.h" />
+    <ClInclude Include="headers\d3dx12.h" />
+    <ClInclude Include="headers\Utils\HResultException.h" />
+    <ClInclude Include="headers\ShaderReference.h" />
+    <ClInclude Include="headers\MeshRenderer.h" />
+    <ClInclude Include="headers\Script.h" />
+    <ClInclude Include="src\utils\d3dx12.h" />
+    <ClInclude Include="headers\UploadBuffer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\core\Entity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core\SleepyEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core\Transform.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\shaders\Shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core\GameState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\utils\MathHelper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\utils\D3DUtils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\utils\HResultException.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\components\Mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core\PSO.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="headers\Draw.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core\Draw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\components\ShaderReference.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\components\Component.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\components\MeshRenderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\components\Collider.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\components\Script.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ResourceCompile Include="SleepyEngine.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="src\shaders\Shader.hlsl" />
+    <Image Include="SleepyEngine.ico" />
+    <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SleepyEngine.aps" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="SleepyEngine.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="small.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="SleepyEngine.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
+    <Text Include="src\shaders\Shader.hlsl" />
   </ItemGroup>
 </Project>
