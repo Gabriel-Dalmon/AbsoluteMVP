@@ -1,20 +1,26 @@
 #pragma once
 
-typedef void* HINSTANCE;
+#ifndef _WINDEF_
+class HINSTANCE__; // Forward or never
+typedef HINSTANCE__* HINSTANCE;
+#endif
+typedef WORD ATOM;
 
 class Window
 {
 public:
-	Window(HINSTANCE hInstance);
+	Window();
 	~Window();
 
-	void Initialize(int m_windowWidth, int m_windowHeight);
+	int Initialize(HINSTANCE hInstance, int windowWidth, int windowHeight);
 	ATOM RegisterWindowClass();
-	void CleanUp();
+	void CleanUp(); 
 
-	inline HWND GetWindowHandle() const { return m_hWnd; }
-	inline int GetWindowWidth() const { return m_windowWidth; }
-	inline int GetWindowHeight() const { return m_windowHeight; }
+	inline HWND GetWindowHandle() const { return m_hWnd; };
+	inline int GetWindowWidth() const { return m_windowWidth; };
+	inline int GetWindowHeight() const { return m_windowHeight; };
+
+	static LRESULT __stdcall WindowProcess(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	HWND m_hWnd = nullptr;

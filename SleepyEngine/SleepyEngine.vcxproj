@@ -143,6 +143,7 @@
     <ClInclude Include="headers\D3DUtils.h" />
     <ClInclude Include="headers\Entity.h" />
     <ClInclude Include="headers\framework.h" />
+    <ClInclude Include="headers\Graphics\CommandQueue.h" />
     <ClInclude Include="headers\Graphics\Device.h" />
     <ClInclude Include="headers\Graphics\FrameResource.h" />
     <ClInclude Include="headers\Graphics\Renderer.h" />
@@ -162,7 +163,7 @@
     <ClInclude Include="headers\ShaderReference.h" />
     <ClInclude Include="headers\MeshRenderer.h" />
     <ClInclude Include="headers\Script.h" />
-    <ClInclude Include="src\utils\d3dx12.h" />
+    <ClInclude Include="headers\d3dx12.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\components\Collider.cpp" />
@@ -176,6 +177,7 @@
     <ClCompile Include="src\core\SleepyEngine.cpp" />
     <ClCompile Include="src\core\Timer.cpp" />
     <ClCompile Include="src\core\Transform.cpp" />
+    <ClCompile Include="src\graphics\CommandQueue.cpp" />
     <ClCompile Include="src\graphics\Device.cpp" />
     <ClCompile Include="src\graphics\FrameResource.cpp" />
     <ClCompile Include="src\graphics\Renderer.cpp" />

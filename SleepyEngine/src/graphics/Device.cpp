@@ -6,6 +6,14 @@
 #include <dxgi1_4.h>
 #include <d3d12.h>
 
+Device::Device()
+{
+}
+
+Device::~Device()
+{
+}
+
 void Device::Initialize(IDXGIFactory4* pDgxiFactory, unsigned int hardwareAdapterIndex)
 {
 	// Recover the hardware adapter
@@ -20,7 +28,7 @@ void Device::Initialize(IDXGIFactory4* pDgxiFactory, unsigned int hardwareAdapte
 		pAdapter,
 		D3D_FEATURE_LEVEL_11_0, 
 		__uuidof(ID3D12Device), 
-		(void**)&m_pDevice
+		(void**)&m_pD3DDevice
 	);
 	pAdapter->Release();
 
@@ -36,7 +44,7 @@ void Device::Initialize(IDXGIFactory4* pDgxiFactory, unsigned int hardwareAdapte
 			nullptr,
 			D3D_FEATURE_LEVEL_11_0,
 			__uuidof(ID3D12Device),
-			(void**)&m_pDevice
+			(void**)&m_pD3DDevice
 		));
 		pAdapter->Release();
 	}
@@ -49,7 +57,7 @@ void Device::Initialize(IDXGIAdapter* pAdapter)
 		pAdapter,
 		D3D_FEATURE_LEVEL_11_0,
 		__uuidof(ID3D12Device),
-		(void**)&m_pDevice
+		(void**)&m_pD3DDevice
 	));
 	Check4xMSAAQualitySupport();
 }
@@ -61,7 +69,7 @@ void Device::Check4xMSAAQualitySupport()
 	msQualityLevels.SampleCount = 4;
 	msQualityLevels.Flags = D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE;
 	msQualityLevels.NumQualityLevels = 0;
-	ThrowIfFailed(m_pDevice->CheckFeatureSupport(D3D12_FEATURE_MULTISAMPLE_QUALITY_LEVELS, &msQualityLevels, sizeof(msQualityLevels)));
+	ThrowIfFailed(m_pD3DDevice->CheckFeatureSupport(D3D12_FEATURE_MULTISAMPLE_QUALITY_LEVELS, &msQualityLevels, sizeof(msQualityLevels)));
 	m_4xMsaaQuality = msQualityLevels.NumQualityLevels;
 	assert(m_4xMsaaQuality > 0 && "Unexpected MSAA quality level.");
 	m_4xMsaaState = true;
@@ -69,9 +77,9 @@ void Device::Check4xMSAAQualitySupport()
 
 void Device::CleanUp()
 {
-	if (m_pDevice)
+	if (m_pD3DDevice)
 	{
-		m_pDevice->Release();
-		m_pDevice = nullptr;
+		m_pD3DDevice->Release();
+		m_pD3DDevice = nullptr;
 	}
 }

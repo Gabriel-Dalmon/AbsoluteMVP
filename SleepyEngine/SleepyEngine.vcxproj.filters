@@ -21,6 +21,7 @@
     <ClCompile Include="src\graphics\FrameResource.cpp" />
     <ClCompile Include="src\graphics\Window.cpp" />
     <ClCompile Include="src\graphics\Renderer.cpp" />
+    <ClCompile Include="src\graphics\CommandQueue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Collider.h" />
@@ -42,13 +43,14 @@
     <ClInclude Include="headers\ShaderReference.h" />
     <ClInclude Include="headers\MeshRenderer.h" />
     <ClInclude Include="headers\Script.h" />
-    <ClInclude Include="src\utils\d3dx12.h" />
+    <ClInclude Include="headers\d3dx12.h" />
     <ClInclude Include="headers\Graphics\SwapChain.h" />
     <ClInclude Include="headers\Graphics\Renderer.h" />
     <ClInclude Include="headers\Graphics\Device.h" />
     <ClInclude Include="headers\Graphics\FrameResource.h" />
     <ClInclude Include="headers\Graphics\Window.h" />
     <ClInclude Include="headers\Utils\Constants.h" />
+    <ClInclude Include="headers\Graphics\CommandQueue.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SleepyEngine.rc" />

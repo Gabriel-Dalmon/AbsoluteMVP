@@ -1,10 +1,15 @@
 #pragma once
 
-#include <windows.h>
+
+#ifndef _WINDEF_
+class HINSTANCE__; // Forward or never
+typedef HINSTANCE__* HINSTANCE;
+#endif
 
 class Device;
 class SwapChain;
 class Window;
+class CommandQueue;
 class IDXGIFactory4;
 class ID3D12RootSignature;
 
@@ -15,6 +20,7 @@ public:
 	~Renderer();
 
 	void Initialize(HINSTANCE hInstance, int windowWidth, int windowHeight);
+	void BuildRootSignature();
 	void RenderFrame();
 	void CleanUp();
 
@@ -26,6 +32,6 @@ private:
 	SwapChain* m_pSwapChain = nullptr;
 	ID3D12RootSignature* m_pRootSignature = nullptr;
 
-	ID3D12CommandQueue* m_pCommandQueue = nullptr;
+	CommandQueue* m_pCommandQueue = nullptr;
 	ID3D12GraphicsCommandList* m_pCommandList = nullptr;
 };
