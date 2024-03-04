@@ -8,6 +8,7 @@ public:
 	~ColliderOBB();
 
 	void Init();
+	void Orient(XMVECTOR quat);
 
 	BoundingOrientedBox m_box;
 };

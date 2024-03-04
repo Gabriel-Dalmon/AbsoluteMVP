@@ -9,6 +9,8 @@ public:
 	// INIT
 	void Init(Mesh* mesh);
 
+	Mesh* GetMesh();
+
 private:
 	Mesh* m_pMesh = nullptr;
 };

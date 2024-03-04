@@ -9,3 +9,8 @@ void MeshRenderer::Init(Mesh* mesh)
 {
 	m_pMesh = mesh;
 }
+
+Mesh* MeshRenderer::GetMesh() 
+{
+	return m_pMesh;
+};
