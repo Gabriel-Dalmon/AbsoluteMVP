@@ -5,6 +5,7 @@
 #include "Utils/HResultException.h"
 #include <comdef.h>
 #include <iostream>
+#include <windowsx.h>
 
 // I don't know where to put them
 #include "Input.h"
@@ -232,6 +233,7 @@ int SleepyEngine::Initialize()
         RegisterWindowClass();
         InitWindow(SW_SHOW);
         InitD3D();
+        m_Camera.SetPosition(0.0f, 0.0f, 0.0f);
     }
     catch (HResultException error)
     {
@@ -247,6 +249,7 @@ int SleepyEngine::Initialize()
         }
         return 1;
     }
+    m_App = this;
     return 0;
 }
 
@@ -354,7 +357,18 @@ void SleepyEngine::InitWindow(int nCmdShow)
 
 }
 
+SleepyEngine* SleepyEngine::m_App = nullptr;
+SleepyEngine* SleepyEngine::GetApp()
+{
+    return m_App;
+}
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    return SleepyEngine::GetApp()->MsgProc(hWnd, message, wParam, lParam);
+}
+
+LRESULT SleepyEngine::MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
@@ -386,6 +400,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
+    case WM_LBUTTONDOWN:
+    case WM_MBUTTONDOWN:
+    case WM_RBUTTONDOWN:
+        OnMouseDown(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+        return 0;
+    case WM_LBUTTONUP:
+    case WM_MBUTTONUP:
+    case WM_RBUTTONUP:
+        OnMouseUp(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+        return 0;
+    case WM_MOUSEMOVE:
+        OnMouseMove(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+        return 0;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
@@ -473,4 +500,33 @@ void SleepyEngine::Draw()//const GameTimer& gt)
     // inefficient and is done for simplicity. Later we will show how to 
     // organize our rendering code so we do not have to wait per frame.
     FlushCommandQueue();
+}
+
+void SleepyEngine::OnMouseDown(WPARAM btnState, int x, int y)
+{
+    m_LastMousePos.x = x;
+    m_LastMousePos.y = y;
+
+    SetCapture(mhMainWnd);
+}
+
+void SleepyEngine::OnMouseUp(WPARAM btnState, int x, int y)
+{
+    ReleaseCapture();
+}
+
+void SleepyEngine::OnMouseMove(WPARAM btnState, int x, int y)
+{
+    if ((btnState & MK_LBUTTON) != 0)
+    {
+        // Make each pixel correspond to a quarter of a degree.
+        float dx = DirectX::XMConvertToRadians(0.25f * static_cast<float>(x - m_LastMousePos.x));
+        float dy = DirectX::XMConvertToRadians(0.25f * static_cast<float>(y - m_LastMousePos.y));
+
+        m_Camera.Pitch(dy);
+        m_Camera.RotateY(dx);
+    }
+
+    m_LastMousePos.x = x;
+    m_LastMousePos.y = y;
 }

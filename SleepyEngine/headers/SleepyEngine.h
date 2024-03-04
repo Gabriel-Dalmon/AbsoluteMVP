@@ -6,11 +6,13 @@
 #include <wrl.h> //ComPtr
 #include <dxgi1_4.h>
 #include "../src/utils/d3dx12.h"
+#include "Camera.h"
 
 #include <d3d12.h>
 #include <cassert>
 
 #include <DirectXColors.h>
+#include <directxmath.h>
 
 #include <DXGI.h>
 
@@ -23,9 +25,16 @@ public:
     SleepyEngine(HINSTANCE hInstance);
     int Initialize();
     int Run();
+
+    LRESULT MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+    static SleepyEngine* GetApp();
 private:
     void InitWindow(int nCmdShow);
     ATOM RegisterWindowClass();
+
+    void OnMouseDown(WPARAM btnState, int x, int y);
+    void OnMouseUp(WPARAM btnState, int x, int y);
+    void OnMouseMove(WPARAM btnState, int x, int y);
 
     // D3DX12 Initialization
     void InitD3D();
@@ -70,6 +79,8 @@ private:
 
     D3D12_VIEWPORT* m_pViewPort = new D3D12_VIEWPORT();
 
+    Camera m_Camera;
+
     UINT m_4xMsaaQuality = 0;
     bool m_4xMsaaState = false;
 
@@ -90,4 +101,8 @@ private:
 
     HWND mhMainWnd = nullptr;
     HINSTANCE m_hAppInstance = nullptr;
+
+    POINT m_LastMousePos;
+
+    static SleepyEngine* m_App;
 };

@@ -12,6 +12,7 @@ class Mesh;
 
 // WINDOWS
 #include <Windows.h>
+#include <windowsx.h>
 #include <wrl.h>
 #ifdef _DEBUG
 	#include <crtdbg.h>
