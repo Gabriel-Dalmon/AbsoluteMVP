@@ -83,8 +83,8 @@ private:
     IDXGISwapChain* m_pSwapChain = nullptr;
     ID3D12Resource* m_pSwapChainBuffer[SWAP_CHAIN_BUFFER_COUNT] = {nullptr, nullptr};
 
-    int m_clientWidth = 200;
-    int m_clientHeight = 200;
+    int m_clientWidth = 640;
+    int m_clientHeight = 480;
 
     tagRECT m_scissorRect;
 

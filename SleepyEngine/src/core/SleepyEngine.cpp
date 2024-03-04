@@ -259,7 +259,7 @@ int SleepyEngine::Run()
 
     HACCEL hAccelTable = LoadAccelerators(m_hAppInstance, MAKEINTRESOURCE(IDC_SLEEPYENGINE));
 
-    MSG msg;
+    MSG msg = { 0 };
 
     Input input = Input();
     input.Init();
@@ -268,7 +268,7 @@ int SleepyEngine::Run()
 
     //Draw();
     // Main message loop:
-    while (GetMessage(&msg, nullptr, 0, 0))
+    while (msg.message != WM_QUIT)
     {
         if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
         {
@@ -278,9 +278,10 @@ int SleepyEngine::Run()
             DispatchMessage(&msg);
         }
         else {
+            timer.UpdateTimer();
+
             input.Update();
 
-            timer.UpdateTimer();
             timer.UpdateFPS(mhMainWnd);
 
             Draw();
@@ -441,7 +442,7 @@ void SleepyEngine::Draw()//const GameTimer& gt)
     // Clear the back buffer and depth buffer.
     m_pCommandList->ClearRenderTargetView(
         GetCurrentBackBufferView(),
-        DirectX::Colors::DarkRed, 0, nullptr
+        DirectX::Colors::LightSteelBlue, 0, nullptr
     );
 
     m_pCommandList->ClearDepthStencilView(
