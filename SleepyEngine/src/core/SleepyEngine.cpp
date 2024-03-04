@@ -1,13 +1,12 @@
 // SleepyEngine.cpp : Defines the entry point for the application.
 //
-//#include "pch.h"
+#include "pch.h"
+
 #include "SleepyEngine.h"
 #include "Utils/HResultException.h"
 #include "Mesh.h"
 #include "PSO.h"
 #include "Shader.h"
-#include <comdef.h>
-#include <iostream>
 
 // Forward declarations of functions included in this code module:
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -372,8 +371,14 @@ int SleepyEngine::Run()
         shader.m_pSerializedRootSig->GetBufferSize(),
         IID_PPV_ARGS(&m_pRootSignature))
     );
-    shader.CompileVS(L"C:\\Users\\vgautier\\source\\repos\\yoannklt\\Sleepy\\SleepyEngine\\src\\shaders\\Shader.hlsl");
-    shader.CompilePS(L"C:\\Users\\vgautier\\source\\repos\\yoannklt\\Sleepy\\SleepyEngine\\src\\shaders\\Shader.hlsl");
+
+#if defined (DEBUG) || (_DEBUG)
+    shader.CompileVS(L"../SleepyEngine/src/shaders/Shader.hlsl");
+    shader.CompilePS(L"../SleepyEngine/src/shaders/Shader.hlsl");
+#else
+    shader.CompileVS(L"Shaders/Shader.hlsl");
+    shader.CompilePS(L"Shaders/Shader.hlsl");
+#endif
 
     m_PSO = InitPSO(shader.m_pInputLayout, m_pRootSignature, shader.m_pVSByteCode, shader.m_pPSByteCode, m_backBufferFormat, false, 0,
         DXGI_FORMAT_D24_UNORM_S8_UINT, m_pDevice, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);

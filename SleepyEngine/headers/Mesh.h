@@ -1,22 +1,16 @@
 #pragma once
 
-#include <DirectXMath.h>
-#include <d3d12.h>
-#include <unordered_map>
-
 #include "Component.h"
-#include "Transform.h"
 
-using namespace DirectX;
 
 struct Vertex
 {
-	XMFLOAT3 Pos;
-	XMFLOAT4 Color;
+	DirectX::XMFLOAT3 Pos;
+	DirectX::XMFLOAT4 Color;
 };
 
 
-class Mesh : Component
+class Mesh : public Component
 {
 public:
 	Mesh();
@@ -24,7 +18,7 @@ public:
 
 	void Init(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, std::vector<Vertex>* vertices, std::vector<int>* indices);
 
-	char* name;
+	char* m_pName;
 
 	std::vector<Vertex>* m_CPUVertexBuffer;
 	std::vector<int>* m_CPUIndexBuffer;
@@ -44,8 +38,6 @@ public:
 
 	D3D12_VERTEX_BUFFER_VIEW VertexBufferView()const;
 	D3D12_INDEX_BUFFER_VIEW IndexBufferView()const;
-
-	Transform transform;
 	
 
 	// Physic stuff below, letting it in comment to treat it later

@@ -125,6 +125,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -154,15 +156,19 @@
     <ClInclude Include="headers\ShaderReference.h" />
     <ClInclude Include="headers\MeshRenderer.h" />
     <ClInclude Include="headers\Script.h" />
+    <ClInclude Include="headers\Pause.h" />
+    <ClInclude Include="headers\Menu.h" />
     <ClInclude Include="src\utils\d3dx12.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\GameStates\Pause.cpp" />
+    <ClCompile Include="src\GameStates\Menu.cpp" />
     <ClCompile Include="src\components\Collider.cpp" />
     <ClCompile Include="src\components\MeshRenderer.cpp" />
     <ClCompile Include="src\components\Script.cpp" />
     <ClCompile Include="src\components\Component.cpp" />
     <ClCompile Include="src\components\ShaderReference.cpp" />
-    <ClCompile Include="src\core\GameState.cpp" />
+    <ClCompile Include="src\GameStates\GameState.cpp" />
     <ClCompile Include="src\components\Mesh.cpp" />
     <ClCompile Include="src\core\Entity.cpp" />
     <ClCompile Include="src\core\PSO.cpp" />

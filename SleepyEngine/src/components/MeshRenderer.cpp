@@ -5,7 +5,7 @@ MeshRenderer::MeshRenderer()
 {
 }
 
-void MeshRenderer::Init()
+void MeshRenderer::Init(Mesh* mesh)
 {
-
+	m_pMesh = mesh;
 }

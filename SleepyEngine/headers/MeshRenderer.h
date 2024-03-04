@@ -7,7 +7,7 @@ public:
 	~MeshRenderer() {};
 
 	// INIT
-	void Init();
+	void Init(Mesh* mesh);
 
 private:
 	Mesh* m_pMesh = nullptr;

@@ -1,7 +1,4 @@
 #pragma once
-#include "pch.h"
-
-using namespace DirectX;
 
 class Transform 
 {

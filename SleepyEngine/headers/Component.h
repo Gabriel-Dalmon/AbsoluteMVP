@@ -18,6 +18,6 @@ public:
 
 
 private:
-	Entity* m_pEntity; 
+	Entity* m_pEntity = nullptr; 
 };
 
