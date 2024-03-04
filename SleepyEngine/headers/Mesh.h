@@ -2,11 +2,10 @@
 
 #include "Component.h"
 
-
 struct Vertex
 {
-	DirectX::XMFLOAT3 Pos;
-	DirectX::XMFLOAT4 Color;
+	XMFLOAT3 Pos;
+	XMFLOAT4 Color;
 };
 
 
@@ -41,5 +40,5 @@ public:
 	
 
 	// Physic stuff below, letting it in comment to treat it later
-	//DirectX::BoundingBox Bounds;
+	// DirectX::BoundingBox Bounds;
 };

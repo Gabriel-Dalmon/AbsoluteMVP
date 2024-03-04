@@ -20,7 +20,7 @@ public:
 	virtual void Exit();
 
 	// Entities
-	void AddEntity(Entity* entity);
+	void AddEntity(Entity* entity); 
 	void RemoveEntity(Entity* entity);
 	bool CheckEntity(Entity* entity);
 	
