@@ -3,11 +3,13 @@
 //#include "pch.h"
 #include "SleepyEngine.h"
 #include "Utils/HResultException.h"
-#include "Mesh.h"
 #include "PSO.h"
 #include "Shader.h"
 #include <comdef.h>
 #include <iostream>
+#include <array>
+#include "Mesh.h"
+
 
 // Forward declarations of functions included in this code module:
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -38,6 +40,7 @@ void SleepyEngine::InitD3D()
     SetScissorRect();
     BuildDescriptorHeaps();
     BuildConstantBuffers();
+    BuildBoxGeometry();
 }
 void SleepyEngine::EnableAdditionalD3D12Debug()
 {
@@ -281,12 +284,84 @@ void SleepyEngine::BuildConstantBuffers()
 
 }
 
+void SleepyEngine::BuildBoxGeometry()
+{
+    std::array<float, 5> testvar = { 1.f,1.f ,1.f ,1.f ,1.f };
+    std::array<Vertex, 8> vertices =
+    {
+        Vertex({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::White) }),
+        Vertex({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Black) }),
+        Vertex({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Red) }),
+        Vertex({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Green) }),
+        Vertex({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Blue) }),
+        Vertex({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Yellow) }),
+        Vertex({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Cyan) }),
+        Vertex({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Magenta) })
+    };
+
+    std::array<std::uint16_t, 36> indices =
+    {
+        // front face
+        0, 1, 2,
+        0, 2, 3,
+
+        // back face
+        4, 6, 5,
+        4, 7, 6,
+
+        // left face
+        4, 5, 1,
+        4, 1, 0,
+
+        // right face
+        3, 2, 6,
+        3, 6, 7,
+
+        // top face
+        1, 5, 6,
+        1, 6, 2,
+
+        // bottom face
+        4, 0, 3,
+        4, 3, 7
+    };
+
+    const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
+    const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
+
+    mBoxGeo = std::make_unique<MeshGeometry>();
+    mBoxGeo->Name = "boxGeo";
+
+    ThrowIfFailed(D3DCreateBlob(vbByteSize, &mBoxGeo->VertexBufferCPU));
+    CopyMemory(mBoxGeo->VertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
+
+    ThrowIfFailed(D3DCreateBlob(ibByteSize, &mBoxGeo->IndexBufferCPU));
+    CopyMemory(mBoxGeo->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
+
+    mBoxGeo->VertexBufferGPU = D3DUtils::CreateDefaultBufferWRL(m_pDevice,
+        m_pCommandList, vertices.data(), vbByteSize, mBoxGeo->VertexBufferUploader);
+
+    mBoxGeo->IndexBufferGPU = D3DUtils::CreateDefaultBufferWRL(m_pDevice,
+        m_pCommandList, indices.data(), ibByteSize, mBoxGeo->IndexBufferUploader);
+
+    mBoxGeo->VertexByteStride = sizeof(Vertex);
+    mBoxGeo->VertexBufferByteSize = vbByteSize;
+    mBoxGeo->IndexFormat = DXGI_FORMAT_R16_UINT;
+    mBoxGeo->IndexBufferByteSize = ibByteSize;
+
+    SubmeshGeometry submesh;
+    submesh.IndexCount = (UINT)indices.size();
+    submesh.StartIndexLocation = 0;
+    submesh.BaseVertexLocation = 0;
+
+    mBoxGeo->DrawArgs["box"] = submesh;
+}
+
 int SleepyEngine::Run()
 {
     HACCEL hAccelTable = LoadAccelerators(m_hAppInstance, MAKEINTRESOURCE(IDC_SLEEPYENGINE));
 
-    MSG msg;
-
+    /*
     //create 2 blobs
     //call the 2 shaders (vs & ps) to store shaders in blobs
     //root signature ?
@@ -332,7 +407,8 @@ int SleepyEngine::Run()
 
     Mesh mesh;
     mesh.Init(m_pDevice, m_pCommandList, &vertices, &indices);
-
+    mesh.name = (char*)"boxGeo";
+    */
     D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDesc;
     cbvHeapDesc.NumDescriptors = 1;
     cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
@@ -341,6 +417,10 @@ int SleepyEngine::Run()
 
     m_pDevice->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(&m_pCbvHeap));
 
+    /*
+    XMMATRIX P = XMMatrixPerspectiveFovLH(0.25f * MathHelper::Pi, static_cast<float>(m_clientWidth) / m_clientHeight, 1.0f, 1000.0f);
+    XMStoreFloat4x4(&mProj, P);
+    
     // Convert Spherical to Cartesian coordinates.
     float x = mRadius * sinf(mPhi) * cosf(mTheta);
     float z = mRadius * sinf(mPhi) * sinf(mTheta);
@@ -362,7 +442,7 @@ int SleepyEngine::Run()
     ObjectConstants objConstants;
     XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
     m_pObjectCB->CopyData(0, objConstants);
-
+    */
 
     Shader shader;
     shader.Init();
@@ -372,8 +452,8 @@ int SleepyEngine::Run()
         shader.m_pSerializedRootSig->GetBufferSize(),
         IID_PPV_ARGS(&m_pRootSignature))
     );
-    shader.CompileVS(L"C:\\Users\\gabri\\source\\repos\\yoannklt\\Sleepy\\SleepyEngine\\src\\shaders\\Shader.hlsl");
-    shader.CompilePS(L"C:\\Users\\gabri\\source\\repos\\yoannklt\\Sleepy\\SleepyEngine\\src\\shaders\\Shader.hlsl");
+    shader.CompileVS(L"C:\\Users\\gdalmon\\source\\repos\\yoannklt\\Sleepy\\SleepyEngine\\src\\shaders\\shader.hlsl");
+    shader.CompilePS(L"C:\\Users\\gdalmon\\source\\repos\\yoannklt\\Sleepy\\SleepyEngine\\src\\shaders\\shader.hlsl");
 
     m_PSO = InitPSO(shader.m_pInputLayout, m_pRootSignature, shader.m_pVSByteCode, shader.m_pPSByteCode, m_backBufferFormat, false, 0,
         DXGI_FORMAT_D24_UNORM_S8_UINT, m_pDevice, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
@@ -382,9 +462,9 @@ int SleepyEngine::Run()
     ID3D12CommandList* cmdsLists[] = { m_pCommandList };
     m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
     FlushCommandQueue();
-
+    MSG msg = { 0 };
     // Main message loop:
-    while (GetMessage(&msg, nullptr, 0, 0))
+    while (msg.message != WM_QUIT)
     {
         if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
         {
@@ -400,6 +480,31 @@ int SleepyEngine::Run()
         
     }
     return (int)msg.wParam;
+}
+
+void SleepyEngine::Update()
+{
+    // Convert Spherical to Cartesian coordinates.
+    float x = mRadius * sinf(mPhi) * cosf(mTheta);
+    float z = mRadius * sinf(mPhi) * sinf(mTheta);
+    float y = mRadius * cosf(mPhi);
+
+    // Build the view matrix.
+    XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);
+    XMVECTOR target = XMVectorZero();
+    XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+
+    XMMATRIX view = XMMatrixLookAtLH(pos, target, up);
+    XMStoreFloat4x4(&mView, view);
+
+    XMMATRIX world = XMLoadFloat4x4(&mWorld);
+    XMMATRIX proj = XMLoadFloat4x4(&mProj);
+    XMMATRIX worldViewProj = world * view * proj;
+
+    // Update the constant buffer with the latest worldViewProj matrix.
+    ObjectConstants objConstants;
+    XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
+    m_pObjectCB->CopyData(0, objConstants);
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE SleepyEngine::GetCurrentBackBufferView()const
@@ -521,7 +626,6 @@ void SleepyEngine::FlushCommandQueue()
 void SleepyEngine::Draw()//const GameTimer& gt)
 {
 
-
     // Reuse the memory associated with command recording.
     // We can only reset when the associated command lists have finished
     // execution on the GPU.
@@ -536,8 +640,6 @@ void SleepyEngine::Draw()//const GameTimer& gt)
         D3D12_RESOURCE_STATE_PRESENT,
         D3D12_RESOURCE_STATE_RENDER_TARGET
     );
-
-    
 
     // Indicate a state transition on the resource usage.
     m_pCommandList->ResourceBarrier(1, &resourceBarrier);
@@ -584,6 +686,7 @@ void SleepyEngine::Draw()//const GameTimer& gt)
 //void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, ID3D12RootSignature* pRootSignature, Mesh* mesh)
 void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, Mesh* mesh)
 {
+    std::cout << "Drawing" << std::endl;
     CD3DX12_RESOURCE_BARRIER barrier;
 
     barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
@@ -607,8 +710,8 @@ void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, Mesh* mesh)
 
     m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
 
-    D3D12_VERTEX_BUFFER_VIEW vertexBufferView = mesh->VertexBufferView();
-    D3D12_INDEX_BUFFER_VIEW indexBufferView = mesh->IndexBufferView();
+    D3D12_VERTEX_BUFFER_VIEW vertexBufferView = mBoxGeo->VertexBufferView();//mesh->VertexBufferView();
+    D3D12_INDEX_BUFFER_VIEW indexBufferView = mBoxGeo->IndexBufferView();// mesh->IndexBufferView();
 
     m_pCommandList->IASetVertexBuffers(0, 1, &vertexBufferView);
     m_pCommandList->IASetIndexBuffer(&indexBufferView);
@@ -619,11 +722,10 @@ void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, Mesh* mesh)
 
     /* the following code is the one that comse from the book
     * we would like to iterate in the submesh if we had one, maybe later
-    *pCommandList->DrawIndexedInstanced(
-    *	mesh->DrawArgs["box"].IndexCount,
-    *	1, 0, 0, 0);*/
+    */
 
-    m_pCommandList->DrawIndexedInstanced(mesh->m_indexCount, 1, 0, 0, 0);
+    //m_pCommandList->DrawIndexedInstanced(mesh->m_indexCount, 1, 0, 0, 0);
+    m_pCommandList->DrawIndexedInstanced(mBoxGeo->DrawArgs["box"].IndexCount, 1, 0, 0, 0);
 
     barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
     m_pCommandList->ResourceBarrier(1, &barrier);

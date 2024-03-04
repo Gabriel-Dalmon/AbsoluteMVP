@@ -32,12 +32,12 @@ ID3D12PipelineState* InitPSO(std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout,
 	descriptor.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 	descriptor.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 	descriptor.SampleMask = UINT_MAX;
-	descriptor.PrimitiveTopologyType = topologyType;
+	descriptor.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	descriptor.NumRenderTargets = 1;
 	descriptor.RTVFormats[0] = backBufferFormat;
 	descriptor.SampleDesc.Count = m4xMsaaState ? 4 : 1;
 	descriptor.SampleDesc.Quality = m4xMsaaState ? (m4xMsaaQuality - 1) : 0;
-	descriptor.DSVFormat = depthStencilFormat;
+	descriptor.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 	ID3D12PipelineState* PSO;
 	device->CreateGraphicsPipelineState(&descriptor, IID_PPV_ARGS(&PSO));

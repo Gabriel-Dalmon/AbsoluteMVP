@@ -16,7 +16,8 @@
 
 #include "MathHelper.h"
 #include "UploadBuffer.h"
-
+#include "MeshGeo.h"
+#include <memory>
 
 #define MAX_LOADSTRING 100
 #define SWAP_CHAIN_BUFFER_COUNT 2
@@ -60,6 +61,9 @@ private:
     void SetScissorRect();
     void BuildDescriptorHeaps();
     void BuildConstantBuffers();
+    void BuildBoxGeometry();
+    void Update();
+
 
     void FlushCommandQueue();
     void Draw();
@@ -119,4 +123,6 @@ private:
     float mTheta = 1.5f * DirectX::XM_PI;
     float mPhi = DirectX::XM_PIDIV4;
     float mRadius = 5.0f;
+
+    std::unique_ptr<MeshGeometry> mBoxGeo = nullptr;
 };
