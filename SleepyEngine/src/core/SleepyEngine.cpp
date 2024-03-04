@@ -267,6 +267,7 @@ int SleepyEngine::Run()
     {
         input.Update();
         timer.UpdateTimer();
+        timer.UpdateFPS(mhMainWnd);
         if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
         {
         /*if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
