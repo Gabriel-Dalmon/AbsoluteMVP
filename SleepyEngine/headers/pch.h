@@ -13,6 +13,9 @@ class Mesh;
 // WINDOWS
 #include <Windows.h>
 #include <wrl.h>
+#ifdef _DEBUG
+	#include <crtdbg.h>
+#endif
 
 // STD
 #include <string>

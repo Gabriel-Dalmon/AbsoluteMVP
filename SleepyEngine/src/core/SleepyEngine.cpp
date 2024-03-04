@@ -252,6 +252,11 @@ int SleepyEngine::Initialize()
 
 int SleepyEngine::Run()
 {
+    #ifdef _DEBUG
+        _CrtMemState memStateInit;
+        _CrtMemCheckpoint(&memStateInit);
+    #endif
+
     HACCEL hAccelTable = LoadAccelerators(m_hAppInstance, MAKEINTRESOURCE(IDC_SLEEPYENGINE));
 
     MSG msg;
@@ -265,9 +270,6 @@ int SleepyEngine::Run()
     // Main message loop:
     while (GetMessage(&msg, nullptr, 0, 0))
     {
-        input.Update();
-        timer.UpdateTimer();
-        timer.UpdateFPS(mhMainWnd);
         if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
         {
         /*if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
@@ -276,10 +278,23 @@ int SleepyEngine::Run()
             DispatchMessage(&msg);
         }
         else {
+            input.Update();
+
+            timer.UpdateTimer();
+            timer.UpdateFPS(mhMainWnd);
+
             Draw();
         }
         
     }
+    #ifdef _DEBUG
+        _CrtMemState memStateEnd, memStateDiff;
+        _CrtMemCheckpoint(&memStateEnd);
+        if (_CrtMemDifference(&memStateDiff, &memStateInit, &memStateEnd))
+        {
+            MessageBoxA(NULL, "MEMORY LEAKS", "DISCLAIMER", 0);
+        }
+    #endif 
     return (int)msg.wParam;
 }
 
