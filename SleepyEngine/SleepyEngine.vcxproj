@@ -137,6 +137,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="headers\Collider.h" />
+    <ClInclude Include="headers\ColliderOBB.h" />
+    <ClInclude Include="headers\ColliderSphere.h" />
     <ClInclude Include="headers\GameState.h" />
     <ClInclude Include="headers\Component.h" />
     <ClInclude Include="headers\D3DUtils.h" />
@@ -164,6 +166,8 @@
     <ClCompile Include="src\GameStates\Pause.cpp" />
     <ClCompile Include="src\GameStates\Menu.cpp" />
     <ClCompile Include="src\components\Collider.cpp" />
+    <ClCompile Include="src\components\ColliderOBB.cpp" />
+    <ClCompile Include="src\components\ColliderSphere.cpp" />
     <ClCompile Include="src\components\MeshRenderer.cpp" />
     <ClCompile Include="src\components\Script.cpp" />
     <ClCompile Include="src\components\Component.cpp" />
