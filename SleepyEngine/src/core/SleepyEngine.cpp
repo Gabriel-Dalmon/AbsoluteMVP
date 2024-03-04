@@ -293,7 +293,7 @@ int SleepyEngine::Run()
         _CrtMemCheckpoint(&memStateEnd);
         if (_CrtMemDifference(&memStateDiff, &memStateInit, &memStateEnd))
         {
-            MessageBoxA(NULL, "MEMORY LEAKS", "DISCLAIMER", 0);
+            MessageBoxA(NULL, "One or multiple memory leaks have been detected during execution!", "Warning", MB_ICONWARNING | MB_OK);
         }
     #endif 
     return (int)msg.wParam;
