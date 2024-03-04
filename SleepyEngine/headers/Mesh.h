@@ -5,6 +5,7 @@
 #include <unordered_map>
 
 #include "Component.h"
+#include "Transform.h"
 
 using namespace DirectX;
 
