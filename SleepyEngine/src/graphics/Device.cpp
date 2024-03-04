@@ -1,36 +1,70 @@
 #include "Graphics/Device.h"
 
+#include "Utils/Constants.h"
 #include "Utils/HResultException.h"
 
 #include <dxgi1_4.h>
 #include <d3d12.h>
 
-void Device::Initialize(IDXGIAdapter1* pHardwareAdapter)
+void Device::Initialize(IDXGIFactory4* pDgxiFactory, unsigned int hardwareAdapterIndex)
 {
+	// Recover the hardware adapter
+	IDXGIAdapter* pAdapter = nullptr;
+	if (pDgxiFactory != nullptr)
+	{
+		ThrowIfFailed(pDgxiFactory->EnumAdapters(hardwareAdapterIndex, &pAdapter));
+	}
+
 	// Create device
 	HRESULT hardwareResult = D3D12CreateDevice(
-		pHardwareAdapter,
+		pAdapter,
 		D3D_FEATURE_LEVEL_11_0, 
 		__uuidof(ID3D12Device), 
 		(void**)&m_pDevice
 	);
+	pAdapter->Release();
 
-	if (FAILED(hardwareResult))
+	// Create a device from a WARP adapter if device creation failed with harware adapter
+	if (FAILED(hardwareResult)) 
 	{
-		IDXGIAdapter* pWarpAdapter;
-		ThrowIfFailed(m_pDxgiFactory->EnumWarpAdapter(IID_PPV_
-			ARGS(&pWarpAdapter)));
-		// If the initialization fails, try to create WARP device
+		#if defined(DEBUG) || defined(_DEBUG)		
+		OutputDebugStringA("Failed to create device with hardware adapter. Creating device with WARP adapter.\n");
+		#endif // DEBUG
+
+		ThrowIfFailed(pDgxiFactory->EnumWarpAdapter(__uuidof(IDXGIAdapter),(void**)&pAdapter));
 		ThrowIfFailed(D3D12CreateDevice(
 			nullptr,
 			D3D_FEATURE_LEVEL_11_0,
 			__uuidof(ID3D12Device),
 			(void**)&m_pDevice
 		));
+		pAdapter->Release();
 	}
+	Check4xMSAAQualitySupport();
+}
 
-	// Create device from WARP 
+void Device::Initialize(IDXGIAdapter* pAdapter)
+{
+	ThrowIfFailed(D3D12CreateDevice(
+		pAdapter,
+		D3D_FEATURE_LEVEL_11_0,
+		__uuidof(ID3D12Device),
+		(void**)&m_pDevice
+	));
+	Check4xMSAAQualitySupport();
+}
 
+void Device::Check4xMSAAQualitySupport()
+{
+	D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS msQualityLevels;
+	msQualityLevels.Format = BACK_BUFFER_FORMAT;
+	msQualityLevels.SampleCount = 4;
+	msQualityLevels.Flags = D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE;
+	msQualityLevels.NumQualityLevels = 0;
+	ThrowIfFailed(m_pDevice->CheckFeatureSupport(D3D12_FEATURE_MULTISAMPLE_QUALITY_LEVELS, &msQualityLevels, sizeof(msQualityLevels)));
+	m_4xMsaaQuality = msQualityLevels.NumQualityLevels;
+	assert(m_4xMsaaQuality > 0 && "Unexpected MSAA quality level.");
+	m_4xMsaaState = true;
 }
 
 void Device::CleanUp()

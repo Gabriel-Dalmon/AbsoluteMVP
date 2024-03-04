@@ -33,7 +33,7 @@ private:
     void CreateDevice();
     void CreateFence();
     void RecoverDescriptorsSize();
-    void Check4xMSAAQualitySupport();
+    void Check4xMSAAQualitySupportOld();
     void CreateCommandObjects();
     void CreateSwapChain();
     void CreateDescriptorHeaps();

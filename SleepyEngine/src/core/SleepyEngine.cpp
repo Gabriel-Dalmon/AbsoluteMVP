@@ -29,7 +29,7 @@ void SleepyEngine::InitD3D()
     CreateDevice();
     CreateFence();
     RecoverDescriptorsSize();
-    Check4xMSAAQualitySupport();
+    Check4xMSAAQualitySupportOld();
     CreateCommandObjects();
     CreateSwapChain();
     CreateDescriptorHeaps();
@@ -82,9 +82,9 @@ void SleepyEngine::RecoverDescriptorsSize()
     m_cbvSrvUavDescriptorSize = m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 }
 
-void SleepyEngine::Check4xMSAAQualitySupport()
+void SleepyEngine::Check4xMSAAQualitySupportOld()
 {
-    D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS msQualityLevels; //will likely be moved to private member attribute
+    D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS msQualityLevels;
     msQualityLevels.Format = m_backBufferFormat;
     msQualityLevels.SampleCount = 4;
     msQualityLevels.Flags = D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE;

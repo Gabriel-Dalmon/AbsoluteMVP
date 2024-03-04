@@ -25,4 +25,7 @@ private:
 	Device* m_pDevice = nullptr;
 	SwapChain* m_pSwapChain = nullptr;
 	ID3D12RootSignature* m_pRootSignature = nullptr;
+
+	ID3D12CommandQueue* m_pCommandQueue = nullptr;
+	ID3D12GraphicsCommandList* m_pCommandList = nullptr;
 };

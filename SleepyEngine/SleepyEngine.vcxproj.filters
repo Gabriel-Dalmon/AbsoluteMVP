@@ -48,6 +48,7 @@
     <ClInclude Include="headers\Graphics\Device.h" />
     <ClInclude Include="headers\Graphics\FrameResource.h" />
     <ClInclude Include="headers\Graphics\Window.h" />
+    <ClInclude Include="headers\Utils\Constants.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SleepyEngine.rc" />

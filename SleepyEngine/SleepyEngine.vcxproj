@@ -157,6 +157,7 @@
     <ClInclude Include="headers\targetver.h" />
     <ClInclude Include="headers\Timer.h" />
     <ClInclude Include="headers\Transform.h" />
+    <ClInclude Include="headers\Utils\Constants.h" />
     <ClInclude Include="headers\Utils\HResultException.h" />
     <ClInclude Include="headers\ShaderReference.h" />
     <ClInclude Include="headers\MeshRenderer.h" />

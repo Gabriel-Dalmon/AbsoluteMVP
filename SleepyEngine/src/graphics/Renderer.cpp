@@ -34,6 +34,10 @@ void Renderer::Initialize(HINSTANCE hInstance, int windowWidth, int windowHeight
 	}
 }
 
+void Renderer::RenderFrame()
+{
+}
+
 void Renderer::CleanUp()
 {
 	m_pSwapChain->CleanUp();
