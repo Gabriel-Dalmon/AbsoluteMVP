@@ -116,6 +116,9 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -143,6 +146,8 @@
     <ClInclude Include="headers\Component.h" />
     <ClInclude Include="headers\D3DUtils.h" />
     <ClInclude Include="headers\Entity.h" />
+    <ClInclude Include="headers\framework.h" />
+    <ClInclude Include="headers\Input.h" />
     <ClInclude Include="headers\MathHelper.h" />
     <ClInclude Include="headers\Mesh.h" />
     <ClInclude Include="headers\pch.h" />
@@ -151,6 +156,7 @@
     <ClInclude Include="headers\Shader.h" />
     <ClInclude Include="headers\SleepyEngine.h" />
     <ClInclude Include="headers\targetver.h" />
+    <ClInclude Include="headers\Timer.h" />
     <ClInclude Include="headers\Transform.h" />
     <ClInclude Include="headers\d3dx12.h" />
     <ClInclude Include="headers\UploadBuffer.h" />
@@ -176,7 +182,9 @@
     <ClCompile Include="src\components\Mesh.cpp" />
     <ClCompile Include="src\core\Entity.cpp" />
     <ClCompile Include="src\core\PSO.cpp" />
+    <ClCompile Include="src\core\Input.cpp" />
     <ClCompile Include="src\core\SleepyEngine.cpp" />
+    <ClCompile Include="src\core\Timer.cpp" />
     <ClCompile Include="src\core\Transform.cpp" />
     <ClCompile Include="src\shaders\Shader.cpp" />
     <ClCompile Include="src\utils\D3DUtils.cpp" />
@@ -184,7 +192,7 @@
     <ClCompile Include="src\utils\MathHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="src\shaders\Shader.hlsl">
+    <Text Include="src\shaders\Color.hlsl">
       <FileType>Document</FileType>
     </Text>
   </ItemGroup>

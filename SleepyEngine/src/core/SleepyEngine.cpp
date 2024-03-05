@@ -8,10 +8,15 @@
 #include "PSO.h"
 #include "Shader.h"
 
+// I don't know where to put them
+#include "Input.h"
+#include "Timer.h"
+
+// Global Variables:
+
 // Forward declarations of functions included in this code module:
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
-
 
 SleepyEngine::SleepyEngine(HINSTANCE hInstance)
 {
@@ -38,6 +43,7 @@ void SleepyEngine::InitD3D()
     BuildDescriptorHeaps();
     BuildConstantBuffers();
 }
+
 void SleepyEngine::EnableAdditionalD3D12Debug()
 {
     ID3D12Debug* pDebugController;
@@ -89,11 +95,8 @@ void SleepyEngine::CreateCommandObjects()
     // Start off in a closed state. This is because the first time we 
     // refer to the command list we will Reset it, and it needs to be 
     // closed before calling Reset.
-    
-    // Seems like we need the commandlist opened before we reset it 
-    // again for the ressource barrier and viewport inits
 
-    m_pCommandList->Close(); 
+    ThrowIfFailed(m_pCommandList->Close()); 
 }
 
 void SleepyEngine::CreateSwapChain()
@@ -282,6 +285,11 @@ void SleepyEngine::BuildConstantBuffers()
 
 int SleepyEngine::Run()
 {
+    #ifdef _DEBUG
+        _CrtMemState memStateInit;
+        _CrtMemCheckpoint(&memStateInit);
+    #endif
+
     HACCEL hAccelTable = LoadAccelerators(m_hAppInstance, MAKEINTRESOURCE(IDC_SLEEPYENGINE));
 
     MSG msg;
@@ -399,11 +407,23 @@ int SleepyEngine::Run()
             DispatchMessage(&msg);
         }
         else {
-            //Draw();
+            input.Update();
+
+            timer.UpdateTimer();
+            timer.UpdateFPS(mhMainWnd);
+
             Draw(&mesh);
         }
         
     }
+    #ifdef _DEBUG
+        _CrtMemState memStateEnd, memStateDiff;
+        _CrtMemCheckpoint(&memStateEnd);
+        if (_CrtMemDifference(&memStateDiff, &memStateInit, &memStateEnd))
+        {
+            MessageBoxA(NULL, "MEMORY LEAKS", "DISCLAIMER", 0);
+        }
+    #endif 
     Release();
 
     return (int)msg.wParam;
@@ -551,8 +571,6 @@ void SleepyEngine::FlushCommandQueue()
 
 void SleepyEngine::Draw()//const GameTimer& gt)
 {
-
-
     // Reuse the memory associated with command recording.
     // We can only reset when the associated command lists have finished
     // execution on the GPU.
@@ -567,8 +585,6 @@ void SleepyEngine::Draw()//const GameTimer& gt)
         D3D12_RESOURCE_STATE_PRESENT,
         D3D12_RESOURCE_STATE_RENDER_TARGET
     );
-
-    
 
     // Indicate a state transition on the resource usage.
     m_pCommandList->ResourceBarrier(1, &resourceBarrier);

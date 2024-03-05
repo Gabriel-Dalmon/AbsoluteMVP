@@ -8,6 +8,9 @@
 // WINDOWS
 #include <Windows.h>
 #include <wrl.h>
+#ifdef _DEBUG
+	#include <crtdbg.h>
+#endif
 
 // STD
 #include <string>
@@ -21,7 +24,7 @@
 #include <fstream>
 #include <sstream>
 #include <cassert>
-
+#include <map>
 #include <float.h>
 #include <cmath>
 
