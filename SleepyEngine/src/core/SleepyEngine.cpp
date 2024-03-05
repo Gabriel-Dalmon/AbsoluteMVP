@@ -210,7 +210,6 @@ void SleepyEngine::SetViewport()
     m_pViewPort->Height = static_cast<float>(m_clientHeight);
     m_pViewPort->MinDepth = 0.0f;
     m_pViewPort->MaxDepth = 1.0f;
-    m_pCommandList->RSSetViewports(1, m_pViewPort);
 }
 
 // Scissor rect is used to clip pixels to a certain area of the render target and avoid rendering them (ex: pixels below UI).
@@ -220,7 +219,6 @@ void SleepyEngine::SetScissorRect()
     m_scissorRect.top = 0;
     m_scissorRect.right = m_clientWidth;
     m_scissorRect.bottom = m_clientHeight;
-    m_pCommandList->RSSetScissorRects(1, &m_scissorRect);
 }
 
 int SleepyEngine::Initialize()
@@ -280,6 +278,11 @@ void SleepyEngine::BuildConstantBuffers()
     m_pDevice->CreateConstantBufferView(
         &cbvDesc,
         m_pCbvHeap->GetCPUDescriptorHandleForHeapStart());
+
+}
+
+void SleepyEngine::BuildMesh()
+{
 
 }
 
@@ -414,6 +417,7 @@ int SleepyEngine::Run()
             timer.UpdateTimer();
             timer.UpdateFPS(mhMainWnd);
 
+            Update();
             Draw(&mesh);
         }
         
@@ -568,63 +572,29 @@ void SleepyEngine::FlushCommandQueue()
     }
 }
 
-void SleepyEngine::Draw()//const GameTimer& gt)
+void SleepyEngine::Update()
 {
-    // Reuse the memory associated with command recording.
-    // We can only reset when the associated command lists have finished
-    // execution on the GPU.
-    ThrowIfFailed(m_pDirectCmdListAlloc->Reset());
-    // A command list can be reset after it has been added to the 
-    // command queue via ExecuteCommandList. Reusing the command list 
-    // reuses memory.
-    ThrowIfFailed(m_pCommandList->Reset(m_pDirectCmdListAlloc, nullptr));
+    // Convert Spherical to Cartesian coordinates.
+    float x = mRadius * sinf(mPhi) * cosf(mTheta);
+    float z = mRadius * sinf(mPhi) * sinf(mTheta);
+    float y = mRadius * cosf(mPhi);
 
-    CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(
-        GetCurrentBackBuffer(),
-        D3D12_RESOURCE_STATE_PRESENT,
-        D3D12_RESOURCE_STATE_RENDER_TARGET
-    );
+    // Build the view matrix.
+    XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);
+    XMVECTOR target = XMVectorZero();
+    XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
-    // Indicate a state transition on the resource usage.
-    m_pCommandList->ResourceBarrier(1, &resourceBarrier);
-    // Set the viewport and scissor rect. This needs to be reset 
-    // whenever the command list is reset.
-    m_pCommandList->RSSetViewports(1, m_pViewPort);
-    m_pCommandList->RSSetScissorRects(1, &m_scissorRect);
-    // Clear the back buffer and depth buffer.
-    m_pCommandList->ClearRenderTargetView(
-        GetCurrentBackBufferView(),
-        DirectX::Colors::DarkRed, 0, nullptr
-    );
+    XMMATRIX view = XMMatrixLookAtLH(pos, target, up);
+    XMStoreFloat4x4(&mView, view);
 
-    m_pCommandList->ClearDepthStencilView(
-        GetDepthStencilView(), D3D12_CLEAR_FLAG_DEPTH |
-        D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr
-    );
+    XMMATRIX world = XMLoadFloat4x4(&mWorld);
+    XMMATRIX proj = XMLoadFloat4x4(&mProj);
+    XMMATRIX worldViewProj = world * view * proj;
 
-    // Specify the buffers we are going to render to.
-    D3D12_CPU_DESCRIPTOR_HANDLE currentBackBufferView = GetCurrentBackBufferView();
-    D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView = GetDepthStencilView();
-    m_pCommandList->OMSetRenderTargets(1, &currentBackBufferView, true, &depthStencilView);
-    // Indicate a state transition on the resource usage.
-    CD3DX12_RESOURCE_BARRIER resourceBarrier2 = CD3DX12_RESOURCE_BARRIER::Transition(
-        GetCurrentBackBuffer(),
-        D3D12_RESOURCE_STATE_RENDER_TARGET,
-        D3D12_RESOURCE_STATE_PRESENT
-    );
-    m_pCommandList->ResourceBarrier(1, &resourceBarrier2);
-    // Done recording commands.
-    ThrowIfFailed(m_pCommandList->Close());
-    // Add the command list to the queue for execution.
-    ID3D12CommandList* cmdsLists[] = { m_pCommandList };
-    m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
-    // swap the back and front buffers
-    ThrowIfFailed(m_pSwapChain->Present(0, 0));
-    m_currentBackBufferOffset = (m_currentBackBufferOffset + 1) % SWAP_CHAIN_BUFFER_COUNT;
-    // Wait until frame commands are complete. This waiting is 
-    // inefficient and is done for simplicity. Later we will show how to 
-    // organize our rendering code so we do not have to wait per frame.
-    FlushCommandQueue();
+    // Update the constant buffer with the latest worldViewProj matrix.
+    ObjectConstants objConstants;
+    XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
+    m_pObjectCB->CopyData(0, objConstants);
 }
 
 //void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, ID3D12RootSignature* pRootSignature, Mesh* mesh)
@@ -640,6 +610,8 @@ void SleepyEngine::Draw(Mesh* mesh)
 
     m_pCommandList->Reset(m_pDirectCmdListAlloc, m_PSO);
     m_pCommandList->RSSetViewports(1, m_pViewPort);
+    m_pCommandList->RSSetScissorRects(1, &m_scissorRect);
+
     m_pCommandList->ResourceBarrier(1, &barrier);
 
     m_pCommandList->ClearRenderTargetView(currentBackBufferView, Colors::LightSteelBlue, 0, nullptr);

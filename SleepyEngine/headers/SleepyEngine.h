@@ -63,10 +63,11 @@ private:
     void SetScissorRect();
     void BuildDescriptorHeaps();
     void BuildConstantBuffers();
+    void BuildMesh();
 
     void FlushCommandQueue();
-    void Draw();
     void Draw(Mesh* mesh);
+    void Update();
 private:
     WCHAR m_szTitle[MAX_LOADSTRING];                  // The title bar text
     WCHAR m_szWindowClass[MAX_LOADSTRING];            // the main window class name
