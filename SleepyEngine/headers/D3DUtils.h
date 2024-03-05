@@ -28,6 +28,10 @@ public:
         FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, nullptr, hr, 0, errorMsg, sizeof(errorMsg), nullptr);
         return errorMsg;
     }
-
+    static ID3DBlob* CompileShader(
+        const std::wstring& filename,
+        const D3D_SHADER_MACRO* defines,
+        const std::string& entrypoint,
+        const std::string& target);
 };
 

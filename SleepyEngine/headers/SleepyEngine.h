@@ -61,6 +61,8 @@ private:
     void SetScissorRect();
     void BuildDescriptorHeaps();
     void BuildConstantBuffers();
+    void BuildRootSignature();
+    void BuildShadersAndInputLayout();
     void BuildBoxGeometry();
     void Update();
 
@@ -123,6 +125,11 @@ private:
     float mTheta = 1.5f * DirectX::XM_PI;
     float mPhi = DirectX::XM_PIDIV4;
     float mRadius = 5.0f;
+
+    ID3DBlob* m_pVSByteCode;
+    ID3DBlob* m_pPSByteCode;
+
+    std::vector<D3D12_INPUT_ELEMENT_DESC> m_inputLayout;
 
     std::unique_ptr<MeshGeometry> mBoxGeo = nullptr;
 };
