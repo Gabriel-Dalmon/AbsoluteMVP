@@ -62,6 +62,7 @@ void Shader::Release()
 {
 	RELEASE(m_pVSByteCode);
 	RELEASE(m_pPSByteCode);
+	RELEASE(m_pSerializedRootSig);
 }
 
 void Shader::CompileVS(std::wstring fileName)  

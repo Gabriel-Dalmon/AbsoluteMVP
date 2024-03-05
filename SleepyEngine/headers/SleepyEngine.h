@@ -40,6 +40,9 @@ public:
     D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferView()const;
     ID3D12Resource* GetCurrentBackBuffer()const;
     D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView()const;
+
+    void Release();
+
 private:
     void InitWindow(int nCmdShow);
     ATOM RegisterWindowClass();

@@ -44,7 +44,7 @@ class Entity;
 
 
 // MACROS
-#define RELEASE(p) {if (p){    p->Release();p = nullptr;}}
+#define RELEASE(p) {if (p){ p->Release(); p = nullptr;}}
 
 // NAMESPACES
 using namespace DirectX;

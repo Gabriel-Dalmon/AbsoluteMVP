@@ -69,4 +69,9 @@ bool GameState::CheckEntity(Entity* entity)
 	return false;
 }
 
+void GameState::Release()
+{
+	RELEASE(m_pPreviousGameState);
+}
+
 

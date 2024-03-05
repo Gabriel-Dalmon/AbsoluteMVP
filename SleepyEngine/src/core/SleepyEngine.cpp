@@ -404,6 +404,8 @@ int SleepyEngine::Run()
         }
         
     }
+    Release();
+
     return (int)msg.wParam;
 }
 
@@ -424,6 +426,27 @@ ID3D12Resource* SleepyEngine::GetCurrentBackBuffer()const
 D3D12_CPU_DESCRIPTOR_HANDLE SleepyEngine::GetDepthStencilView()const
 {
     return m_pDsvHeap->GetCPUDescriptorHandleForHeapStart();
+}
+
+void SleepyEngine::Release()
+{
+    RELEASE(m_pDevice);
+    RELEASE(m_pFence);
+    RELEASE(m_pRtvHeap);
+    RELEASE(m_pDsvHeap);
+    // RELEASE(m_pViewPort);
+    RELEASE(m_pDepthStencilBuffer);
+    RELEASE(m_pCommandQueue);
+    RELEASE(m_pDirectCmdListAlloc);
+    RELEASE(m_pCommandList);
+    RELEASE(m_pDxgiFactory);
+    RELEASE(m_pSwapChain);
+    // RELEASE(m_pSwapChainBuffer);
+    RELEASE(m_PSO);
+    RELEASE(m_pRootSignature);
+    // RELEASE(mhMainWnd);
+    RELEASE(m_pCbvHeap);
+    // RELEASE(m_pObjectCB);  
 }
 
 
