@@ -22,6 +22,7 @@
     <ClCompile Include="src\utils\D3DUtils.cpp" />
     <ClCompile Include="src\utils\HResultException.cpp" />
     <ClCompile Include="src\utils\MathHelper.cpp" />
+    <ClCompile Include="src\components\tmpMeshGeo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Collider.h" />
@@ -53,6 +54,7 @@
     <ClInclude Include="headers\Menu.h" />
     <ClInclude Include="src\utils\d3dx12.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="headers\tmpMeshGeo.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SleepyEngine.rc" />

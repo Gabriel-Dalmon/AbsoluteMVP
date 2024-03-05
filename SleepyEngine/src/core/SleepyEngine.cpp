@@ -8,6 +8,7 @@
 #include "PSO.h"
 #include "Shader.h"
 
+#include "tmpMeshGeo.h"
 // I don't know where to put them
 #include "Input.h"
 #include "Timer.h"
@@ -42,6 +43,11 @@ void SleepyEngine::InitD3D()
     SetScissorRect();
     BuildDescriptorHeaps();
     BuildConstantBuffers();
+    BuildBoxGeometry();
+    BuildBoxGeometryBis();
+
+    XMMATRIX P = XMMatrixPerspectiveFovLH(0.25f * MathHelper::Pi, static_cast<float>(m_clientWidth / m_clientHeight), 1.0f, 1000.0f);
+    XMStoreFloat4x4(&mProj, P);
 }
 
 void SleepyEngine::EnableAdditionalD3D12Debug()
@@ -279,10 +285,6 @@ void SleepyEngine::BuildConstantBuffers()
         &cbvDesc,
         m_pCbvHeap->GetCPUDescriptorHandleForHeapStart());
 
-}
-
-void SleepyEngine::BuildMesh()
-{
 
 }
 
@@ -298,82 +300,6 @@ int SleepyEngine::Run()
 
     Timer timer;
     timer.Init();
-
-    //create 2 blobs
-    //call the 2 shaders (vs & ps) to store shaders in blobs
-    //root signature ?
-
-    std::vector<Vertex> vertices =
-    {
-        Vertex({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::White) }),
-        Vertex({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Black) }),
-        Vertex({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Red) }),
-        Vertex({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Green) }),
-        Vertex({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Blue) }),
-        Vertex({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Yellow) }),
-        Vertex({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Cyan) }),
-        Vertex({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Magenta) })
-    };
-
-    std::vector<int> indices =
-    {
-        // front face
-        0, 1, 2,
-        0, 2, 3,
-
-        // back face
-        4, 6, 5,
-        4, 7, 6,
-
-        // left face
-        4, 5, 1,
-        4, 1, 0,
-
-        // right face
-        3, 2, 6,
-        3, 6, 7,
-
-        // top face
-        1, 5, 6,
-        1, 6, 2,
-
-        // bottom face
-        4, 0, 3,
-        4, 3, 7
-    };
-
-    Mesh mesh;
-    mesh.Init(m_pDevice, m_pCommandList, &vertices, &indices);
-
-    D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDesc;
-    cbvHeapDesc.NumDescriptors = 1;
-    cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-    cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-    cbvHeapDesc.NodeMask = 0;
-
-    m_pDevice->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(&m_pCbvHeap));
-
-    // Convert Spherical to Cartesian coordinates.
-    float x = mRadius * sinf(mPhi) * cosf(mTheta);
-    float z = mRadius * sinf(mPhi) * sinf(mTheta);
-    float y = mRadius * cosf(mPhi);
-
-    // Build the view matrix.
-    XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);
-    XMVECTOR target = XMVectorZero();
-    XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-
-    XMMATRIX view = XMMatrixLookAtLH(pos, target, up);
-    XMStoreFloat4x4(&mView, view);
-
-    XMMATRIX world = XMLoadFloat4x4(&mWorld);
-    XMMATRIX proj = XMLoadFloat4x4(&mProj);
-    XMMATRIX worldViewProj = world * view * proj;
-
-    // Update the constant buffer with the latest worldViewProj matrix.
-    ObjectConstants objConstants;
-    XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
-    m_pObjectCB->CopyData(0, objConstants);
 
 
     Shader shader;
@@ -418,12 +344,11 @@ int SleepyEngine::Run()
             timer.UpdateFPS(mhMainWnd);
 
             Update();
-            Draw(&mesh);
+            DrawBis();
         }
         
     }
     Release();
-    mesh.Release();
     shader.Release();
 
     return (int)msg.wParam;
@@ -572,6 +497,124 @@ void SleepyEngine::FlushCommandQueue()
     }
 }
 
+void SleepyEngine::BuildBoxGeometry()
+{
+    std::vector<Vertex> vertices =
+    {
+        Vertex({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::White) }),
+        Vertex({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Black) }),
+        Vertex({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Red) }),
+        Vertex({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Green) }),
+        Vertex({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Blue) }),
+        Vertex({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Yellow) }),
+        Vertex({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Cyan) }),
+        Vertex({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Magenta) })
+    };
+
+    std::vector<uint16_t> indices =
+    {
+        // front face
+        0, 1, 2,
+        0, 2, 3,
+
+        // back face
+        4, 6, 5,
+        4, 7, 6,
+
+        // left face
+        4, 5, 1,
+        4, 1, 0,
+
+        // right face
+        3, 2, 6,
+        3, 6, 7,
+
+        // top face
+        1, 5, 6,
+        1, 6, 2,
+
+        // bottom face
+        4, 0, 3,
+        4, 3, 7
+    };
+
+    mBoxGeo = new Mesh();
+    mBoxGeo->Init(m_pDevice, m_pCommandList, &vertices, &indices);
+}
+
+void SleepyEngine::BuildBoxGeometryBis()
+{
+    std::array<Vertex, 8> vertices =
+    {
+        Vertex({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::White) }),
+        Vertex({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Black) }),
+        Vertex({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Red) }),
+        Vertex({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Green) }),
+        Vertex({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Blue) }),
+        Vertex({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Yellow) }),
+        Vertex({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Cyan) }),
+        Vertex({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Magenta) })
+    };
+
+    std::array<std::uint16_t, 36> indices =
+    {
+        // front face
+        0, 1, 2,
+        0, 2, 3,
+
+        // back face
+        4, 6, 5,
+        4, 7, 6,
+
+        // left face
+        4, 5, 1,
+        4, 1, 0,
+
+        // right face
+        3, 2, 6,
+        3, 6, 7,
+
+        // top face
+        1, 5, 6,
+        1, 6, 2,
+
+        // bottom face
+        4, 0, 3,
+        4, 3, 7
+    };
+
+    const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
+    const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
+
+    mBoxGeoBis = new MeshGeometry();
+    mBoxGeoBis->Name = "boxGeo";
+
+    ThrowIfFailed(D3DCreateBlob(vbByteSize, &mBoxGeoBis->VertexBufferCPU));
+    CopyMemory(mBoxGeoBis->VertexBufferCPU->GetBufferPointer(), vertices.data(), vbByteSize);
+
+    ThrowIfFailed(D3DCreateBlob(ibByteSize, &mBoxGeoBis->IndexBufferCPU));
+    CopyMemory(mBoxGeoBis->IndexBufferCPU->GetBufferPointer(), indices.data(), ibByteSize);
+
+    mBoxGeoBis->VertexBufferGPU = D3DUtils::CreateDefaultBufferWRL(m_pDevice,
+        m_pCommandList, vertices.data(), vbByteSize, mBoxGeoBis->VertexBufferUploader);
+
+    mBoxGeoBis->IndexBufferGPU = D3DUtils::CreateDefaultBufferWRL(m_pDevice,
+        m_pCommandList, indices.data(), ibByteSize, mBoxGeoBis->IndexBufferUploader);
+
+    mBoxGeoBis->VertexByteStride = sizeof(Vertex);
+    mBoxGeoBis->VertexBufferByteSize = vbByteSize;
+    mBoxGeoBis->IndexFormat = DXGI_FORMAT_R16_UINT;
+    mBoxGeoBis->IndexBufferByteSize = ibByteSize;
+
+    SubmeshGeometry submesh;
+    submesh.IndexCount = (UINT)indices.size();
+    submesh.StartIndexLocation = 0;
+    submesh.BaseVertexLocation = 0;
+
+    mBoxGeoBis->DrawArgs["box"] = submesh;
+}
+
+
 void SleepyEngine::Update()
 {
     // Convert Spherical to Cartesian coordinates.
@@ -598,8 +641,71 @@ void SleepyEngine::Update()
 }
 
 //void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, ID3D12RootSignature* pRootSignature, Mesh* mesh)
-void SleepyEngine::Draw(Mesh* mesh)
+void SleepyEngine::Draw()
 {
+    std::cout << "Drawing" << std::endl;
+    CD3DX12_RESOURCE_BARRIER barrier;
+
+    barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+    D3D12_CPU_DESCRIPTOR_HANDLE currentBackBufferView = GetCurrentBackBufferView();
+    D3D12_CPU_DESCRIPTOR_HANDLE dephtStencilView = GetDepthStencilView();
+
+    m_pDirectCmdListAlloc->Reset();
+
+    m_pCommandList->Reset(m_pDirectCmdListAlloc, m_PSO);
+    m_pCommandList->RSSetViewports(1, m_pViewPort);
+    m_pCommandList->RSSetScissorRects(1, &m_scissorRect);
+
+    m_pCommandList->ResourceBarrier(1, &barrier);
+
+    m_pCommandList->ClearRenderTargetView(currentBackBufferView, Colors::LightSteelBlue, 0, nullptr);
+    m_pCommandList->ClearDepthStencilView(dephtStencilView, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+    m_pCommandList->OMSetRenderTargets(1, &currentBackBufferView, true, &dephtStencilView);
+
+    ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvHeap };
+    m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+
+    m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
+ 
+    D3D12_VERTEX_BUFFER_VIEW vertexBufferView = mBoxGeo->VertexBufferView();
+    D3D12_INDEX_BUFFER_VIEW indexBufferView = mBoxGeo->IndexBufferView();
+    D3D12_VERTEX_BUFFER_VIEW vertexBufferViewBis = mBoxGeoBis->VertexBufferView();
+    D3D12_INDEX_BUFFER_VIEW indexBufferViewBis = mBoxGeoBis->IndexBufferView();
+
+    m_pCommandList->IASetVertexBuffers(0, 1, &vertexBufferView);
+    m_pCommandList->IASetIndexBuffer(&indexBufferView);
+
+    m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
+
+    /* the following code is the one that comse from the book
+    * we would like to iterate in the submesh if we had one, maybe later
+    *pCommandList->DrawIndexedInstanced(
+    *	mesh->DrawArgs["box"].IndexCount,
+    *	1, 0, 0, 0);*/
+    UINT indexCount = mBoxGeo->m_indexCount;
+    UINT indexCountBis = mBoxGeoBis->DrawArgs["box"].IndexCount;
+    m_pCommandList->DrawIndexedInstanced(indexCount, 1, 0, 0, 0);
+
+    barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+    m_pCommandList->ResourceBarrier(1, &barrier);
+
+    m_pCommandList->Close();
+
+    ID3D12CommandList* cmdsLists[] = { m_pCommandList };
+    m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+
+    ThrowIfFailed(m_pSwapChain->Present(0, 0));
+    m_currentBackBufferOffset = (m_currentBackBufferOffset + 1) % SWAP_CHAIN_BUFFER_COUNT;
+    FlushCommandQueue();
+}
+
+
+void SleepyEngine::DrawBis()
+{
+    std::cout << "Drawing" << std::endl;
     CD3DX12_RESOURCE_BARRIER barrier;
 
     barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
@@ -624,8 +730,8 @@ void SleepyEngine::Draw(Mesh* mesh)
 
     m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
 
-    D3D12_VERTEX_BUFFER_VIEW vertexBufferView = mesh->VertexBufferView();
-    D3D12_INDEX_BUFFER_VIEW indexBufferView = mesh->IndexBufferView();
+    D3D12_VERTEX_BUFFER_VIEW vertexBufferView = mBoxGeoBis->VertexBufferView();
+    D3D12_INDEX_BUFFER_VIEW indexBufferView = mBoxGeoBis->IndexBufferView();
 
     m_pCommandList->IASetVertexBuffers(0, 1, &vertexBufferView);
     m_pCommandList->IASetIndexBuffer(&indexBufferView);
@@ -640,7 +746,7 @@ void SleepyEngine::Draw(Mesh* mesh)
     *	mesh->DrawArgs["box"].IndexCount,
     *	1, 0, 0, 0);*/
 
-    m_pCommandList->DrawIndexedInstanced(mesh->m_indexCount, 1, 0, 0, 0);
+    m_pCommandList->DrawIndexedInstanced(mBoxGeoBis->DrawArgs["box"].IndexCount, 1, 0, 0, 0);
 
     barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
     m_pCommandList->ResourceBarrier(1, &barrier);

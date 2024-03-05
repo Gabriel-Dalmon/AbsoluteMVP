@@ -7,12 +7,13 @@ Mesh::Mesh() {}
 
 Mesh::~Mesh() {}
 
-void Mesh::Init(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, std::vector<Vertex>* vertices, std::vector<int>* indices)
+void Mesh::Init(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, std::vector<Vertex>* vertices, std::vector<uint16_t>* indices)
 {
 	m_vertexByteStride = sizeof(Vertex);
 	m_vertexBufferByteSize = sizeof(Vertex) * vertices->size();
 	m_indexCount = indices->size();
-	m_indexBufferByteSize = sizeof(Vertex) * m_indexCount;
+	m_indexBufferByteSize = sizeof(uint16_t) * m_indexCount;
+	std::cout << "Index BSize" << m_indexBufferByteSize << std::endl;
 	
 	m_pGPUVertexBuffer = D3DUtils::CreateDefaultBuffer(device, commandList, vertices, m_vertexBufferByteSize, m_pUploaderVertexBuffer);
 	m_pGPUIndexBuffer = D3DUtils::CreateDefaultBuffer(device, commandList, vertices, m_indexBufferByteSize, m_pUploaderIndexBuffer);
@@ -42,9 +43,9 @@ D3D12_VERTEX_BUFFER_VIEW Mesh::VertexBufferView()const
 D3D12_INDEX_BUFFER_VIEW Mesh::IndexBufferView()const
 {
 	D3D12_INDEX_BUFFER_VIEW ibv;
-	ibv.BufferLocation = m_pGPUVertexBuffer->GetGPUVirtualAddress();
+	ibv.BufferLocation = m_pGPUIndexBuffer->GetGPUVirtualAddress();
 	ibv.Format = IndexFormat;
-	ibv.SizeInBytes = m_vertexBufferByteSize;
+	ibv.SizeInBytes = m_indexBufferByteSize;
 
 	return ibv;
 }
