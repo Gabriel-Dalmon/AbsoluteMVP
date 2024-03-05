@@ -16,6 +16,8 @@ public:
 
 	// SETTER / GETTER 
 
+	// RELEASE
+	void Release();
 
 protected:
 	Entity* m_pEntity = nullptr; 

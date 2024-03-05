@@ -9,7 +9,7 @@ void Entity::Init()
 {
 }
 
-void Entity::Clear()
+void Entity::Release()
 {
 	for (int i = 0; i < m_componentsList.size(); i++)
 	{

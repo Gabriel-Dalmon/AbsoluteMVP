@@ -9,5 +9,5 @@ public:
 
 	void Init();
 
-	BoundingSphere m_box;
+	// BoundingSphere m_box;
 };

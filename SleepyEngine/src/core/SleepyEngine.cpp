@@ -285,14 +285,16 @@ void SleepyEngine::BuildConstantBuffers()
 
 int SleepyEngine::Run()
 {
-    #ifdef _DEBUG
-        _CrtMemState memStateInit;
-        _CrtMemCheckpoint(&memStateInit);
-    #endif
 
     HACCEL hAccelTable = LoadAccelerators(m_hAppInstance, MAKEINTRESOURCE(IDC_SLEEPYENGINE));
 
-    MSG msg;
+    MSG msg = { 0 };
+
+    Input input;
+    input.Init();
+
+    Timer timer;
+    timer.Init();
 
     //create 2 blobs
     //call the 2 shaders (vs & ps) to store shaders in blobs
@@ -381,11 +383,11 @@ int SleepyEngine::Run()
     );
 
 #if defined (DEBUG) || (_DEBUG)
-    shader.CompileVS(L"../SleepyEngine/src/shaders/Shader.hlsl");
-    shader.CompilePS(L"../SleepyEngine/src/shaders/Shader.hlsl");
+    shader.CompileVS(L"../SleepyEngine/src/shaders/Color.hlsl");
+    shader.CompilePS(L"../SleepyEngine/src/shaders/Color.hlsl");
 #else
-    shader.CompileVS(L"Shaders/Shader.hlsl");
-    shader.CompilePS(L"Shaders/Shader.hlsl");
+    shader.CompileVS(L"Shaders/Color.hlsl");
+    shader.CompilePS(L"Shaders/Color.hlsl");
 #endif
 
     m_PSO = InitPSO(shader.m_pInputLayout, m_pRootSignature, shader.m_pVSByteCode, shader.m_pPSByteCode, m_backBufferFormat, false, 0,
@@ -397,7 +399,7 @@ int SleepyEngine::Run()
     FlushCommandQueue();
 
     // Main message loop:
-    while (GetMessage(&msg, nullptr, 0, 0))
+    while (msg.message != WM_QUIT)
     {
         if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
         {
@@ -416,15 +418,9 @@ int SleepyEngine::Run()
         }
         
     }
-    #ifdef _DEBUG
-        _CrtMemState memStateEnd, memStateDiff;
-        _CrtMemCheckpoint(&memStateEnd);
-        if (_CrtMemDifference(&memStateDiff, &memStateInit, &memStateEnd))
-        {
-            MessageBoxA(NULL, "MEMORY LEAKS", "DISCLAIMER", 0);
-        }
-    #endif 
     Release();
+    mesh.Release();
+    shader.Release();
 
     return (int)msg.wParam;
 }
@@ -466,7 +462,10 @@ void SleepyEngine::Release()
     RELEASE(m_pRootSignature);
     // RELEASE(mhMainWnd);
     RELEASE(m_pCbvHeap);
-    // RELEASE(m_pObjectCB);  
+    // RELEASE(m_pObjectCB); 
+    delete m_pViewPort;
+    delete m_pObjectCB;
+
 }
 
 
@@ -483,7 +482,7 @@ ATOM SleepyEngine::RegisterWindowClass()
     wcex.hIcon = LoadIcon(m_hAppInstance, MAKEINTRESOURCE(IDI_SLEEPYENGINE));
     wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-    wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_SLEEPYENGINE);
+    wcex.lpszMenuName = 0;
     wcex.lpszClassName = m_szWindowClass;
     wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
@@ -640,7 +639,7 @@ void SleepyEngine::Draw(Mesh* mesh)
     m_pDirectCmdListAlloc->Reset();
 
     m_pCommandList->Reset(m_pDirectCmdListAlloc, m_PSO);
-
+    m_pCommandList->RSSetViewports(1, m_pViewPort);
     m_pCommandList->ResourceBarrier(1, &barrier);
 
     m_pCommandList->ClearRenderTargetView(currentBackBufferView, Colors::LightSteelBlue, 0, nullptr);

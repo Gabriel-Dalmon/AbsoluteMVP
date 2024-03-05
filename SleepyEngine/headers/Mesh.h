@@ -15,18 +15,22 @@ public:
 	Mesh();
 	~Mesh();
 
+	// Init
 	void Init(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, std::vector<Vertex>* vertices, std::vector<int>* indices);
+
+	// Release
+	void Release();
 
 	char* m_pName;
 
 	std::vector<Vertex>* m_CPUVertexBuffer;
 	std::vector<int>* m_CPUIndexBuffer;
 	
-	ID3D12Resource* m_GPUVertexBuffer = nullptr;
-	ID3D12Resource* m_GPUIndexBuffer = nullptr;
+	ID3D12Resource* m_pGPUVertexBuffer = nullptr;
+	ID3D12Resource* m_pGPUIndexBuffer = nullptr;
 	
-	ID3D12Resource* m_uploaderVertexBuffer = nullptr;
-	ID3D12Resource* m_uploaderIndexBuffer = nullptr;
+	ID3D12Resource* m_pUploaderVertexBuffer = nullptr;
+	ID3D12Resource* m_pUploaderIndexBuffer = nullptr;
 
 
 	int m_vertexByteStride = 0;

@@ -45,8 +45,8 @@ public:
 		return nullptr; 
 	}
 	
-	// Clear
-	void Clear();
+	// RELEASE
+	void Release();
 
 private:
 	std::vector<Component*> m_componentsList;  

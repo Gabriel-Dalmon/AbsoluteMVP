@@ -9,3 +9,7 @@ Script::Script()
 void Script::Init()
 {
 }
+
+void Script::Release()
+{
+}

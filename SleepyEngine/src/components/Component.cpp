@@ -1,8 +1,14 @@
 #include "pch.h"
+#include "Entity.h"
+
 #include "Component.h"
 
-//#include "Entity.h"
 
 Component::Component()
 {
+}
+
+void Component::Release()
+{
+	RELEASE(m_pEntity);
 }

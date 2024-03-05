@@ -11,3 +11,8 @@ void MeshRenderer::Init(Mesh* mesh)
 {
 	m_pMesh = mesh;
 }
+
+void MeshRenderer::Release()
+{
+	RELEASE(m_pMesh);
+}

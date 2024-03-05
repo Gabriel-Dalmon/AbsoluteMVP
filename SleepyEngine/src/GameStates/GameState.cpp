@@ -47,7 +47,7 @@ void GameState::RemoveEntity(Entity* entity)
 	{
 		if (m_EntityList[i] == entity)
 		{
-			entity->Clear();
+			RELEASE(m_EntityList[i]);
 			m_EntityList.erase(m_EntityList.begin() + i);
 		}
 	}
