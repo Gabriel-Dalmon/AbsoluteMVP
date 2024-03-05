@@ -73,7 +73,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LibraryPath>$(ProjectDir)\x64\Debug;$(LibraryPath)</LibraryPath>
     <ExternalIncludePath>$(SolutionDir)\SleepyEngine\headers;$(ExternalIncludePath)</ExternalIncludePath>
-    <IncludePath>$(WindowsSDK_IncludePath);$(IncludePath)</IncludePath>
+    <IncludePath>$(WindowsSDK_IncludePath);headers;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ExternalIncludePath>$(SolutionDir)\SleepyEngine\headers;$(ExternalIncludePath)</ExternalIncludePath>
@@ -139,12 +139,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
+    <ClInclude Include="headers\Bullet.h" />
+    <ClInclude Include="headers\Enemy.h" />
+    <ClInclude Include="headers\GameManager.h" />
+    <ClInclude Include="headers\Player.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="SleepyGame.h" />
+    <ClInclude Include="headers\SleepyGame.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SleepyGame.cpp" />
+    <ClCompile Include="src\Bullet.cpp" />
+    <ClCompile Include="src\Enemy.cpp" />
+    <ClCompile Include="src\GameManager.cpp" />
+    <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\SleepyGame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SleepyGame.rc" />

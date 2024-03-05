@@ -1,7 +1,6 @@
 // SleepyGame.cpp : Defines the entry point for the application.
 //
 
-#include "framework.h"
 #include "SleepyGame.h"
 #include "SleepyEngine.h"
 #include <iostream>
