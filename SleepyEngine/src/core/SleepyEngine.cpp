@@ -663,7 +663,7 @@ void SleepyEngine::Draw(Mesh* mesh)
 
     m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
 
-    /* the following code is the one that comse from the book
+    /* the following code is the one that come from the book
     * we would like to iterate in the submesh if we had one, maybe later
     *pCommandList->DrawIndexedInstanced(
     *	mesh->DrawArgs["box"].IndexCount,

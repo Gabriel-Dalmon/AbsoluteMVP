@@ -167,6 +167,7 @@
     <ClInclude Include="headers\Pause.h" />
     <ClInclude Include="headers\Menu.h" />
     <ClInclude Include="src\utils\d3dx12.h" />
+    <ClInclude Include="headers\TextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GameStates\Pause.cpp" />
@@ -190,6 +191,7 @@
     <ClCompile Include="src\utils\D3DUtils.cpp" />
     <ClCompile Include="src\utils\HResultException.cpp" />
     <ClCompile Include="src\utils\MathHelper.cpp" />
+    <ClCompile Include="src\components\TextureLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\shaders\Color.hlsl">
