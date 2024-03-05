@@ -56,7 +56,7 @@ void Timer::UpdateFPS(HWND Window)
 			MaxFPS = FrameCount;
 
 		FrameCount = 0;
-		FPSTimer += GetTotalTime();
+		FPSTimer += GetTotalTime() - FPSTimer;
 		
 		// Might be temporary, might not be
 		// Depends on if we can figure out "fonts"

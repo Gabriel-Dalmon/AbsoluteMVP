@@ -1,15 +1,37 @@
 // SleepyEngine.cpp : Defines the entry point for the application.
 //
-//#include "pch.h"
+#include "pch.h"
 #include "SleepyEngine.h"
 #include "Utils/HResultException.h"
-#include <comdef.h>
-#include <iostream>
-#include <windowsx.h>
+//#include <comdef.h>
+//#include <iostream>
+//#include <windowsx.h>
 
 // I don't know where to put them
 #include "Input.h"
 #include "Timer.h"
+
+std::ostream& XM_CALLCONV operator<<(std::ostream& os, FXMVECTOR v)
+{
+    XMFLOAT3 dest;
+    XMStoreFloat3(&dest, v);
+
+    os << "(" << dest.x << ", " << dest.y << ", " << dest.z << ")";
+    return os;
+}
+
+std::ostream& XM_CALLCONV operator << (std::ostream& os, FXMMATRIX m)
+{
+    for (int i = 0; i < 4; ++i)
+    {
+        os << XMVectorGetX(m.r[i]) << "\t";
+        os << XMVectorGetY(m.r[i]) << "\t";
+        os << XMVectorGetZ(m.r[i]) << "\t";
+        os << XMVectorGetW(m.r[i]);
+        os << std::endl;
+    }
+    return os;
+}
 
 // Global Variables:
 
@@ -281,11 +303,15 @@ int SleepyEngine::Run()
             DispatchMessage(&msg);
         }
         else {
+            std::cout << m_Camera.GetPosition() << std::endl;
+            std::cout << m_Camera.GetView() << std::endl;
             timer.UpdateTimer();
 
             input.Update();
 
             timer.UpdateFPS(mhMainWnd);
+
+            UpdateInstanceData();
 
             Draw();
         }
@@ -441,6 +467,14 @@ void SleepyEngine::FlushCommandQueue()
         WaitForSingleObject(eventHandle, INFINITE);
         CloseHandle(eventHandle);
     }
+}
+
+void SleepyEngine::UpdateInstanceData()
+{
+    XMMATRIX view = m_Camera.GetView();
+    XMMATRIX invView = XMMatrixInverse(&XMMatrixDeterminant(view), view);
+
+    //auto buffer = FrameRess
 }
 
 void SleepyEngine::Draw()//const GameTimer& gt)

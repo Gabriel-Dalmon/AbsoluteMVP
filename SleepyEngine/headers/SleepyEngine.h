@@ -1,20 +1,14 @@
 #pragma once
 
 #include "resource.h"
+#include "pch.h"
 
-#include <windows.h>
-#include <wrl.h> //ComPtr
-#include <dxgi1_4.h>
-#include "../src/utils/d3dx12.h"
+//#include <windows.h>
+//#include <wrl.h> //ComPtr
+//#include <dxgi1_4.h>
+//#include "../src/utils/d3dx12.h"
 #include "Camera.h"
 
-#include <d3d12.h>
-#include <cassert>
-
-#include <DirectXColors.h>
-#include <directxmath.h>
-
-#include <DXGI.h>
 
 #define MAX_LOADSTRING 100
 #define SWAP_CHAIN_BUFFER_COUNT 2
@@ -52,6 +46,7 @@ private:
     void SetScissorRect();
 
     void FlushCommandQueue();
+    void UpdateInstanceData();
     void Draw();
 
     // GETTERS / SETTERS

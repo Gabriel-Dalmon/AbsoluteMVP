@@ -2,9 +2,11 @@
 // Camera.h by Frank Luna (C) 2011 All Rights Reserved.
 //***************************************************************************************
 
+#include "pch.h"
+#include "MathHelper.h"
 #include "Camera.h"
 
-using namespace DirectX;
+//using namespace DirectX;
 
 Camera::Camera()
 {
@@ -155,7 +157,7 @@ void Camera::LookAt(const XMFLOAT3& pos, const XMFLOAT3& target, const XMFLOAT3&
 
 XMMATRIX Camera::GetView()const
 {
-	assert(!mViewDirty);
+	//assert(!mViewDirty);
 	return XMLoadFloat4x4(&mView);
 }
 

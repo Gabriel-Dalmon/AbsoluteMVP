@@ -45,7 +45,7 @@ class Mesh;
 #include <DirectXColors.h>
 #include <DirectXCollision.h>
 #include "../src/utils/d3dx12.h"
-
+#include "MathHelper.h"
 
 
 // MACROS
