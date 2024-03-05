@@ -63,13 +63,14 @@ private:
     void BuildConstantBuffers();
     void BuildRootSignature();
     void BuildShadersAndInputLayout();
+    void BuildPSO();
     void BuildBoxGeometry();
     void Update();
 
 
     void FlushCommandQueue();
+    //void Draw();
     void Draw();
-    void Draw(ID3D12DescriptorHeap* pCBVHeap, Mesh* mesh);
 private:
     WCHAR m_szTitle[MAX_LOADSTRING];                  // The title bar text
     WCHAR m_szWindowClass[MAX_LOADSTRING];            // the main window class name
@@ -88,6 +89,7 @@ private:
 
     DXGI_FORMAT m_backBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
     int m_currentBackBufferOffset = 0;
+    DXGI_FORMAT m_depthStencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
     D3D12_VIEWPORT* m_pViewPort = new D3D12_VIEWPORT();
 

@@ -41,7 +41,13 @@ void SleepyEngine::InitD3D()
     BuildDescriptorHeaps();
     BuildConstantBuffers();
     BuildRootSignature();
+    BuildShadersAndInputLayout();
     BuildBoxGeometry();
+    BuildPSO();
+    // The window resized, so update the aspect ratio and recompute the projection matrix.
+    DirectX::XMMATRIX P = XMMatrixPerspectiveFovLH(0.25f * MathHelper::Pi, static_cast<float>(m_clientWidth/m_clientHeight), 1.0f, 1000.0f);
+    DirectX::XMStoreFloat4x4(&mProj, P);
+    
 }
 void SleepyEngine::EnableAdditionalD3D12Debug()
 {
@@ -328,8 +334,8 @@ void SleepyEngine::BuildShadersAndInputLayout()
 {
     HRESULT hr = S_OK;
 
-    m_pVSByteCode = D3DUtils::CompileShader(L"Shaders\\color.hlsl", nullptr, "VS", "vs_5_0");
-    m_pPSByteCode = D3DUtils::CompileShader(L"Shaders\\color.hlsl", nullptr, "PS", "ps_5_0");
+    m_pVSByteCode = D3DUtils::CompileShader(L"C:\\Users\\gdalmon\\source\\repos\\yoannklt\\Sleepy\\SleepyEngine\\src\\shaders\\shader.hlsl", nullptr, "VS", "vs_5_0");
+    m_pPSByteCode = D3DUtils::CompileShader(L"C:\\Users\\gdalmon\\source\\repos\\yoannklt\\Sleepy\\SleepyEngine\\src\\shaders\\shader.hlsl", nullptr, "PS", "ps_5_0");
 
     m_inputLayout =
     {
@@ -338,6 +344,34 @@ void SleepyEngine::BuildShadersAndInputLayout()
     };
 }
 
+void SleepyEngine::BuildPSO()
+{
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc;
+    ZeroMemory(&psoDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
+    psoDesc.InputLayout = { m_inputLayout.data(), (UINT)m_inputLayout.size() };
+    psoDesc.pRootSignature = m_pRootSignature;
+    psoDesc.VS =
+    {
+        reinterpret_cast<BYTE*>(m_pVSByteCode->GetBufferPointer()),
+        m_pVSByteCode->GetBufferSize()
+    };
+    psoDesc.PS =
+    {
+        reinterpret_cast<BYTE*>(m_pPSByteCode->GetBufferPointer()),
+        m_pPSByteCode->GetBufferSize()
+    };
+    psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+    psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+    psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+    psoDesc.SampleMask = UINT_MAX;
+    psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+    psoDesc.NumRenderTargets = 1;
+    psoDesc.RTVFormats[0] = m_backBufferFormat;
+    psoDesc.SampleDesc.Count = m_4xMsaaState ? 4 : 1;
+    psoDesc.SampleDesc.Quality = m_4xMsaaState ? (m_4xMsaaQuality - 1) : 0;
+    psoDesc.DSVFormat = m_depthStencilFormat;
+    ThrowIfFailed(m_pDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_PSO)));
+}
 
 void SleepyEngine::BuildBoxGeometry()
 {
@@ -414,104 +448,7 @@ void SleepyEngine::BuildBoxGeometry()
 
 int SleepyEngine::Run()
 {
-    HACCEL hAccelTable = LoadAccelerators(m_hAppInstance, MAKEINTRESOURCE(IDC_SLEEPYENGINE));
-
-    
-    //create 2 blobs
-    //call the 2 shaders (vs & ps) to store shaders in blobs
-    //root signature ?
-
-    std::vector<Vertex> vertices =
-    {
-        Vertex({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::White) }),
-        Vertex({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Black) }),
-        Vertex({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Red) }),
-        Vertex({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Green) }),
-        Vertex({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Blue) }),
-        Vertex({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Yellow) }),
-        Vertex({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Cyan) }),
-        Vertex({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Magenta) })
-    };
-
-    std::vector<int> indices =
-    {
-        // front face
-        0, 1, 2,
-        0, 2, 3,
-
-        // back face
-        4, 6, 5,
-        4, 7, 6,
-
-        // left face
-        4, 5, 1,
-        4, 1, 0,
-
-        // right face
-        3, 2, 6,
-        3, 6, 7,
-
-        // top face
-        1, 5, 6,
-        1, 6, 2,
-
-        // bottom face
-        4, 0, 3,
-        4, 3, 7
-    };
-
-    Mesh mesh;
-    mesh.Init(m_pDevice, m_pCommandList, &vertices, &indices);
-    mesh.name = (char*)"boxGeo";
-    
-    D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDesc;
-    cbvHeapDesc.NumDescriptors = 1;
-    cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-    cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-    cbvHeapDesc.NodeMask = 0;
-
-    m_pDevice->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(&m_pCbvHeap));
-
-    /*
-    XMMATRIX P = XMMatrixPerspectiveFovLH(0.25f * MathHelper::Pi, static_cast<float>(m_clientWidth) / m_clientHeight, 1.0f, 1000.0f);
-    XMStoreFloat4x4(&mProj, P);
-    
-    // Convert Spherical to Cartesian coordinates.
-    float x = mRadius * sinf(mPhi) * cosf(mTheta);
-    float z = mRadius * sinf(mPhi) * sinf(mTheta);
-    float y = mRadius * cosf(mPhi);
-
-    // Build the view matrix.
-    XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);
-    XMVECTOR target = XMVectorZero();
-    XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-
-    XMMATRIX view = XMMatrixLookAtLH(pos, target, up);
-    XMStoreFloat4x4(&mView, view);
-
-    XMMATRIX world = XMLoadFloat4x4(&mWorld);
-    XMMATRIX proj = XMLoadFloat4x4(&mProj);
-    XMMATRIX worldViewProj = world * view * proj;
-
-    // Update the constant buffer with the latest worldViewProj matrix.
-    ObjectConstants objConstants;
-    XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
-    m_pObjectCB->CopyData(0, objConstants);
-    */
-
-    Shader shader;
-    shader.Init();
-    /*ThrowIfFailed(m_pDevice->CreateRootSignature(
-        0,
-        shader.m_pSerializedRootSig->GetBufferPointer(),
-        shader.m_pSerializedRootSig->GetBufferSize(),
-        IID_PPV_ARGS(&m_pRootSignature))
-    );*/
-    shader.CompileVS(L"C:\\Users\\gabri\\source\\repos\\yoannklt\\Sleepy\\SleepyEngine\\src\\shaders\\shader.hlsl");
-    shader.CompilePS(L"C:\\Users\\gabri\\source\\repos\\yoannklt\\Sleepy\\SleepyEngine\\src\\shaders\\shader.hlsl");
-
-    m_PSO = InitPSO(shader.m_pInputLayout, m_pRootSignature, shader.m_pVSByteCode, shader.m_pPSByteCode, m_backBufferFormat, false, 0,
-        DXGI_FORMAT_D24_UNORM_S8_UINT, m_pDevice, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+    HACCEL hAccelTable = LoadAccelerators(m_hAppInstance, MAKEINTRESOURCE(IDC_SLEEPYENGINE));    
 
     ThrowIfFailed(m_pCommandList->Close());
     ID3D12CommandList* cmdsLists[] = { m_pCommandList };
@@ -523,14 +460,14 @@ int SleepyEngine::Run()
     {
         if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
         {
-        /*if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
-        {*/
+
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
         else {
             //Draw();
-            Draw(m_pCbvHeap, &mesh);
+            Update();
+            Draw();
         }
         
     }
@@ -545,20 +482,20 @@ void SleepyEngine::Update()
     float y = mRadius * cosf(mPhi);
 
     // Build the view matrix.
-    XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);
-    XMVECTOR target = XMVectorZero();
-    XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+    DirectX::XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);
+    DirectX::XMVECTOR target = XMVectorZero();
+    DirectX::XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
-    XMMATRIX view = XMMatrixLookAtLH(pos, target, up);
-    XMStoreFloat4x4(&mView, view);
+    DirectX::XMMATRIX view = XMMatrixLookAtLH(pos, target, up);
+    DirectX::XMStoreFloat4x4(&mView, view);
 
-    XMMATRIX world = XMLoadFloat4x4(&mWorld);
-    XMMATRIX proj = XMLoadFloat4x4(&mProj);
-    XMMATRIX worldViewProj = world * view * proj;
+    DirectX::XMMATRIX world = DirectX::XMLoadFloat4x4(&mWorld);
+    DirectX::XMMATRIX proj = DirectX::XMLoadFloat4x4(&mProj);
+    DirectX::XMMATRIX worldViewProj = world * view * proj;
 
     // Update the constant buffer with the latest worldViewProj matrix.
     ObjectConstants objConstants;
-    XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
+    DirectX::XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
     m_pObjectCB->CopyData(0, objConstants);
 }
 
@@ -595,7 +532,7 @@ ATOM SleepyEngine::RegisterWindowClass()
     wcex.hIcon = LoadIcon(m_hAppInstance, MAKEINTRESOURCE(IDI_SLEEPYENGINE));
     wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-    wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_SLEEPYENGINE);
+    wcex.lpszMenuName = 0;
     wcex.lpszClassName = m_szWindowClass;
     wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
@@ -678,7 +615,7 @@ void SleepyEngine::FlushCommandQueue()
     }
 }
 
-void SleepyEngine::Draw()//const GameTimer& gt)
+/*void SleepyEngine::Draw()//const GameTimer& gt)
 {
 
     // Reuse the memory associated with command recording.
@@ -736,11 +673,12 @@ void SleepyEngine::Draw()//const GameTimer& gt)
     // inefficient and is done for simplicity. Later we will show how to 
     // organize our rendering code so we do not have to wait per frame.
     FlushCommandQueue();
-}
+}*/
 
 //void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, ID3D12RootSignature* pRootSignature, Mesh* mesh)
-void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, Mesh* mesh)
+void SleepyEngine::Draw()
 {
+    
     std::cout << "Drawing" << std::endl;
     CD3DX12_RESOURCE_BARRIER barrier;
 
@@ -751,6 +689,8 @@ void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, Mesh* mesh)
     m_pDirectCmdListAlloc->Reset();
 
     m_pCommandList->Reset(m_pDirectCmdListAlloc, m_PSO);
+    m_pCommandList->RSSetViewports(1, m_pViewPort);
+    m_pCommandList->RSSetScissorRects(1, &m_scissorRect);
 
     // bcareful, may have problems using a single initialization of barrier
     m_pCommandList->ResourceBarrier(1, &barrier);
@@ -760,7 +700,7 @@ void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, Mesh* mesh)
 
     m_pCommandList->OMSetRenderTargets(1, &currentBackBufferView, true, &dephtStencilView);
 
-    ID3D12DescriptorHeap* descriptorHeaps[] = { pCBVHeap };
+    ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvHeap };
     m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
     m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
@@ -773,11 +713,9 @@ void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, Mesh* mesh)
 
     m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    m_pCommandList->SetGraphicsRootDescriptorTable(0, pCBVHeap->GetGPUDescriptorHandleForHeapStart());
+    m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
 
-    /* the following code is the one that comse from the book
-    * we would like to iterate in the submesh if we had one, maybe later
-    */
+
 
     //m_pCommandList->DrawIndexedInstanced(mesh->m_indexCount, 1, 0, 0, 0);
     m_pCommandList->DrawIndexedInstanced(mBoxGeo->DrawArgs["box"].IndexCount, 1, 0, 0, 0);
@@ -793,4 +731,61 @@ void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, Mesh* mesh)
     ThrowIfFailed(m_pSwapChain->Present(0, 0));
     m_currentBackBufferOffset = (m_currentBackBufferOffset + 1) % SWAP_CHAIN_BUFFER_COUNT;
     FlushCommandQueue();
+
+    // Reuse the memory associated with command recording.
+// We can only reset when the associated command lists have finished execution on the GPU.
+    /*ThrowIfFailed(m_pDirectCmdListAlloc->Reset());
+
+    // A command list can be reset after it has been added to the command queue via ExecuteCommandList.
+    // Reusing the command list reuses memory.
+    ThrowIfFailed(m_pCommandList->Reset(m_pDirectCmdListAlloc, m_PSO));
+
+    m_pCommandList->RSSetViewports(1, m_pViewPort);
+    m_pCommandList->RSSetScissorRects(1, &m_scissorRect);
+
+    // Indicate a state transition on the resource usage.
+    m_pCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(),
+        D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+
+    // Clear the back buffer and depth buffer.
+    m_pCommandList->ClearRenderTargetView(GetCurrentBackBufferView(), Colors::LightSteelBlue, 0, nullptr);
+    m_pCommandList->ClearDepthStencilView(GetDepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+    // Specify the buffers we are going to render to.
+    m_pCommandList->OMSetRenderTargets(1, &GetCurrentBackBufferView(), true, &GetDepthStencilView());
+
+    ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvHeap };
+    m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+
+    m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
+
+    m_pCommandList->IASetVertexBuffers(0, 1, &mBoxGeo->VertexBufferView());
+    m_pCommandList->IASetIndexBuffer(&mBoxGeo->IndexBufferView());
+    m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
+
+    m_pCommandList->DrawIndexedInstanced(
+        mBoxGeo->DrawArgs["box"].IndexCount,
+        1, 0, 0, 0);
+
+    // Indicate a state transition on the resource usage.
+    m_pCommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(),
+        D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+
+    // Done recording commands.
+    ThrowIfFailed(m_pCommandList->Close());
+
+    // Add the command list to the queue for execution.
+    ID3D12CommandList* cmdsLists[] = { m_pCommandList };
+    m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+
+    // swap the back and front buffers
+    ThrowIfFailed(m_pSwapChain->Present(0, 0));
+    m_currentBackBufferOffset = (m_currentBackBufferOffset + 1) % SWAP_CHAIN_BUFFER_COUNT;
+
+    // Wait until frame commands are complete.  This waiting is inefficient and is
+    // done for simplicity.  Later we will show how to organize our rendering code
+    // so we do not have to wait per frame.
+    FlushCommandQueue();*/
 }
