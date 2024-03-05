@@ -8,6 +8,20 @@
 #include <io.h>
 #include <fcntl.h>
 
+void CreateConsoleAndCallEngine(HINSTANCE hInstance)
+{
+    AllocConsole();
+    FILE* consoleOut;
+    freopen_s(&consoleOut, "CONOUT$", "w", stdout);
+
+    SleepyEngine engine(hInstance);
+    engine.Initialize();
+    engine.Run();
+
+    fclose(consoleOut);
+    FreeConsole();
+}
+
 
 //int main(int argc, char* argv[])
 
@@ -24,18 +38,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
-    {
-        AllocConsole();
-        FILE* consoleOut;
-        freopen_s(&consoleOut, "CONOUT$", "w", stdout);
+    
+    CreateConsoleAndCallEngine(hInstance);
 
-        SleepyEngine engine(hInstance);
-        engine.Initialize();
-        engine.Run();
-
-        fclose(consoleOut);
-        FreeConsole();
-    }
 #ifdef _DEBUG
     _CrtMemState memStateEnd, memStateDiff;
     _CrtMemCheckpoint(&memStateEnd);

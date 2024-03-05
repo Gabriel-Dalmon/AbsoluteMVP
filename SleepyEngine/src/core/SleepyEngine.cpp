@@ -446,28 +446,29 @@ D3D12_CPU_DESCRIPTOR_HANDLE SleepyEngine::GetDepthStencilView()const
 
 void SleepyEngine::Release()
 {
+    // Variables membres avec une méthode Release, et membres DirectX
     RELEASE(m_pDevice);
     RELEASE(m_pFence);
     RELEASE(m_pRtvHeap);
     RELEASE(m_pDsvHeap);
-    // RELEASE(m_pViewPort);
     RELEASE(m_pDepthStencilBuffer);
     RELEASE(m_pCommandQueue);
     RELEASE(m_pDirectCmdListAlloc);
     RELEASE(m_pCommandList);
     RELEASE(m_pDxgiFactory);
     RELEASE(m_pSwapChain);
-    // RELEASE(m_pSwapChainBuffer);
     RELEASE(m_PSO);
     RELEASE(m_pRootSignature);
-    // RELEASE(mhMainWnd);
     RELEASE(m_pCbvHeap);
-    // RELEASE(m_pObjectCB); 
+    
+    // "new"
     delete m_pViewPort;
     delete m_pObjectCB;
 
+    // Window and Window Class
+    DestroyWindow(mhMainWnd); 
+    UnregisterClassW(m_szWindowClass, m_hAppInstance);
 }
-
 
 ATOM SleepyEngine::RegisterWindowClass()
 {

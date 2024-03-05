@@ -14,15 +14,15 @@ class Timer
 
 	private:
 
-		float StartTime;
+		float StartTime = 0.0f;
 
-		float DeltaTime;
-		float TotalTime;
+		float DeltaTime = 0.0f;
+		float TotalTime = 0.0f;
 
-		float currTime;
-		float prevTime;
+		float currTime = 0.0f;
+		float prevTime = 0.0f;
 
-		float FPSTimer;
-		int FrameCount;
-		int MaxFPS;
+		float FPSTimer = 0.0f;
+		int FrameCount = 0.0f;
+		int MaxFPS = 0.0f;
 };

@@ -68,8 +68,8 @@ private:
     void Draw();
     void Draw(Mesh* mesh);
 private:
-    WCHAR m_szTitle[MAX_LOADSTRING];                  // The title bar text
-    WCHAR m_szWindowClass[MAX_LOADSTRING];            // the main window class name
+    WCHAR m_szTitle[MAX_LOADSTRING] = L"";                  // The title bar text
+    WCHAR m_szWindowClass[MAX_LOADSTRING] = L"";            // the main window class name
 
     ID3D12Device* m_pDevice = nullptr;
 
