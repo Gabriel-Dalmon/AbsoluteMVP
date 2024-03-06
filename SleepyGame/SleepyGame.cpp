@@ -16,18 +16,34 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_ LPWSTR    lpCmdLine,
                      _In_ int       nCmdShow)
 {
+
+#ifdef _DEBUG
+    _CrtMemState memStateInit;
+    _CrtMemCheckpoint(&memStateInit);
+#endif
+
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
-    
-    AllocConsole();
-    FILE* consoleOut;
-    freopen_s(&consoleOut, "CONOUT$", "w", stdout);
+    {
+        AllocConsole();
+        FILE* consoleOut;
+        freopen_s(&consoleOut, "CONOUT$", "w", stdout);
 
-    SleepyEngine engine(hInstance);
-    engine.Initialize();
-    engine.Run();
+        SleepyEngine engine(hInstance);
+        engine.Initialize();
+        engine.Run();
 
-    fclose(consoleOut);
-    FreeConsole();
+        fclose(consoleOut);
+        FreeConsole();
+    }
+#ifdef _DEBUG
+    _CrtMemState memStateEnd, memStateDiff;
+    _CrtMemCheckpoint(&memStateEnd);
+    if (_CrtMemDifference(&memStateDiff, &memStateInit, &memStateEnd))
+    {
+        MessageBoxA(NULL, "MEMORY LEAKS", "DISCLAIMER", 0);
+    }
+#endif 
+
     return 0;
 }

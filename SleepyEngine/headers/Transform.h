@@ -1,7 +1,5 @@
 #pragma once
 
-using namespace DirectX;
-
 class Transform 
 {
 public:

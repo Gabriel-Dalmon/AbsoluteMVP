@@ -16,8 +16,10 @@ public:
 
 	// SETTER / GETTER 
 
+	// RELEASE
+	void Release();
 
-private:
-	Entity* m_pEntity; 
+protected:
+	Entity* m_pEntity = nullptr; 
 };
 

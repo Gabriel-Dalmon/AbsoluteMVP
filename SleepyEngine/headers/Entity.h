@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 class Entity
 {
 public:
@@ -37,16 +39,16 @@ public:
 		{
 			if (dynamic_cast<T>(m_componentsList[i]) != NULL)  
 			{
-				return m_componentsList[i];
+				return (T)m_componentsList[i];
 			}
 		}
 		return nullptr; 
 	}
-	// OUAIS
-	// CLEAR
-	void Clear();
+	
+	// RELEASE
+	void Release();
 
 private:
-	std::vector<Component*> m_componentsList; 
+	std::vector<Component*> m_componentsList;  
 };
 

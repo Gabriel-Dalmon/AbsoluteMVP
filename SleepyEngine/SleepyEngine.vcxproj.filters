@@ -1,13 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClCompile Include="src\GameStates\Pause.cpp" />
+    <ClCompile Include="src\GameStates\Menu.cpp" />
     <ClCompile Include="src\components\Collider.cpp" />
+    <ClCompile Include="src\components\ColliderOBB.cpp" />
+    <ClCompile Include="src\components\ColliderSphere.cpp" />
     <ClCompile Include="src\components\MeshRenderer.cpp" />
     <ClCompile Include="src\components\Script.cpp" />
     <ClCompile Include="src\components\Component.cpp" />
     <ClCompile Include="src\components\ShaderReference.cpp" />
-    <ClCompile Include="src\core\GameState.cpp" />
+    <ClCompile Include="src\GameStates\GameState.cpp" />
+    <ClCompile Include="src\components\Mesh.cpp" />
     <ClCompile Include="src\core\Entity.cpp" />
+    <ClCompile Include="src\core\PSO.cpp" />
     <ClCompile Include="src\core\Input.cpp" />
     <ClCompile Include="src\core\SleepyEngine.cpp" />
     <ClCompile Include="src\core\Timer.cpp" />
@@ -16,10 +22,13 @@
     <ClCompile Include="src\utils\D3DUtils.cpp" />
     <ClCompile Include="src\utils\HResultException.cpp" />
     <ClCompile Include="src\utils\MathHelper.cpp" />
+    <ClCompile Include="src\components\tmpMeshGeo.cpp" />
     <ClCompile Include="src\core\Camera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Collider.h" />
+    <ClInclude Include="headers\ColliderOBB.h" />
+    <ClInclude Include="headers\ColliderSphere.h" />
     <ClInclude Include="headers\GameState.h" />
     <ClInclude Include="headers\Component.h" />
     <ClInclude Include="headers\D3DUtils.h" />
@@ -27,18 +36,26 @@
     <ClInclude Include="headers\framework.h" />
     <ClInclude Include="headers\Input.h" />
     <ClInclude Include="headers\MathHelper.h" />
+    <ClInclude Include="headers\Mesh.h" />
     <ClInclude Include="headers\pch.h" />
+    <ClInclude Include="headers\PSO.h" />
     <ClInclude Include="headers\Resource.h" />
     <ClInclude Include="headers\Shader.h" />
     <ClInclude Include="headers\SleepyEngine.h" />
     <ClInclude Include="headers\targetver.h" />
     <ClInclude Include="headers\Timer.h" />
     <ClInclude Include="headers\Transform.h" />
+    <ClInclude Include="headers\d3dx12.h" />
+    <ClInclude Include="headers\UploadBuffer.h" />
     <ClInclude Include="headers\Utils\HResultException.h" />
     <ClInclude Include="headers\ShaderReference.h" />
     <ClInclude Include="headers\MeshRenderer.h" />
     <ClInclude Include="headers\Script.h" />
+    <ClInclude Include="headers\Pause.h" />
+    <ClInclude Include="headers\Menu.h" />
     <ClInclude Include="src\utils\d3dx12.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="headers\tmpMeshGeo.h" />
     <ClInclude Include="headers\Camera.h" />
   </ItemGroup>
   <ItemGroup>
