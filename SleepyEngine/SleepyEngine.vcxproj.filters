@@ -49,6 +49,7 @@
     <ClInclude Include="headers\Menu.h" />
     <ClInclude Include="headers\Pause.h" />
     <ClInclude Include="headers\Factory.h" />
+    <ClInclude Include="headers\ComponentDescriptor.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SleepyEngine.rc" />

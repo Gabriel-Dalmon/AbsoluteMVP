@@ -22,24 +22,15 @@ void Factory::Init(MeshRessources* parseOutpute)
 
 void Factory::FillPlayer(Entity* pEntity)
 {
-	Entity* player;
-	player->Init();
+	ColliderSphere* collider = Component::CreateComponent<ColliderSphere>();
+	pEntity->AddComponent<ColliderSphere*>(collider);
 
-	ColliderSphere* collider;
-	collider->Init();
-	player->AddComponent<ColliderSphere*>(collider);
+	MeshRenderer* mesh = Component::CreateComponent<MeshRenderer>();
+	pEntity->AddComponent<MeshRenderer*>(mesh);
 
-	Mesh* mesh;
-	mesh->Init();
-	player->AddComponent<Mesh*>(mesh);
-
-	MeshRenderer* meshRenderer;
-	meshRenderer->Init(mesh);
-	player->AddComponent<MeshRenderer*>(meshRenderer);
-
-	ShaderReference* shaderReference;
+	/*ShaderReference* shaderReference;
 	shaderReference->Init();
-	player->AddComponent<ShaderReference*>(shaderReference);
+	player->AddComponent<ShaderReference*>(shaderReference);*/
 
 	//shoot script here
 };

@@ -1,4 +1,5 @@
 #pragma once
+#include "ComponentDescriptor.h"
 
 class Entity;
 
@@ -13,12 +14,21 @@ protected:
 
 public: // Create and kill component
 	template<typename T>
-	static Component* CreateComponent() {
-		new T;
-		T->Init();
-		return T;
+	static T* CreateComponent() {
+		T* component = new T;
+		component->Init();
+		return component;
 	}
-	void KillSelf();
+
+	template<typename T, typename U>
+	static T* CreateComponent(U* descriptor) {
+		T* component = new T;
+		component->Init(descriptor);
+		return component;
+	}
+
+
+	void Release();
 
 	// Update 
 	virtual void Update() {};

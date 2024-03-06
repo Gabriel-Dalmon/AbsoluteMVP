@@ -7,7 +7,7 @@ Component::Component()
 {
 }
 
-void Component::KillSelf()
+void Component::Release()
 {
 	delete this;
 }
