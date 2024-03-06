@@ -1,6 +1,4 @@
 #pragma once
-#include "Enemy.h"
-#include "Player.h"
 
 class GameManager {
 public:
@@ -8,7 +6,7 @@ public:
 	~GameManager();
 
 	void Setup();
-	Enemy* SpawnEnnemy();
+	//Enemy* SpawnEnnemy();
 
-	std::vector<Entity*> m_entities;
+	//std::vector<Entity*> m_entities;
 };

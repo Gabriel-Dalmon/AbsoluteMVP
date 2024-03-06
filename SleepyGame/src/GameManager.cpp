@@ -6,7 +6,7 @@ GameManager::~GameManager() {};
 
 void GameManager::Setup()
 {
-	Entity* player;
+	/*Entity* player;
 	m_entities.push_back(player);
 }
 
@@ -14,5 +14,5 @@ Enemy* GameManager::SpawnEnnemy()
 {
 	Enemy* enemy;
 	m_entities.push_back(enemy);
-	return enemy;
+	return enemy;*/
 }

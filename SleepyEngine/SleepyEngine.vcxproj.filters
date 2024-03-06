@@ -20,6 +20,7 @@
     <ClCompile Include="src\components\ColliderSphere.cpp" />
     <ClCompile Include="src\GameStates\Menu.cpp" />
     <ClCompile Include="src\GameStates\Pause.cpp" />
+    <ClCompile Include="src\core\Factory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Collider.h" />
@@ -47,6 +48,7 @@
     <ClInclude Include="headers\ColliderSphere.h" />
     <ClInclude Include="headers\Menu.h" />
     <ClInclude Include="headers\Pause.h" />
+    <ClInclude Include="headers\Factory.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SleepyEngine.rc" />

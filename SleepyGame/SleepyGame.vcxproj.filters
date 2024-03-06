@@ -30,13 +30,10 @@
     <ClInclude Include="headers\GameManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\Enemy.h">
+    <ClInclude Include="headers\CustomScript.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\Bullet.h">
+    <ClInclude Include="headers\JSonParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -47,13 +44,10 @@
     <ClCompile Include="src\GameManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Enemy.cpp">
+    <ClCompile Include="src\CustomScript.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Bullet.cpp">
+    <ClCompile Include="src\JSonParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

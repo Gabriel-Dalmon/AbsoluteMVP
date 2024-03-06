@@ -6,3 +6,8 @@
 Component::Component()
 {
 }
+
+void Component::KillSelf()
+{
+	delete this;
+}

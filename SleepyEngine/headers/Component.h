@@ -4,12 +4,21 @@ class Entity;
 
 class Component
 {
-public:
+protected:
 	Component();
 	~Component() {};
 
 	// Init
 	virtual void Init() {};
+
+public: // Create and kill component
+	template<typename T>
+	static Component* CreateComponent() {
+		new T;
+		T->Init();
+		return T;
+	}
+	void KillSelf();
 
 	// Update 
 	virtual void Update() {};

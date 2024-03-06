@@ -2,16 +2,22 @@
 
 #include <vector>
 
+class Component;
+
 class Entity
 {
-public:
+private:
 	Entity();
 	~Entity() {};
 
 	// INIT
 	void Init();
 
-	// SETTER / GETTER
+public: // Create and kill entity
+	static Entity* CreateEmptyEntity();
+	void KillSelf();
+
+public: // SETTER / GETTER	
 	template<typename T> 
 	void AddComponent(T component)   
 	{
