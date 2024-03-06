@@ -7,6 +7,7 @@
 
 // WINDOWS
 #include <Windows.h>
+#include <windowsx.h>
 #include <wrl.h>
 #ifdef _DEBUG
 	#include <crtdbg.h>
@@ -39,6 +40,7 @@
 #include <DirectXColors.h>
 #include <DirectXCollision.h>
 #include "d3dx12.h"
+#include "MathHelper.h"
 
 // FORWARD DECLARATIONS
 class Mesh;

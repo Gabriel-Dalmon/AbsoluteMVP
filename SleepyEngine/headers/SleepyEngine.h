@@ -1,9 +1,7 @@
 #pragma once
 #include "resource.h"
-
-#include "d3dx12.h"
-#include <dxgi1_4.h>
-#include "MathHelper.h"
+#include "pch.h"
+#include "Camera.h"
 #include "UploadBuffer.h"
 
 
@@ -13,6 +11,7 @@
 // Bizarre que ça soit ici
 class Mesh;
 class MeshGeometry;
+class Timer;
 class Transform;
 
 struct ObjectConstants
@@ -33,6 +32,9 @@ public:
     ID3D12Resource* GetCurrentBackBuffer()const;
     D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView()const;
 
+    LRESULT MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+    static SleepyEngine* GetApp();
+
     void Release();
 
 private:
@@ -43,6 +45,12 @@ private:
     void Draw();
     void DrawBis();
     void Update();
+
+    void OnMouseDown(WPARAM btnState, int x, int y);
+    void OnMouseUp(WPARAM btnState, int x, int y);
+    void OnMouseMove(WPARAM btnState, int x, int y);
+
+    void OnKeyboardInput(Timer& time);
 
     // D3DX12 Initialization
     void InitD3D();
@@ -84,6 +92,8 @@ private:
     int m_currentBackBufferOffset = 0;
 
     D3D12_VIEWPORT* m_pViewPort = new D3D12_VIEWPORT();
+
+    Camera m_Camera;
 
     UINT m_4xMsaaQuality = 0;
     bool m_4xMsaaState = false;
@@ -127,4 +137,8 @@ private:
     float xS = 0.0f;
     float yS = 0.5f;
     float zS = 0.5f;
+
+    POINT m_LastMousePos;
+
+    static SleepyEngine* m_App;
 };
