@@ -12,6 +12,7 @@
 // I don't know where to put them
 #include "Input.h"
 #include "Timer.h"
+#include "TextureLoader.h"
 
 // Global Variables:
 
@@ -45,6 +46,9 @@ void SleepyEngine::InitD3D()
     BuildConstantBuffers();
     BuildBoxGeometry();
     BuildBoxGeometryBis();
+
+    // Texture 
+    CreateTexture(L"imgdds/t_box.dds");
 
     XMMATRIX P = XMMatrixPerspectiveFovLH(0.25f * MathHelper::Pi, static_cast<float>(m_clientWidth / m_clientHeight), 1.0f, 1000.0f);
     XMStoreFloat4x4(&mProj, P);
@@ -612,6 +616,52 @@ void SleepyEngine::BuildBoxGeometryBis()
     submesh.BaseVertexLocation = 0;
 
     mBoxGeoBis->DrawArgs["box"] = submesh;
+}
+
+ID3D12Resource* SleepyEngine::CreateTexture(const wchar_t* fileName)
+{
+    // reset command list
+    m_pDirectCmdListAlloc->Reset();
+    m_pCommandList->Reset(m_pDirectCmdListAlloc, nullptr);
+
+    // init variable texture 
+   
+    Microsoft::WRL::ComPtr<ID3D12Resource> texture;
+    Microsoft::WRL::ComPtr<ID3D12Resource> textureuploiad;
+
+    // on load la texture ddsdepuis son emplacment de fichier
+    
+    //CreateDDSTextureFromFile12(device, cmdList, fileName, texture, textureUploadHeap, maxsize, alphaMode);
+    ThrowIfFailed(CreateDDSTextureFromFile12(m_pDevice, m_pCommandList, fileName, texture, textureuploiad));
+
+    // créer un SRV Descriptors 
+
+    CD3DX12_CPU_DESCRIPTOR_HANDLE hDescriptor(m_pCbvHeap->GetCPUDescriptorHandleForHeapStart());
+
+    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    srvDesc.Format = texture->GetDesc().Format;
+    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Texture2D.MostDetailedMip = 0;
+    srvDesc.Texture2D.MipLevels = texture->GetDesc().MipLevels;
+    srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+    m_pDevice->CreateShaderResourceView(texture.Get(), &srvDesc, hDescriptor);
+
+    // close command list 
+    m_pCommandList->Close();
+
+    // execute command list
+    ID3D12CommandList* cmdsLists[] = { m_pCommandList };
+    m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+
+    // flush command list
+    FlushCommandQueue();
+
+    // get and need to store texture
+    ID3D12Resource* pTexture = texture.Get();
+    texture.Detach();
+
+    return pTexture;
 }
 
 

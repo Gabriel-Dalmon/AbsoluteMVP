@@ -23,7 +23,8 @@
     <ClCompile Include="src\utils\HResultException.cpp" />
     <ClCompile Include="src\utils\MathHelper.cpp" />
     <ClCompile Include="src\components\tmpMeshGeo.cpp" />
-    <ClCompile Include="src\components\TextureLoader.cpp" />
+    <ClCompile Include="src\utils\TextureLoader.cpp" />
+    <ClCompile Include="src\components\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Collider.h" />
@@ -57,6 +58,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="headers\tmpMeshGeo.h" />
     <ClInclude Include="headers\TextureLoader.h" />
+    <ClInclude Include="headers\Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SleepyEngine.rc" />
