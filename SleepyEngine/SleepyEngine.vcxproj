@@ -146,6 +146,7 @@
     <ClInclude Include="headers\Graphics\CommandQueue.h" />
     <ClInclude Include="headers\Graphics\Device.h" />
     <ClInclude Include="headers\Graphics\FrameResource.h" />
+    <ClInclude Include="headers\Graphics\PipelineStateObject.h" />
     <ClInclude Include="headers\Graphics\Renderer.h" />
     <ClInclude Include="headers\Graphics\SwapChain.h" />
     <ClInclude Include="headers\Graphics\Window.h" />
@@ -180,6 +181,7 @@
     <ClCompile Include="src\graphics\CommandQueue.cpp" />
     <ClCompile Include="src\graphics\Device.cpp" />
     <ClCompile Include="src\graphics\FrameResource.cpp" />
+    <ClCompile Include="src\graphics\PipelineStateObject.cpp" />
     <ClCompile Include="src\graphics\Renderer.cpp" />
     <ClCompile Include="src\graphics\SwapChain.cpp" />
     <ClCompile Include="src\graphics\Window.cpp" />

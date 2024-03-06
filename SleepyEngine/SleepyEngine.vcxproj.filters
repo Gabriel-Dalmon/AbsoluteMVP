@@ -22,6 +22,7 @@
     <ClCompile Include="src\graphics\Window.cpp" />
     <ClCompile Include="src\graphics\Renderer.cpp" />
     <ClCompile Include="src\graphics\CommandQueue.cpp" />
+    <ClCompile Include="src\graphics\PipelineStateObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Collider.h" />
@@ -51,6 +52,7 @@
     <ClInclude Include="headers\Graphics\Window.h" />
     <ClInclude Include="headers\Utils\Constants.h" />
     <ClInclude Include="headers\Graphics\CommandQueue.h" />
+    <ClInclude Include="headers\Graphics\PipelineStateObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SleepyEngine.rc" />
