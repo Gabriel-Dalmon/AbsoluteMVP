@@ -11,6 +11,7 @@
 
 class Mesh;
 class MeshGeometry;
+class Timer;
 
 struct ObjectConstants
 {
@@ -47,6 +48,8 @@ private:
     void OnMouseDown(WPARAM btnState, int x, int y);
     void OnMouseUp(WPARAM btnState, int x, int y);
     void OnMouseMove(WPARAM btnState, int x, int y);
+
+    void OnKeyboardInput(Timer& time);
 
     // D3DX12 Initialization
     void InitD3D();

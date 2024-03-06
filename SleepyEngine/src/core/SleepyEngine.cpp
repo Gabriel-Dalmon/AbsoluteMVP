@@ -370,6 +370,7 @@ int SleepyEngine::Run()
 
             timer.UpdateFPS(mhMainWnd);
 
+            OnKeyboardInput(timer);
             Update();
             DrawBis();
         }
