@@ -45,7 +45,6 @@
 class Mesh;
 class Component;
 class Entity;
-#include "../src/utils/d3dx12.h"
 #include "MathHelper.h"
 
 

@@ -30,6 +30,9 @@ public:
     ID3D12Resource* GetCurrentBackBuffer()const;
     D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView()const;
 
+    LRESULT MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+    static SleepyEngine* GetApp();
+
     void Release();
 
 private:
