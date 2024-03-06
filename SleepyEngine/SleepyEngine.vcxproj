@@ -82,7 +82,7 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -96,7 +96,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -110,7 +110,7 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -127,7 +127,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -157,6 +157,7 @@
     <ClInclude Include="headers\SleepyEngine.h" />
     <ClInclude Include="headers\targetver.h" />
     <ClInclude Include="headers\Timer.h" />
+    <ClInclude Include="headers\tmpMeshGeo.h" />
     <ClInclude Include="headers\Transform.h" />
     <ClInclude Include="headers\d3dx12.h" />
     <ClInclude Include="headers\UploadBuffer.h" />
@@ -166,9 +167,11 @@
     <ClInclude Include="headers\Script.h" />
     <ClInclude Include="headers\Pause.h" />
     <ClInclude Include="headers\Menu.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="src\utils\d3dx12.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\components\tmpMeshGeo.cpp" />
     <ClCompile Include="src\GameStates\Pause.cpp" />
     <ClCompile Include="src\GameStates\Menu.cpp" />
     <ClCompile Include="src\components\Collider.cpp" />

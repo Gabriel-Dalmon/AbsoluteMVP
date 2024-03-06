@@ -2,18 +2,8 @@
 
 #include "resource.h"
 
-#include <windows.h>
-#include <wrl.h> //ComPtr
-#include <dxgi1_4.h>
 #include "d3dx12.h"
-
-#include <d3d12.h>
-#include <cassert>
-
-#include <DirectXColors.h>
-
-#include <DXGI.h>
-
+#include <dxgi1_4.h>
 #include "MathHelper.h"
 #include "UploadBuffer.h"
 
@@ -22,6 +12,7 @@
 #define SWAP_CHAIN_BUFFER_COUNT 2
 
 class Mesh;
+class MeshGeometry;
 
 struct ObjectConstants
 {
@@ -47,6 +38,11 @@ private:
     void InitWindow(int nCmdShow);
     ATOM RegisterWindowClass();
 
+    void FlushCommandQueue();
+    void Draw();
+    void DrawBis();
+    void Update();
+
     // D3DX12 Initialization
     void InitD3D();
     void EnableAdditionalD3D12Debug();
@@ -63,10 +59,10 @@ private:
     void SetScissorRect();
     void BuildDescriptorHeaps();
     void BuildConstantBuffers();
+    void BuildBoxGeometry();
+    void BuildBoxGeometryBis();
 
-    void FlushCommandQueue();
-    void Draw();
-    void Draw(Mesh* mesh);
+
 private:
     WCHAR m_szTitle[MAX_LOADSTRING] = L"";                  // The title bar text
     WCHAR m_szWindowClass[MAX_LOADSTRING] = L"";            // the main window class name
@@ -122,4 +118,12 @@ private:
     float mTheta = 1.5f * DirectX::XM_PI;
     float mPhi = DirectX::XM_PIDIV4;
     float mRadius = 5.0f;
+
+    Mesh* mBoxGeo = nullptr;
+    MeshGeometry* mBoxGeoBis = nullptr;
+    Transform m_Transform;
+
+    float xS = 0.0f;
+    float yS = 0.5f;
+    float zS = 0.5f;
 };
