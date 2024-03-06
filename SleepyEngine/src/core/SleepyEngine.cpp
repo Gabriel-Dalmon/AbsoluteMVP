@@ -803,6 +803,7 @@ void SleepyEngine::DrawBis()
     FlushCommandQueue();
 }
 
+// Note: the best option is to remove that and make them callbacks with the input class
 void SleepyEngine::OnMouseDown(WPARAM btnState, int x, int y)
 {
     m_LastMousePos.x = x;
@@ -834,4 +835,23 @@ void SleepyEngine::OnMouseMove(WPARAM btnState, int x, int y)
 
     m_LastMousePos.x = x;
     m_LastMousePos.y = y;
+}
+
+void SleepyEngine::OnKeyboardInput(Timer& timer)
+{
+    const float dt = timer.GetDeltaTime();
+
+    if (GetAsyncKeyState('Z') & 0x8000)
+        m_Camera.Walk(10.0f * dt);
+
+    if (GetAsyncKeyState('S') & 0x8000)
+        m_Camera.Walk(-10.0f * dt);
+
+    if (GetAsyncKeyState('Q') & 0x8000)
+        m_Camera.Strafe(-10.0f * dt);
+
+    if (GetAsyncKeyState('D') & 0x8000)
+        m_Camera.Strafe(10.0f * dt);
+
+    m_Camera.UpdateViewMatrix();
 }
