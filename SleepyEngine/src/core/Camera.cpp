@@ -194,8 +194,10 @@ void Camera::Walk(float d)
 	// mPosition += d*mLook
 	XMVECTOR s = XMVectorReplicate(d);
 	XMVECTOR l = XMLoadFloat3(&mLook);
+	XMVECTOR kys = { XMVectorGetX(l), 0, XMVectorGetZ(l) };
+	kys = XMVector3Normalize(kys);
 	XMVECTOR p = XMLoadFloat3(&mPosition);
-	XMStoreFloat3(&mPosition, XMVectorMultiplyAdd(s, l, p));
+	XMStoreFloat3(&mPosition, XMVectorMultiplyAdd(s, kys, p));
 
 	mViewDirty = true;
 }
