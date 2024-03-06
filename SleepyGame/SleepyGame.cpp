@@ -13,12 +13,13 @@ void CreateConsoleAndCallEngine(HINSTANCE hInstance)
     AllocConsole();
     FILE* consoleOut;
     freopen_s(&consoleOut, "CONOUT$", "w", stdout);
-
     SleepyEngine engine(hInstance);
     engine.Initialize();
-    engine.Run();
 
-    fclose(consoleOut);
+    engine.Run();
+   
+    if(consoleOut != 0)
+        fclose(consoleOut);
     FreeConsole();
 }
 

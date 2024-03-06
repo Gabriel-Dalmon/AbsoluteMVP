@@ -380,8 +380,8 @@ int SleepyEngine::Run()
         }
         
     }
-    // Release();
-    // shader.Release();
+    Release();
+    shader.Release();
 
     return (int)msg.wParam;
 }
@@ -425,6 +425,9 @@ void SleepyEngine::Release()
     // "new"
     delete m_pViewPort;
     delete m_pObjectCB;
+    delete m_Transform;
+    delete mBoxGeo;
+    delete mBoxGeoBis;
 
     // Window and Window Class
     DestroyWindow(mhMainWnd); 
