@@ -255,7 +255,7 @@ int SleepyEngine::Initialize()
         RegisterWindowClass();
         InitWindow(SW_SHOW);
         InitD3D();
-        m_Camera.SetPosition(0.0f, 0.0f, 0.0f);
+        m_Camera.SetPosition(0.0f, 2.0f, -15.0f);
     }
     catch (HResultException error)
     {
@@ -469,14 +469,6 @@ void SleepyEngine::FlushCommandQueue()
     }
 }
 
-void SleepyEngine::UpdateInstanceData()
-{
-    XMMATRIX view = m_Camera.GetView();
-    XMMATRIX invView = XMMatrixInverse(&XMMatrixDeterminant(view), view);
-
-    //auto buffer = FrameRess
-}
-
 void SleepyEngine::Draw()//const GameTimer& gt)
 {
     // Reuse the memory associated with command recording.
@@ -551,14 +543,18 @@ void SleepyEngine::OnMouseUp(WPARAM btnState, int x, int y)
 
 void SleepyEngine::OnMouseMove(WPARAM btnState, int x, int y)
 {
+    std::cout << "Moov Boolet" << std::endl;
     if ((btnState & MK_LBUTTON) != 0)
     {
+        std::cout << "Cam" << std::endl;
         // Make each pixel correspond to a quarter of a degree.
         float dx = DirectX::XMConvertToRadians(0.25f * static_cast<float>(x - m_LastMousePos.x));
         float dy = DirectX::XMConvertToRadians(0.25f * static_cast<float>(y - m_LastMousePos.y));
 
         m_Camera.Pitch(dy);
         m_Camera.RotateY(dx);
+
+        m_Camera.UpdateViewMatrix();
     }
 
     m_LastMousePos.x = x;
