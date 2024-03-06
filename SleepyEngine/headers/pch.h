@@ -44,7 +44,7 @@
 class Mesh;
 class Component;
 class Entity;
-
+class Transform;
 
 // MACROS
 #define RELEASE(p) {if (p){ p->Release(); p = nullptr;}}

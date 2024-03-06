@@ -291,8 +291,9 @@ void SleepyEngine::BuildConstantBuffers()
 
 int SleepyEngine::Run()
 {
-    m_Transform.Identity();  
-    m_Transform.SetScale(.5f, .5f, .5f);
+    m_Transform = new Transform();
+    m_Transform->Identity();  
+    m_Transform->SetScale(.5f, .5f, .5f);
 
     HACCEL hAccelTable = LoadAccelerators(m_hAppInstance, MAKEINTRESOURCE(IDC_SLEEPYENGINE));
 
@@ -637,18 +638,18 @@ void SleepyEngine::Update()
 
     // Rotation essai 0:
     // m_Transform.Identity();
-    m_Transform.Rotate(.001f, .001f, .001f);
+    m_Transform->Rotate(.001f, .001f, .001f);
     if (xS <= 1.f /*&& yS <= 1.f && zS <= 1.f*/)
     {
         xS += 0.005;/*
         yS += 0.0001;
         zS += 0.0001;*/
-        m_Transform.SetScale(xS, yS, zS);
-        std::cout << m_Transform.m_scaleVect.x << std::endl;
+        m_Transform->SetScale(xS, yS, zS);
+        std::cout << m_Transform->m_scaleVect.x << std::endl;
     }
-    m_Transform.Update();
+    m_Transform->Update();
 
-    XMMATRIX world = XMLoadFloat4x4(&m_Transform.m_transformMatrix);
+    XMMATRIX world = XMLoadFloat4x4(&m_Transform->m_transformMatrix);
     XMMATRIX proj = XMLoadFloat4x4(&mProj);
     XMMATRIX worldViewProj = world * view * proj;
 

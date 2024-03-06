@@ -1,5 +1,4 @@
 #pragma once
-
 #include "resource.h"
 
 #include "d3dx12.h"
@@ -11,8 +10,10 @@
 #define MAX_LOADSTRING 100
 #define SWAP_CHAIN_BUFFER_COUNT 2
 
+// Bizarre que ça soit ici
 class Mesh;
 class MeshGeometry;
+class Transform;
 
 struct ObjectConstants
 {
@@ -121,7 +122,7 @@ private:
 
     Mesh* mBoxGeo = nullptr;
     MeshGeometry* mBoxGeoBis = nullptr;
-    Transform m_Transform;
+    Transform* m_Transform = nullptr;
 
     float xS = 0.0f;
     float yS = 0.5f;
