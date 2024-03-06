@@ -9,7 +9,7 @@ public:
 // MEMBER VARIABLES
 public:
 	//scale
-	XMFLOAT4 m_scaleQuat;
+	XMFLOAT3 m_scaleVect;
 	XMFLOAT4X4 m_scaleMatrix;
 
 	//orientation
@@ -20,7 +20,7 @@ public:
 	XMFLOAT4X4 m_currentRotateMatrix;
 
 	//position
-	XMFLOAT4 m_positionQuat;
+	XMFLOAT3 m_positionVect;
 	XMFLOAT4X4 m_positionMatrix;
 
 	//"merged" matrix
@@ -28,7 +28,14 @@ public:
 
 // METHODES
 public:
+	// Init
 	void Identity();
+
+	// Methods
 	void Rotate(float yaw, float pitch, float roll);
+	void SetScale(float x, float y, float z); 
+	void SetPosition(float x, float y, float z);
+
 	void Update();
+
 };

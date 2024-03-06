@@ -121,4 +121,9 @@ private:
 
     Mesh* mBoxGeo = nullptr;
     MeshGeometry* mBoxGeoBis = nullptr;
+    Transform m_Transform;
+
+    float xS = 0.0f;
+    float yS = 0.5f;
+    float zS = 0.5f;
 };

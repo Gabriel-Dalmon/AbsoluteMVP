@@ -2,6 +2,7 @@
 //
 #include "pch.h"
 
+#include "Transform.h"
 #include "SleepyEngine.h"
 #include "Utils/HResultException.h"
 #include "Mesh.h"
@@ -290,6 +291,8 @@ void SleepyEngine::BuildConstantBuffers()
 
 int SleepyEngine::Run()
 {
+    m_Transform.Identity();  
+    m_Transform.SetScale(.5f, .5f, .5f);
 
     HACCEL hAccelTable = LoadAccelerators(m_hAppInstance, MAKEINTRESOURCE(IDC_SLEEPYENGINE));
 
@@ -348,8 +351,8 @@ int SleepyEngine::Run()
         }
         
     }
-    Release();
-    shader.Release();
+    // Release();
+    // shader.Release();
 
     return (int)msg.wParam;
 }
@@ -617,20 +620,34 @@ void SleepyEngine::BuildBoxGeometryBis()
 
 void SleepyEngine::Update()
 {
+    std::cout << "Update" << std::endl;
     // Convert Spherical to Cartesian coordinates.
-    float x = mRadius * sinf(mPhi) * cosf(mTheta);
-    float z = mRadius * sinf(mPhi) * sinf(mTheta);
-    float y = mRadius * cosf(mPhi);
+    float x = mRadius * sinf(mPhi) * cosf(mTheta); 
+    float z = mRadius * sinf(mPhi) * sinf(mTheta); 
+    float y = mRadius * cosf(mPhi); 
 
     // Build the view matrix.
-    XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);
-    XMVECTOR target = XMVectorZero();
-    XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+    XMVECTOR pos = XMVectorSet(x, y, z, 1.0f); 
+    XMVECTOR target = XMVectorZero(); 
+    XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f); 
 
-    XMMATRIX view = XMMatrixLookAtLH(pos, target, up);
-    XMStoreFloat4x4(&mView, view);
+    XMMATRIX view = XMMatrixLookAtLH(pos, target, up); 
+    XMStoreFloat4x4(&mView, view); 
 
-    XMMATRIX world = XMLoadFloat4x4(&mWorld);
+    // Rotation essai 0:
+    // m_Transform.Identity();
+    m_Transform.Rotate(.001f, .001f, .001f);
+    if (xS <= 1.f /*&& yS <= 1.f && zS <= 1.f*/)
+    {
+        xS += 0.005;/*
+        yS += 0.0001;
+        zS += 0.0001;*/
+        m_Transform.SetScale(xS, yS, zS);
+        std::cout << m_Transform.m_scaleVect.x << std::endl;
+    }
+    m_Transform.Update();
+
+    XMMATRIX world = XMLoadFloat4x4(&m_Transform.m_transformMatrix);
     XMMATRIX proj = XMLoadFloat4x4(&mProj);
     XMMATRIX worldViewProj = world * view * proj;
 
@@ -638,6 +655,7 @@ void SleepyEngine::Update()
     ObjectConstants objConstants;
     XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
     m_pObjectCB->CopyData(0, objConstants);
+
 }
 
 //void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, ID3D12RootSignature* pRootSignature, Mesh* mesh)
