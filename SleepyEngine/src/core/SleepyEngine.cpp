@@ -685,8 +685,8 @@ void SleepyEngine::Update()
     XMVECTOR target = XMVectorZero(); 
     XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f); 
 
-    XMMATRIX view = XMMatrixLookAtLH(pos, target, up); 
-    XMStoreFloat4x4(&mView, view); 
+    //XMMATRIX view = XMMatrixLookAtLH(pos, target, up); 
+    //XMStoreFloat4x4(&mView, view); 
     XMMATRIX view = m_Camera.GetView();
     XMStoreFloat4x4(&mView, view);
 
@@ -704,8 +704,7 @@ void SleepyEngine::Update()
     m_Transform->Update();
 
     XMMATRIX world = XMLoadFloat4x4(&m_Transform->m_transformMatrix);
-    XMMATRIX proj = XMLoadFloat4x4(&mProj);
-    XMMATRIX world = XMLoadFloat4x4(&mWorld);
+    //XMMATRIX proj = XMLoadFloat4x4(&mProj);
     XMMATRIX proj = m_Camera.GetProj();
     XMMATRIX worldViewProj = world * view * proj;
 
