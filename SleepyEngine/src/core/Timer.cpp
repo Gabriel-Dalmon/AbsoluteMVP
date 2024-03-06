@@ -17,6 +17,10 @@ bool Timer::Init()
 	currTime = 0.f;
 	prevTime = 0.f;
 
+	FrameCount = 0;
+	FPSTimer = 0.f;
+	MaxFPS = 0;
+
 	std::cout << timeGetTime() << std::endl;
 
 	return true;
@@ -39,4 +43,23 @@ void Timer::UpdateTimer()
 	DeltaTime = currTime - prevTime;
 
 	prevTime = currTime;
+}
+
+void Timer::UpdateFPS(HWND Window)
+{
+	FrameCount += 1;
+	if ((GetTotalTime() - FPSTimer) >= 1.f)
+	{
+		std::wstring title = L"FPS: " + std::to_wstring(FrameCount) + L" | Max FPS: " + std::to_wstring(MaxFPS);
+
+		if (FrameCount > MaxFPS)
+			MaxFPS = FrameCount;
+
+		FrameCount = 0;
+		FPSTimer += GetTotalTime();
+		
+		// Might be temporary, might not be
+		// Depends on if we can figure out "fonts"
+		SetWindowText(Window, title.c_str());
+	}
 }

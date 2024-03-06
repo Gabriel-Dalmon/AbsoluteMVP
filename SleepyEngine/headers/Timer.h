@@ -7,6 +7,7 @@ class Timer
 		bool Init();
 
 		void UpdateTimer();
+		void UpdateFPS(HWND Window);
 
 		float GetTotalTime();
 		float GetDeltaTime();
@@ -20,4 +21,8 @@ class Timer
 
 		float currTime;
 		float prevTime;
+
+		float FPSTimer;
+		int FrameCount;
+		int MaxFPS;
 };

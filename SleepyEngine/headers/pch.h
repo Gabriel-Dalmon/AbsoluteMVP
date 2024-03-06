@@ -1,10 +1,5 @@
 #pragma once
 
-// FORWARD DECLARATIONS
-class Entity;
-class Component;
-class Mesh;
-
 // LIBS
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
@@ -13,6 +8,9 @@ class Mesh;
 // WINDOWS
 #include <Windows.h>
 #include <wrl.h>
+#ifdef _DEBUG
+	#include <crtdbg.h>
+#endif
 
 // STD
 #include <string>
@@ -40,12 +38,16 @@ class Mesh;
 #include <DirectXPackedVector.h>
 #include <DirectXColors.h>
 #include <DirectXCollision.h>
-#include "../src/utils/d3dx12.h"
+#include "d3dx12.h"
 
+// FORWARD DECLARATIONS
+class Mesh;
+class Component;
+class Entity;
 
 
 // MACROS
-#define RELEASE(p) {if (p){    p->Release();p = nullptr;}}
+#define RELEASE(p) {if (p){ p->Release(); p = nullptr;}}
 
 // NAMESPACES
 using namespace DirectX;

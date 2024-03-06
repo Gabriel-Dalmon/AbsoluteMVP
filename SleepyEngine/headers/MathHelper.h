@@ -76,7 +76,7 @@ public:
 		DirectX::XMVECTOR det = DirectX::XMMatrixDeterminant(A);
 		return DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(&det, A));
 	}
-
+public:
 	static DirectX::XMFLOAT4X4 Identity4x4()
 	{
 		static DirectX::XMFLOAT4X4 I(

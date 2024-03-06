@@ -2,20 +2,23 @@
 
 #include "resource.h"
 
-#include <windows.h>
-#include <wrl.h> //ComPtr
+#include "d3dx12.h"
 #include <dxgi1_4.h>
-#include "../src/utils/d3dx12.h"
+#include "MathHelper.h"
+#include "UploadBuffer.h"
 
-#include <d3d12.h>
-#include <cassert>
-
-#include <DirectXColors.h>
-
-#include <DXGI.h>
 
 #define MAX_LOADSTRING 100
 #define SWAP_CHAIN_BUFFER_COUNT 2
+
+class Mesh;
+class MeshGeometry;
+
+struct ObjectConstants
+{
+    DirectX::XMFLOAT4X4 WorldViewProj = MathHelper::Identity4x4();
+};
+
 
 class SleepyEngine
 {
@@ -23,9 +26,22 @@ public:
     SleepyEngine(HINSTANCE hInstance);
     int Initialize();
     int Run();
+
+    // GETTERS / SETTERS
+    D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferView()const;
+    ID3D12Resource* GetCurrentBackBuffer()const;
+    D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView()const;
+
+    void Release();
+
 private:
     void InitWindow(int nCmdShow);
     ATOM RegisterWindowClass();
+
+    void FlushCommandQueue();
+    void Draw();
+    void DrawBis();
+    void Update();
 
     // D3DX12 Initialization
     void InitD3D();
@@ -41,14 +57,12 @@ private:
     void CreateDepthStencilView();
     void SetViewport();
     void SetScissorRect();
+    void BuildDescriptorHeaps();
+    void BuildConstantBuffers();
+    void BuildBoxGeometry();
+    void BuildBoxGeometryBis();
 
-    void FlushCommandQueue();
-    void Draw();
 
-    // GETTERS / SETTERS
-    D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferView()const;
-    D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView()const;
-    ID3D12Resource* GetCurrentBackBuffer()const;
 private:
     WCHAR m_szTitle[MAX_LOADSTRING];                  // The title bar text
     WCHAR m_szWindowClass[MAX_LOADSTRING];            // the main window class name
@@ -83,11 +97,28 @@ private:
     IDXGISwapChain* m_pSwapChain = nullptr;
     ID3D12Resource* m_pSwapChainBuffer[SWAP_CHAIN_BUFFER_COUNT] = {nullptr, nullptr};
 
-    int m_clientWidth = 200;
-    int m_clientHeight = 200;
+    ID3D12PipelineState* m_PSO = nullptr;
+    ID3D12RootSignature* m_pRootSignature = nullptr;
+
+    int m_clientWidth = 600;
+    int m_clientHeight = 600;
 
     tagRECT m_scissorRect;
 
     HWND mhMainWnd = nullptr;
     HINSTANCE m_hAppInstance = nullptr;
+
+    // To delete/Refactor: 
+    ID3D12DescriptorHeap* m_pCbvHeap = nullptr;
+    UploadBuffer<ObjectConstants>* m_pObjectCB = nullptr;
+    DirectX::XMFLOAT4X4 mWorld = MathHelper::Identity4x4();
+    DirectX::XMFLOAT4X4 mView = MathHelper::Identity4x4();
+    DirectX::XMFLOAT4X4 mProj = MathHelper::Identity4x4();
+
+    float mTheta = 1.5f * DirectX::XM_PI;
+    float mPhi = DirectX::XM_PIDIV4;
+    float mRadius = 5.0f;
+
+    Mesh* mBoxGeo = nullptr;
+    MeshGeometry* mBoxGeoBis = nullptr;
 };

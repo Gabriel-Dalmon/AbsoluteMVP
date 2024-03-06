@@ -10,6 +10,8 @@ public:
 	// INIT
 	void Init() override;
 
+	void Release();
+
 private:
 
 };
