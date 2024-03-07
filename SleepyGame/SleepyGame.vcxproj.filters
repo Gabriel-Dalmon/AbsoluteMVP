@@ -27,6 +27,9 @@
     <ClInclude Include="SleepyGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SystemHeaders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SleepyGame.cpp">

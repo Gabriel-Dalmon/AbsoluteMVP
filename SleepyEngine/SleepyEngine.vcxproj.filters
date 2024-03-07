@@ -1,8 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="src\GameStates\Pause.cpp" />
-    <ClCompile Include="src\GameStates\Menu.cpp" />
     <ClCompile Include="src\components\Collider.cpp" />
     <ClCompile Include="src\components\ColliderOBB.cpp" />
     <ClCompile Include="src\components\ColliderSphere.cpp" />
@@ -57,6 +55,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="headers\tmpMeshGeo.h" />
     <ClInclude Include="headers\Camera.h" />
+    <ClInclude Include="headers\Engine.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SleepyEngine.rc" />
@@ -64,6 +63,9 @@
   <ItemGroup>
     <Image Include="SleepyEngine.ico" />
     <Image Include="small.ico" />
+    <Image Include="icon1.ico" />
+    <Image Include="..\..\..\..\Downloads\icon.ico" />
+    <Image Include="..\..\..\..\downloads\icon2.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SleepyEngine.aps" />

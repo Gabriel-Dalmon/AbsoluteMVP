@@ -1,4 +1,5 @@
 #pragma once
+#include "Collider.h"
 
 class ColliderOBB : public Collider
 {
@@ -8,5 +9,5 @@ public:
 
 	void Init();
 
-	BoundingOrientedBox m_box;
+	// BoundingOrientedBox m_box; 
 };

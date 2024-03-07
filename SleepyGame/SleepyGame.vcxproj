@@ -141,6 +141,7 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SleepyGame.h" />
+    <ClInclude Include="SystemHeaders.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>

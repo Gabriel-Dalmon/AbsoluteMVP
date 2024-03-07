@@ -2,17 +2,21 @@
 //
 #include "pch.h"
 
+#include "resource.h"
+#include "Camera.h"
+#include "UploadBuffer.h"
 #include "Transform.h"
-#include "SleepyEngine.h"
 #include "Utils/HResultException.h"
 #include "Mesh.h"
 #include "PSO.h"
 #include "Shader.h"
-
-#include "tmpMeshGeo.h"
-// I don't know where to put them
 #include "Input.h"
 #include "Timer.h"
+#include "tmpMeshGeo.h"
+
+#include "SleepyEngine.h"
+
+// I don't know where to put them
 
 std::ostream& XM_CALLCONV operator<<(std::ostream& os, FXMVECTOR v)
 {
@@ -259,7 +263,7 @@ int SleepyEngine::Initialize()
         RegisterWindowClass();
         InitWindow(SW_SHOW);
         InitD3D();
-        m_Camera.SetPosition(0.0f, 2.0f, -15.0f);
+        m_Camera.SetPosition(0.0f, 2.0f, -10.0f);
     }
     catch (HResultException error)
     {
@@ -444,12 +448,12 @@ ATOM SleepyEngine::RegisterWindowClass()
     wcex.cbClsExtra = 0;
     wcex.cbWndExtra = 0;
     wcex.hInstance = m_hAppInstance;
-    wcex.hIcon = LoadIcon(m_hAppInstance, MAKEINTRESOURCE(IDI_SLEEPYENGINE));
+    wcex.hIcon = LoadIcon(m_hAppInstance, MAKEINTRESOURCE(IDI_ICON1));
     wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
     wcex.lpszMenuName = 0;
     wcex.lpszClassName = m_szWindowClass;
-    wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+    wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_ICON1));
 
     return RegisterClassExW(&wcex);
 }
@@ -612,7 +616,7 @@ void SleepyEngine::BuildBoxGeometryBis()
         Vertex({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Green) }),
         Vertex({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Blue) }),
         Vertex({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Yellow) }),
-        Vertex({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Cyan) }),
+        Vertex({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Cyan) }), 
         Vertex({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Magenta) })
     };
 
@@ -696,14 +700,15 @@ void SleepyEngine::Update()
     // Rotation essai 0:
     // m_Transform.Identity();
     m_Transform->Rotate(.001f, .001f, .001f);
-    if (xS <= 1.f /*&& yS <= 1.f && zS <= 1.f*/)
+    if (xS <= 1.f && yS <= 1.f && zS <= 1.f)
     {
-        xS += 0.005;/*
-        yS += 0.0001;
-        zS += 0.0001;*/
+        xS += 0.005;
+        yS += 0.005;
+        zS += 0.005;
         m_Transform->SetScale(xS, yS, zS);
         std::cout << m_Transform->m_scaleVect.x << std::endl;
     }
+
     m_Transform->Update();
 
     XMMATRIX world = XMLoadFloat4x4(&m_Transform->m_transformMatrix);

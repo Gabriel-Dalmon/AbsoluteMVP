@@ -3,7 +3,6 @@
 //***************************************************************************************
 
 #include "pch.h"
-#include "MathHelper.h"
 #include "Camera.h"
 
 //using namespace DirectX;

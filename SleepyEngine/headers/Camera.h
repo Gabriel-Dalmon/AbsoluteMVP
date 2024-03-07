@@ -1,8 +1,5 @@
 #pragma once
 
-//#include "d3dUtil.h"
-
-
 class Camera
 {
 public:

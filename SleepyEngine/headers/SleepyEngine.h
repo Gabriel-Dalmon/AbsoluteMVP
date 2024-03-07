@@ -1,9 +1,4 @@
 #pragma once
-#include "resource.h"
-#include "pch.h"
-#include "Camera.h"
-#include "UploadBuffer.h"
-
 
 #define MAX_LOADSTRING 100
 #define SWAP_CHAIN_BUFFER_COUNT 2
@@ -16,7 +11,7 @@ class Transform;
 
 struct ObjectConstants
 {
-    DirectX::XMFLOAT4X4 WorldViewProj = MathHelper::Identity4x4();
+    XMFLOAT4X4 WorldViewProj = MathHelper::Identity4x4();
 };
 
 
@@ -28,7 +23,7 @@ public:
     int Run();
 
     // GETTERS / SETTERS
-    D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferView()const;
+    D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferView()const; 
     ID3D12Resource* GetCurrentBackBuffer()const;
     D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView()const;
 
@@ -122,9 +117,9 @@ private:
     // To delete/Refactor: 
     ID3D12DescriptorHeap* m_pCbvHeap = nullptr;
     UploadBuffer<ObjectConstants>* m_pObjectCB = nullptr;
-    DirectX::XMFLOAT4X4 mWorld = MathHelper::Identity4x4();
-    DirectX::XMFLOAT4X4 mView = MathHelper::Identity4x4();
-    DirectX::XMFLOAT4X4 mProj = MathHelper::Identity4x4();
+    XMFLOAT4X4 mWorld = MathHelper::Identity4x4();
+    XMFLOAT4X4 mView = MathHelper::Identity4x4();
+    XMFLOAT4X4 mProj = MathHelper::Identity4x4();
 
     float mTheta = 1.5f * DirectX::XM_PI;
     float mPhi = DirectX::XM_PIDIV4;
@@ -134,7 +129,7 @@ private:
     MeshGeometry* mBoxGeoBis = nullptr;
     Transform* m_Transform = nullptr;
 
-    float xS = 0.0f;
+    float xS = 0.5f;
     float yS = 0.5f;
     float zS = 0.5f;
 

@@ -156,6 +156,7 @@
     <ClInclude Include="headers\Resource.h" />
     <ClInclude Include="headers\Shader.h" />
     <ClInclude Include="headers\SleepyEngine.h" />
+    <ClInclude Include="headers\Engine.h" />
     <ClInclude Include="headers\targetver.h" />
     <ClInclude Include="headers\Timer.h" />
     <ClInclude Include="headers\tmpMeshGeo.h" />
@@ -173,8 +174,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\components\tmpMeshGeo.cpp" />
-    <ClCompile Include="src\GameStates\Pause.cpp" />
-    <ClCompile Include="src\GameStates\Menu.cpp" />
     <ClCompile Include="src\components\Collider.cpp" />
     <ClCompile Include="src\components\ColliderOBB.cpp" />
     <ClCompile Include="src\components\ColliderSphere.cpp" />
@@ -205,6 +204,9 @@
     <None Include="SleepyEngine.aps" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\Downloads\icon.ico" />
+    <Image Include="..\..\..\..\downloads\icon2.ico" />
+    <Image Include="icon1.ico" />
     <Image Include="SleepyEngine.ico" />
     <Image Include="small.ico" />
   </ItemGroup>

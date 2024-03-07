@@ -1,9 +1,4 @@
 #include "pch.h"
-#include"Collider.h"
-
-#include "ColliderOBB.h"
-#include "entity.h";
-#include "MeshRenderer.h"
 
 ColliderOBB::ColliderOBB() {};
 
