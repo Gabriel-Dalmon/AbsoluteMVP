@@ -30,6 +30,9 @@
     <ClInclude Include="SystemHeaders.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SleepyGame.cpp">

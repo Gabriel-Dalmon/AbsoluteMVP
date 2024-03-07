@@ -1,5 +1,4 @@
 #pragma once
-#include "Collider.h"
 
 class ColliderOBB : public Collider
 {

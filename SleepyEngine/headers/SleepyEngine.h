@@ -3,12 +3,6 @@
 #define MAX_LOADSTRING 100
 #define SWAP_CHAIN_BUFFER_COUNT 2
 
-// Bizarre que ça soit ici
-class Mesh;
-class MeshGeometry;
-class Timer;
-class Transform;
-
 struct ObjectConstants
 {
     XMFLOAT4X4 WorldViewProj = MathHelper::Identity4x4();

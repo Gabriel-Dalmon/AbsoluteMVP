@@ -43,12 +43,24 @@
 #include "MathHelper.h"
 
 // FORWARD DECLARATIONS
+class SleepyEngine;
+class Camera;
 class Component;
+class Collider;
+class ColliderOBB;
+class ColliderSphere;
 class Entity;
-class Transform;
+class GameState;
+class Input;
+class Menu;
 class Mesh;
-class MeshGeometry;
+class MeshRenderer;
+class Pause;
+class Script;
+class Shader;
+class ShaderReference;
 class Timer;
+class Transform;
 
 // MACROS
 #define RELEASE(p) {if (p){ p->Release(); p = nullptr;}}
@@ -59,3 +71,22 @@ class Timer;
 using namespace DirectX;
 
 // Classes 
+#include "SleepyEngine.h"
+#include "Camera.h"
+#include "Component.h"
+#include "Collider.h"
+#include "ColliderOBB.h"
+#include "ColliderSphere.h"
+#include "Entity.h"
+#include "GameState.h"
+#include "Input.h"
+#include "Menu.h"
+#include "Mesh.h"
+#include "MeshRenderer.h"
+#include "Pause.h"
+#include "Script.h"
+#include "Shader.h"
+#include "ShaderReference.h"
+#include "Timer.h"
+#include "Transform.h"
+

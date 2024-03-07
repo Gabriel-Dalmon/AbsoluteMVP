@@ -1,7 +1,4 @@
 #pragma once
-#include "Component.h"
-
-class Shader;
 
 class ShaderReference : public Component 
 {

@@ -1,7 +1,5 @@
 #include "pch.h"
 
-#include "PSO.h"
-
 ID3D12PipelineState* InitPSO(std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout,
 	ID3D12RootSignature* pRootSignature, 
 	ID3DBlob* pVSByteCode, 

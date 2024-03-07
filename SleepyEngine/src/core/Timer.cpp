@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "Timer.h"
 
 //TotalTime: temps en s depuis lancement du jeu : float
 //DeltaTime: temps écoulé entre deux frames: float

@@ -1,9 +1,7 @@
 // SleepyGame.cpp : Defines the entry point for the application.
 //
 
-
-#include "SuperHeader.h"
-#include "SuperHeader2.h"
+#include "pch.h"
 
 #include "framework.h"
 #include "SleepyGame.h"

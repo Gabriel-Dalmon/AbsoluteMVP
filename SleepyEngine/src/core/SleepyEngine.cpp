@@ -650,7 +650,7 @@ void SleepyEngine::BuildBoxGeometryBis()
     const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
     const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
 
-    mBoxGeoBis = new MeshGeometry();
+    mBoxGeoBis = new MeshGeometry(); 
     mBoxGeoBis->Name = "boxGeo";
 
     ThrowIfFailed(D3DCreateBlob(vbByteSize, &mBoxGeoBis->VertexBufferCPU));

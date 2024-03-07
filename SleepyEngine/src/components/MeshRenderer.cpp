@@ -1,7 +1,4 @@
 #include "pch.h"
-#include "Mesh.h"
-
-#include "MeshRenderer.h"
 
 MeshRenderer::MeshRenderer()
 {

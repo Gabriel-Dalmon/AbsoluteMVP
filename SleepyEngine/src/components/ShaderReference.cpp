@@ -1,8 +1,4 @@
 #include "pch.h"
-#include "Shader.h"
-
-#include "ShaderReference.h"
-
 
 ShaderReference::ShaderReference()
 {

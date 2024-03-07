@@ -1,6 +1,4 @@
 #include "pch.h"
-#include "Component.h"
-#include "Entity.h"
 
 Entity::Entity()
 {
