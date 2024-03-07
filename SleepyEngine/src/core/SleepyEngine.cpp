@@ -853,5 +853,19 @@ void SleepyEngine::OnKeyboardInput(Timer& timer)
     if (GetAsyncKeyState('D') & 0x8000)
         m_Camera.Strafe(10.0f * dt);
 
+    if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+    {
+        XMFLOAT3 v = m_Camera.GetPosition3f();
+        v.y = v.y + 10.0f * dt;
+        m_Camera.SetPosition(v);
+    }
+
+    if (GetAsyncKeyState(VK_SHIFT) & 0x8000)
+    {
+        XMFLOAT3 v = m_Camera.GetPosition3f();
+        v.y = v.y - 10.0f * dt;
+        m_Camera.SetPosition(v);
+    }
+
     m_Camera.UpdateViewMatrix();
 }
