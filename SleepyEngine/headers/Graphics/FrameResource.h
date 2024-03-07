@@ -1,8 +1,5 @@
 #pragma once
 
-class ID3D12CommandAllocator;
-class ID3D12Device;
-
 class FrameResource
 {
 public:

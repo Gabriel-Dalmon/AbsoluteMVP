@@ -765,7 +765,9 @@ void SleepyEngine::DrawBis()
     m_pCommandList->Close();
 
     ID3D12CommandList* cmdsLists[] = { m_pCommandList };
+    ID3D12CommandList* const commandsLists[] = { m_pCommandList };
     m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+    //m_pCommandQueue->ExecuteCommandLists(_countof(commandsLists), commandsLists);
 
     ThrowIfFailed(m_pSwapChain->Present(0, 0));
     m_currentBackBufferOffset = (m_currentBackBufferOffset + 1) % SWAP_CHAIN_BUFFER_COUNT;

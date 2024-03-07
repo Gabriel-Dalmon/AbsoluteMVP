@@ -142,6 +142,7 @@
     <ClInclude Include="headers\Collider.h" />
     <ClInclude Include="headers\ColliderOBB.h" />
     <ClInclude Include="headers\ColliderSphere.h" />
+    <ClInclude Include="headers\ECS\System.h" />
     <ClInclude Include="headers\GameState.h" />
     <ClInclude Include="headers\Component.h" />
     <ClInclude Include="headers\D3DUtils.h" />

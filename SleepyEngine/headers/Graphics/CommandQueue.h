@@ -9,7 +9,7 @@ public:
 	~CommandQueue();
 
 	int Initialize(Device* pDevice);
-	void Execute();
+	void Execute(unsigned int commandsListsCount, ID3D12CommandList* const commandsLists[]);
 	void Signal();
 	void Flush();
 	int CleanUp();

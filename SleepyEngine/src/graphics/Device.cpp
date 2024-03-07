@@ -1,10 +1,8 @@
+#include "pch.h"
 #include "Graphics/Device.h"
 
 #include "Utils/Constants.h"
 #include "Utils/HResultException.h"
-
-#include <dxgi1_4.h>
-#include <d3d12.h>
 
 Device::Device()
 {

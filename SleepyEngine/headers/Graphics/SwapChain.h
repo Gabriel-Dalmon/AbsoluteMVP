@@ -1,7 +1,5 @@
 #pragma once
 
-class IDXGISwapChain;
-class IDXGIFactory4;
 class Device;
 class Window;
 

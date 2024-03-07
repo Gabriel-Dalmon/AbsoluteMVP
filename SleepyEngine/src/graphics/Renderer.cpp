@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/Window.h"
 #include "Graphics/Device.h"
@@ -6,10 +7,6 @@
 #include "Utils/HResultException.h"
 
 #include "d3dx12.h"
-
-#include <windows.h>
-#include <dxgi1_4.h>
-#include <d3d12.h>
 
 Renderer::Renderer()
 {

@@ -1,11 +1,5 @@
 #pragma once
 
-#ifndef _WINDEF_
-class HINSTANCE__; // Forward or never
-typedef HINSTANCE__* HINSTANCE;
-#endif
-typedef WORD ATOM;
-
 class Window
 {
 public:

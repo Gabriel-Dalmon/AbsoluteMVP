@@ -7,5 +7,6 @@ public:
 	~PipelineStateObject();
 
 	int Initialize();
-	int CleanUp();
+	int BuildShaders();
+	int Release();
 };

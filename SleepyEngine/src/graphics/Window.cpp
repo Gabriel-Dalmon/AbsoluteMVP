@@ -1,7 +1,7 @@
+#include "pch.h"
 #include "Graphics/Window.h"
 
-#include "Resource.H"
-#include <windows.h>
+#include "Resource.h"
 
 
 Window::Window()

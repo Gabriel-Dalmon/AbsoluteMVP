@@ -1,17 +1,9 @@
 #pragma once
 
-
-#ifndef _WINDEF_
-class HINSTANCE__; // Forward or never
-typedef HINSTANCE__* HINSTANCE;
-#endif
-
 class Device;
 class SwapChain;
 class Window;
 class CommandQueue;
-class IDXGIFactory4;
-class ID3D12RootSignature;
 
 class Renderer
 {
