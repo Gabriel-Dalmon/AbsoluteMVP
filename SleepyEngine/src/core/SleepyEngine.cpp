@@ -47,6 +47,16 @@ void SleepyEngine::InitD3D()
     BuildBoxGeometry();
     BuildBoxGeometryBis();
 
+    // close command list 
+    m_pCommandList->Close();
+
+    // execute command list
+    ID3D12CommandList* cmdsLists[] = { m_pCommandList };
+    m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+
+    // flush command list
+    FlushCommandQueue();
+
     // Texture 
     CreateTexture(L"imgdds/t_box.dds");
 
@@ -326,10 +336,12 @@ int SleepyEngine::Run()
     m_PSO = InitPSO(shader.m_pInputLayout, m_pRootSignature, shader.m_pVSByteCode, shader.m_pPSByteCode, m_backBufferFormat, false, 0,
         DXGI_FORMAT_D24_UNORM_S8_UINT, m_pDevice, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
 
-    ThrowIfFailed(m_pCommandList->Close());
-    ID3D12CommandList* cmdsLists[] = { m_pCommandList };
-    m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
-    FlushCommandQueue();
+
+    // Surement pas nécessaire interfere avec texture 
+    //ThrowIfFailed(m_pCommandList->Close());
+    //ID3D12CommandList* cmdsLists[] = { m_pCommandList };
+    //m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+    //FlushCommandQueue();
 
     // Main message loop:
     while (msg.message != WM_QUIT)
@@ -624,15 +636,15 @@ ID3D12Resource* SleepyEngine::CreateTexture(const wchar_t* fileName)
     m_pDirectCmdListAlloc->Reset();
     m_pCommandList->Reset(m_pDirectCmdListAlloc, nullptr);
 
-    // init variable texture 
+    // init variables textures 
    
     Microsoft::WRL::ComPtr<ID3D12Resource> texture;
-    Microsoft::WRL::ComPtr<ID3D12Resource> textureuploiad;
+    Microsoft::WRL::ComPtr<ID3D12Resource> textureUpload;
 
     // on load la texture ddsdepuis son emplacment de fichier
     
     //CreateDDSTextureFromFile12(device, cmdList, fileName, texture, textureUploadHeap, maxsize, alphaMode);
-    ThrowIfFailed(CreateDDSTextureFromFile12(m_pDevice, m_pCommandList, fileName, texture, textureuploiad));
+    ThrowIfFailed(CreateDDSTextureFromFile12(m_pDevice, m_pCommandList, fileName, texture, textureUpload));
 
     // créer un SRV Descriptors 
 
@@ -717,7 +729,7 @@ void SleepyEngine::Draw()
     m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
     m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
- 
+
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView = mBoxGeo->VertexBufferView();
     D3D12_INDEX_BUFFER_VIEW indexBufferView = mBoxGeo->IndexBufferView();
     D3D12_VERTEX_BUFFER_VIEW vertexBufferViewBis = mBoxGeoBis->VertexBufferView();
@@ -728,7 +740,8 @@ void SleepyEngine::Draw()
 
     m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
+    //  m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
+    m_pCommandList->SetGraphicsRootConstantBufferView(0, m_pObjectCB->Resource()->GetGPUVirtualAddress());
 
     /* the following code is the one that comse from the book
     * we would like to iterate in the submesh if we had one, maybe later
