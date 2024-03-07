@@ -93,6 +93,7 @@ private:
     D3D12_VIEWPORT* m_pViewPort = new D3D12_VIEWPORT();
 
     Camera m_Camera;
+    float lastCameraY = 0.0f;
 
     UINT m_4xMsaaQuality = 0;
     bool m_4xMsaaState = false;

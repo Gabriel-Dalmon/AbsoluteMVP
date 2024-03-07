@@ -362,8 +362,6 @@ int SleepyEngine::Run()
             DispatchMessage(&msg);
         }
         else {
-            std::cout << m_Camera.GetPosition() << std::endl;
-            std::cout << m_Camera.GetView() << std::endl;
             timer.UpdateTimer();
 
             input.Update();
@@ -371,6 +369,7 @@ int SleepyEngine::Run()
             timer.UpdateFPS(mhMainWnd);
 
             OnKeyboardInput(timer);
+            //std::cout << "Lookie here:" << m_Camera.GetLook() << std::endl;
             Update();
             DrawBis();
         }
@@ -685,7 +684,7 @@ void SleepyEngine::Update()
 //void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, ID3D12RootSignature* pRootSignature, Mesh* mesh)
 void SleepyEngine::Draw()
 {
-    std::cout << "Drawing" << std::endl;
+    //std::cout << "Drawing" << std::endl;
     CD3DX12_RESOURCE_BARRIER barrier;
 
     barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
@@ -747,7 +746,7 @@ void SleepyEngine::Draw()
 
 void SleepyEngine::DrawBis()
 {
-    std::cout << "Drawing" << std::endl;
+    //std::cout << "Drawing" << std::endl;
     CD3DX12_RESOURCE_BARRIER barrier;
 
     barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
@@ -819,15 +818,18 @@ void SleepyEngine::OnMouseUp(WPARAM btnState, int x, int y)
 
 void SleepyEngine::OnMouseMove(WPARAM btnState, int x, int y)
 {
-    std::cout << "Moov Boolet" << std::endl;
     if ((btnState & MK_LBUTTON) != 0)
     {
-        std::cout << "Cam" << std::endl;
         // Make each pixel correspond to a quarter of a degree.
-        float dx = DirectX::XMConvertToRadians(0.25f * static_cast<float>(x - m_LastMousePos.x));
-        float dy = DirectX::XMConvertToRadians(0.25f * static_cast<float>(y - m_LastMousePos.y));
+        float dx = XMConvertToRadians(0.25f * static_cast<float>(x - m_LastMousePos.x));
+        float dy = XMConvertToRadians(0.25f * static_cast<float>(y - m_LastMousePos.y));
 
-        m_Camera.Pitch(dy);
+        if (lastCameraY + dy > -XM_PI * 0.35f && lastCameraY + dy < XM_PI*0.45f)
+        {
+            m_Camera.Pitch(dy);
+            lastCameraY += dy;
+        }
+
         m_Camera.RotateY(dx);
 
         m_Camera.UpdateViewMatrix();
