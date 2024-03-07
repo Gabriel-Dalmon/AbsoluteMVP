@@ -1,7 +1,7 @@
 #include "pch.h"
-#include "Entity.h"
+#include "ECS/Entity.h"
 
-#include "Component.h"
+#include "ECS/Component.h"
 
 
 Component::Component()

@@ -20,10 +20,10 @@ struct ObjectConstants
 };
 
 
-class SleepyEngine
+class OldSleepyEngine
 {
 public:
-    SleepyEngine(HINSTANCE hInstance);
+    OldSleepyEngine(HINSTANCE hInstance);
     int Initialize();
     int Run();
 

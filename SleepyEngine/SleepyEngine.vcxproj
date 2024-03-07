@@ -142,8 +142,9 @@
     <ClInclude Include="headers\Collider.h" />
     <ClInclude Include="headers\ColliderOBB.h" />
     <ClInclude Include="headers\ColliderSphere.h" />
+    <ClInclude Include="headers\Core\SleepyEngine.h" />
     <ClInclude Include="headers\ECS\System.h" />
-    <ClInclude Include="headers\GameState.h" />
+    <ClInclude Include="headers\Core\GameState.h" />
     <ClInclude Include="headers\Component.h" />
     <ClInclude Include="headers\D3DUtils.h" />
     <ClInclude Include="headers\Entity.h" />
@@ -158,6 +159,7 @@
     <ClInclude Include="headers\Input.h" />
     <ClInclude Include="headers\MathHelper.h" />
     <ClInclude Include="headers\Mesh.h" />
+    <ClInclude Include="headers\OldSleepyEngine.h" />
     <ClInclude Include="headers\pch.h" />
     <ClInclude Include="headers\PSO.h" />
     <ClInclude Include="headers\Resource.h" />
@@ -181,6 +183,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\components\tmpMeshGeo.cpp" />
+    <ClCompile Include="src\core\OldSleepyEngine.cpp" />
     <ClCompile Include="src\GameStates\Pause.cpp" />
     <ClCompile Include="src\GameStates\Menu.cpp" />
     <ClCompile Include="src\components\Collider.cpp" />

@@ -30,12 +30,13 @@
     <ClCompile Include="src\graphics\Renderer.cpp" />
     <ClCompile Include="src\graphics\CommandQueue.cpp" />
     <ClCompile Include="src\graphics\PipelineStateObject.cpp" />
+    <ClCompile Include="src\core\OldSleepyEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Collider.h" />
     <ClInclude Include="headers\ColliderOBB.h" />
     <ClInclude Include="headers\ColliderSphere.h" />
-    <ClInclude Include="headers\GameState.h" />
+    <ClInclude Include="headers\Core\GameState.h" />
     <ClInclude Include="headers\Component.h" />
     <ClInclude Include="headers\D3DUtils.h" />
     <ClInclude Include="headers\Entity.h" />
@@ -71,6 +72,8 @@
     <ClInclude Include="headers\Graphics\Window.h" />
     <ClInclude Include="headers\Utils\Constants.h" />
     <ClInclude Include="headers\ECS\System.h" />
+    <ClInclude Include="headers\Core\SleepyEngine.h" />
+    <ClInclude Include="headers\OldSleepyEngine.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SleepyEngine.rc" />

@@ -19,7 +19,7 @@ void CommandQueue::Execute(unsigned int commandsListsCount, ID3D12CommandList* c
     m_pD3DCommandQueue->ExecuteCommandLists(commandsListsCount, commandsLists);
 }
 
-void CommandQueue::Flush()
+/*void CommandQueue::Flush()
 {
     m_currentFence++;
 
@@ -44,3 +44,4 @@ void CommandQueue::Flush()
         }
     }
 }
+*/

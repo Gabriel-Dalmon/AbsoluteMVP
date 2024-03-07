@@ -7,7 +7,7 @@ public:
 	~GameState() {};
 
 	// INIT
-	void Init();
+	void Initialize();
 
 	// SETTER / GETTER
 	GameState* PreviousGameState() { return m_pPreviousGameState; }

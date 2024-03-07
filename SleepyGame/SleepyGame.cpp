@@ -3,7 +3,7 @@
 
 #include "framework.h"
 #include "SleepyGame.h"
-#include "SleepyEngine.h"
+#include "OldSleepyEngine.h"
 #include <iostream>
 #include <io.h>
 #include <fcntl.h>
@@ -29,7 +29,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         FILE* consoleOut;
         freopen_s(&consoleOut, "CONOUT$", "w", stdout);
 
-        SleepyEngine engine(hInstance);
+        OldSleepyEngine engine(hInstance);
         engine.Initialize();
         engine.Run();
 

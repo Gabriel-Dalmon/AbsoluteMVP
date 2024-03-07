@@ -1,13 +1,13 @@
 #include "pch.h"
-#include "GameState.h"
+#include "Core/GameState.h"
 
-#include "Entity.h"
+#include "ECS/Entity.h"
 
 GameState::GameState()
 {
 }
 
-void GameState::Init()
+void GameState::Initialize()
 {
 }
 

@@ -2,7 +2,7 @@
 #include"Collider.h"
 
 #include "ColliderOBB.h"
-#include "entity.h";
+#include "ECS/Entity.h";
 #include "MeshRenderer.h"
 
 ColliderOBB::ColliderOBB() {};
