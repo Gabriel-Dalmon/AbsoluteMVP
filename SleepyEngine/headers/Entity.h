@@ -15,7 +15,7 @@ private:
 
 public: // Create and kill entity
 	static Entity* CreateEmptyEntity();
-	void KillSelf();
+	void Release();
 
 public: // SETTER / GETTER	
 	template<typename T> 

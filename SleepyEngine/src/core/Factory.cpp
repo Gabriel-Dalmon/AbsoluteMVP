@@ -1,3 +1,4 @@
+#include "ComponentDescriptor.h"
 #include "Entity.h"
 #include "Factory.h"
 
@@ -22,11 +23,19 @@ void Factory::Init(MeshRessources* parseOutpute)
 
 void Factory::FillPlayer(Entity* pEntity)
 {
+	ColliderSphereDescriptor CSDesc;
+	CSDesc.center = { 0, 0, 0 };
+	CSDesc.radius = 1;
 	ColliderSphere* collider = Component::CreateComponent<ColliderSphere>();
+	collider->Init(&CSDesc);
 	pEntity->AddComponent<ColliderSphere*>(collider);
 
-	MeshRenderer* mesh = Component::CreateComponent<MeshRenderer>();
-	pEntity->AddComponent<MeshRenderer*>(mesh);
+
+	MeshReferenceDescriptor MeshRefDesc;
+	//MDesc->MeshRef =
+	/*MeshReference* meshRef = Component::CreateComponent<MeshReference>();
+	meshRef->Init(&MeshRefDesc);
+	pEntity->AddComponent<Mesh*>(meshRef);*/
 
 	/*ShaderReference* shaderReference;
 	shaderReference->Init();

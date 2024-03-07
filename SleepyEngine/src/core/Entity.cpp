@@ -18,7 +18,7 @@ Entity* Entity::CreateEmptyEntity()
 	return entity;
 }
 
-void Entity::KillSelf()
+void Entity::Release()
 {
 	Clear();
 	delete this;

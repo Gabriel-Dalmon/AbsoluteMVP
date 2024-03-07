@@ -16,7 +16,6 @@ public: // Create and kill component
 	template<typename T>
 	static T* CreateComponent() {
 		T* component = new T;
-		component->Init();
 		return component;
 	}
 
