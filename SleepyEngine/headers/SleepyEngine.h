@@ -1,8 +1,5 @@
 #pragma once
 
-#define MAX_LOADSTRING 100
-#define SWAP_CHAIN_BUFFER_COUNT 2
-
 struct ObjectConstants
 {
     XMFLOAT4X4 WorldViewProj = MathHelper::Identity4x4();

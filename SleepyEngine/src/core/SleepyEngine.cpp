@@ -3,20 +3,19 @@
 #include "pch.h"
 
 #include "resource.h"
-#include "Camera.h"
 #include "UploadBuffer.h"
-#include "Transform.h"
 #include "Utils/HResultException.h"
-#include "Mesh.h"
 #include "PSO.h"
-#include "Shader.h"
-#include "Input.h"
-#include "Timer.h"
 #include "tmpMeshGeo.h"
 
-#include "SleepyEngine.h"
-
-// I don't know where to put them
+//#include "Camera.h"
+//#include "Transform.h"
+//#include "Mesh.h"
+//#include "Shader.h"
+//#include "Input.h"
+//#include "Timer.h"
+// 
+//#include "SleepyEngine.h"
 
 std::ostream& XM_CALLCONV operator<<(std::ostream& os, FXMVECTOR v)
 {
