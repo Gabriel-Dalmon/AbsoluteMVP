@@ -7,7 +7,7 @@ MeshRenderer::MeshRenderer()
 {
 }
 
-void MeshRenderer::Init(Mesh* mesh)
+void MeshRenderer::Init(MeshReferenceDescriptor* desc)
 {
-	m_pMesh = mesh;
+	m_pMesh = desc->meshRef;
 }

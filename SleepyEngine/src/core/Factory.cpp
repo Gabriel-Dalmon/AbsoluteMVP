@@ -1,6 +1,7 @@
 #include "ComponentDescriptor.h"
 #include "Entity.h"
 #include "Factory.h"
+#include "RessourceAllocator.h"
 
 #include "pch.h"
 //include components
@@ -9,16 +10,17 @@
 #include "MeshRenderer.h"
 #include "Script.h"
 #include "ShaderReference.h"
-#include "RessourceAllocator.h"
+#include "MeshRenderer.h"
+#include "Shader.h"
 
 
 Factory::Factory() {};
 
 Factory::~Factory() {};
 
-void Factory::Init(MeshRessources* parseOutpute) 
+void Factory::Init(RessourceAllocator* pRessourceAllocator)
 {
-	m_pMeshRessources = parseOutpute;
+	m_pRessourceAllocator = pRessourceAllocator;
 }
 
 
@@ -33,14 +35,18 @@ void Factory::FillPlayer(Entity* pEntity)
 
 
 	MeshReferenceDescriptor MeshRefDesc;
-	//MDesc->MeshRef = ressourceAllocator->mesCollection("cube")
-	/*MeshReference* meshRef = Component::CreateComponent<MeshReference>();
+	MeshRefDesc.meshRef = m_pRessourceAllocator->getMesh("cube");
+	MeshRenderer* meshRef = Component::CreateComponent<MeshRenderer>();
 	meshRef->Init(&MeshRefDesc);
-	pEntity->AddComponent<Mesh*>(meshRef);*/
+	pEntity->AddComponent<MeshRenderer*>(meshRef);
 
-	/*ShaderReference* shaderReference;
-	shaderReference->Init();
-	player->AddComponent<ShaderReference*>(shaderReference);*/
+	// /!\ we create a shader dynamically for tests, dont forget to change it
+	ShaderReferenceDescriptor ShaderRefDesc;
+	ShaderRefDesc.shaderRef = new Shader;
+	ShaderRefDesc.shaderRef->Init();
+	ShaderReference* shaderReference;
+	shaderReference->Init(&ShaderRefDesc);
+	pEntity->AddComponent<ShaderReference*>(shaderReference);
 
 	//shoot script here
 };

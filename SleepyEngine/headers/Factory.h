@@ -1,17 +1,17 @@
 #pragma once
 
 class Entity;
-struct MeshRessources;
+struct RessourceAllocator;
 
 class Factory 
 {
 public:
 	Factory();
 	~Factory();
-	void Init(MeshRessources* pParseOutpute);
+	void Init(RessourceAllocator* rRessourceAllocator);
 
 private:
-	MeshRessources* m_pMeshRessources;
+	RessourceAllocator* m_pRessourceAllocator;
 
 public:
 	void FillPlayer(Entity* pEntity);

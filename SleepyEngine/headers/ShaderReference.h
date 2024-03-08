@@ -10,7 +10,7 @@ public:
 	~ShaderReference() {};
 
 	// INIT
-	void Init();
+	void Init(ShaderReferenceDescriptor* desc);
 
 	// SETTER / GETTER
 	Shader* GetShader() { return m_pShader; }

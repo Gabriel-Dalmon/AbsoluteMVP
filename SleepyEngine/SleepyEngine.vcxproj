@@ -167,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core\Factory.cpp" />
+    <ClCompile Include="src\core\RessourceAllocator.cpp" />
     <ClCompile Include="src\GameStates\Pause.cpp" />
     <ClCompile Include="src\GameStates\Menu.cpp" />
     <ClCompile Include="src\components\Collider.cpp" />

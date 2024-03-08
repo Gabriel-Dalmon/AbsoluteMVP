@@ -7,6 +7,7 @@ class ID3D12Device;
 class ID3D12GraphicsCommandList;
 struct Vertex;
 class Mesh;
+class Shader;
 
 
 struct Descriptor {
@@ -31,3 +32,7 @@ struct MeshReferenceDescriptor : Descriptor
 	Mesh* meshRef;
 };
 
+struct ShaderReferenceDescriptor : Descriptor
+{
+	Shader* shaderRef;
+};

@@ -21,6 +21,7 @@
     <ClCompile Include="src\GameStates\Menu.cpp" />
     <ClCompile Include="src\GameStates\Pause.cpp" />
     <ClCompile Include="src\core\Factory.cpp" />
+    <ClCompile Include="src\core\RessourceAllocator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Collider.h" />
