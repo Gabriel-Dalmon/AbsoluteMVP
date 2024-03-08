@@ -41,6 +41,7 @@ private:
     void FlushCommandQueue();
     void Draw();
     void DrawBis();
+    void DrawMeshWithTexture();
     void Update();
 
     // D3DX12 Initialization
@@ -64,6 +65,7 @@ private:
 
     // Texture
     ID3D12Resource* CreateTexture(const wchar_t* fileName);
+
 
 
 private:

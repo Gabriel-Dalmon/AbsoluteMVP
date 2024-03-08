@@ -8,6 +8,12 @@ struct Vertex
 	XMFLOAT4 Color;
 };
 
+struct VertexTexture
+{
+	XMFLOAT3 Pos;
+	XMFLOAT2 Uv;
+};
+
 
 class Mesh : public Component
 {

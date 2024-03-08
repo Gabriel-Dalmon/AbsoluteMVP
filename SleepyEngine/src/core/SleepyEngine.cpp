@@ -272,7 +272,7 @@ int SleepyEngine::Initialize()
 void SleepyEngine::BuildDescriptorHeaps()
 {
     D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDesc;
-    cbvHeapDesc.NumDescriptors = 1;
+    cbvHeapDesc.NumDescriptors = 100;
     cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
     cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
     cbvHeapDesc.NodeMask = 0;
@@ -560,16 +560,31 @@ void SleepyEngine::BuildBoxGeometry()
 
 void SleepyEngine::BuildBoxGeometryBis()
 {
-    std::array<Vertex, 8> vertices =
+    // Avec color 
+    //std::array<Vertex, 8> vertices =
+    //{
+    //    Vertex({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::White) }),
+    //    Vertex({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Black) }),
+    //    Vertex({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Red) }),
+    //    Vertex({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Green) }),
+    //    Vertex({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Blue) }),
+    //    Vertex({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Yellow) }),
+    //    Vertex({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Cyan) }),
+    //    Vertex({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Magenta) })
+    //};
+
+    //Avec uv pour les textures
+    std::array<VertexTexture, 8> vertices =
     {
-        Vertex({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::White) }),
-        Vertex({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Black) }),
-        Vertex({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Red) }),
-        Vertex({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Green) }),
-        Vertex({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Blue) }),
-        Vertex({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Yellow) }),
-        Vertex({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Cyan) }),
-        Vertex({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Magenta) })
+        VertexTexture({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT2(0.0f, 0.0f) }), // Coin inférieur gauche, face avant
+        VertexTexture({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT2(0.0f, 1.0f) }), // Coin supérieur gauche, face avant
+        VertexTexture({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT2(1.0f, 1.0f) }), // Coin supérieur droit, face avant
+        VertexTexture({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT2(1.0f, 0.0f) }), // Coin inférieur droit, face avant
+
+        VertexTexture({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT2(0.0f, 0.0f) }), // Coin inférieur gauche, face arrière
+        VertexTexture({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT2(0.0f, 1.0f) }), // Coin supérieur gauche, face arrière
+        VertexTexture({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT2(1.0f, 1.0f) }), // Coin supérieur droit, face arrière
+        VertexTexture({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT2(1.0f, 0.0f) }), // Coin inférieur droit, face arrière
     };
 
     std::array<std::uint16_t, 36> indices =
@@ -599,7 +614,9 @@ void SleepyEngine::BuildBoxGeometryBis()
         4, 3, 7
     };
 
-    const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
+    //const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
+    const UINT vbByteSize = (UINT)vertices.size() * sizeof(VertexTexture);
+
     const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
 
     mBoxGeoBis = new MeshGeometry();
@@ -617,7 +634,9 @@ void SleepyEngine::BuildBoxGeometryBis()
     mBoxGeoBis->IndexBufferGPU = D3DUtils::CreateDefaultBufferWRL(m_pDevice,
         m_pCommandList, indices.data(), ibByteSize, mBoxGeoBis->IndexBufferUploader);
 
-    mBoxGeoBis->VertexByteStride = sizeof(Vertex);
+    //mBoxGeoBis->VertexByteStride = sizeof(Vertex);
+    mBoxGeoBis->VertexByteStride = sizeof(VertexTexture);
+
     mBoxGeoBis->VertexBufferByteSize = vbByteSize;
     mBoxGeoBis->IndexFormat = DXGI_FORMAT_R16_UINT;
     mBoxGeoBis->IndexBufferByteSize = ibByteSize;
@@ -637,18 +656,20 @@ ID3D12Resource* SleepyEngine::CreateTexture(const wchar_t* fileName)
     m_pCommandList->Reset(m_pDirectCmdListAlloc, nullptr);
 
     // init variables textures 
-   
     Microsoft::WRL::ComPtr<ID3D12Resource> texture;
     Microsoft::WRL::ComPtr<ID3D12Resource> textureUpload;
 
     // on load la texture ddsdepuis son emplacment de fichier
-    
-    //CreateDDSTextureFromFile12(device, cmdList, fileName, texture, textureUploadHeap, maxsize, alphaMode);
     ThrowIfFailed(CreateDDSTextureFromFile12(m_pDevice, m_pCommandList, fileName, texture, textureUpload));
 
     // créer un SRV Descriptors 
-
     CD3DX12_CPU_DESCRIPTOR_HANDLE hDescriptor(m_pCbvHeap->GetCPUDescriptorHandleForHeapStart());
+
+    // Pour trouver la taille d'une case du heap pour l'offset ici = 32
+    //std::cout << "size d'une case du heap :" << m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) << std::endl;
+
+    // On decale d'une case dans le heap ( une case = 32 octets )
+    hDescriptor.Offset(1, 32);
 
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
     srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -658,6 +679,7 @@ ID3D12Resource* SleepyEngine::CreateTexture(const wchar_t* fileName)
     srvDesc.Texture2D.MipLevels = texture->GetDesc().MipLevels;
     srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
     m_pDevice->CreateShaderResourceView(texture.Get(), &srvDesc, hDescriptor);
+
 
     // close command list 
     m_pCommandList->Close();
@@ -801,7 +823,9 @@ void SleepyEngine::DrawBis()
 
     m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
+    // m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
+    m_pCommandList->SetGraphicsRootConstantBufferView(0, m_pObjectCB->Resource()->GetGPUVirtualAddress());
+
 
     /* the following code is the one that comse from the book
     * we would like to iterate in the submesh if we had one, maybe later
@@ -823,3 +847,38 @@ void SleepyEngine::DrawBis()
     m_currentBackBufferOffset = (m_currentBackBufferOffset + 1) % SWAP_CHAIN_BUFFER_COUNT;
     FlushCommandQueue();
 }
+
+void SleepyEngine::DrawMeshWithTexture()
+{
+    //UINT objCBByteSize = d3dUtil::CalcConstantBufferByteSize(sizeof(ObjectConstants));
+    //UINT matCBByteSize = d3dUtil::CalcConstantBufferByteSize(sizeof(MaterialConstants));
+
+    //auto objectCB = mCurrFrameResource->ObjectCB->Resource();
+    //auto matCB = mCurrFrameResource->MaterialCB->Resource();
+
+    //// For each render item...
+    //for (size_t i = 0; i < ritems.size(); ++i)
+    //{
+    //    auto ri = ritems[i];
+
+    //    cmdList->IASetVertexBuffers(0, 1, &ri->Geo->VertexBufferView());
+    //    cmdList->IASetIndexBuffer(&ri->Geo->IndexBufferView());
+    //    cmdList->IASetPrimitiveTopology(ri->PrimitiveType);
+
+    //    CD3DX12_GPU_DESCRIPTOR_HANDLE tex(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+    //    tex.Offset(ri->Mat->DiffuseSrvHeapIndex, mCbvSrvDescriptorSize);
+
+    //    D3D12_GPU_VIRTUAL_ADDRESS objCBAddress = objectCB->GetGPUVirtualAddress() + ri->ObjCBIndex * objCBByteSize;
+    //    D3D12_GPU_VIRTUAL_ADDRESS matCBAddress = matCB->GetGPUVirtualAddress() + ri->Mat->MatCBIndex * matCBByteSize;
+
+    //    cmdList->SetGraphicsRootDescriptorTable(0, tex);
+    //    cmdList->SetGraphicsRootConstantBufferView(1, objCBAddress);
+    //    cmdList->SetGraphicsRootConstantBufferView(3, matCBAddress);
+
+    //    cmdList->DrawIndexedInstanced(ri->IndexCount, 1, ri->StartIndexLocation, ri->BaseVertexLocation, 0);
+    //}
+}
+
+// ( create texture / create mesh ) -> create object (struct) -> Draw Object 
+
+// Dans le draw on va renseigner le mesh en cours et la texture en cours pour les dessiner l'un appliquer sur l'autre
