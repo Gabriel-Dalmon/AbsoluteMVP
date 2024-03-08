@@ -139,10 +139,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="headers\AbstractCommand.h" />
+    <ClInclude Include="headers\FunctionCommand.h" />
+    <ClInclude Include="headers\EventManager.h" />
     <ClInclude Include="headers\Camera.h" />
     <ClInclude Include="headers\Collider.h" />
     <ClInclude Include="headers\ColliderOBB.h" />
     <ClInclude Include="headers\ColliderSphere.h" />
+    <ClInclude Include="headers\EventsName.h" />
     <ClInclude Include="headers\GameState.h" />
     <ClInclude Include="headers\Component.h" />
     <ClInclude Include="headers\D3DUtils.h" />
@@ -169,10 +173,16 @@
     <ClInclude Include="headers\Script.h" />
     <ClInclude Include="headers\Pause.h" />
     <ClInclude Include="headers\Menu.h" />
+    <ClInclude Include="headers\MethodCommand.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\utils\d3dx12.h" />
+    <ClInclude Include="headers\System.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\AbstractCommand.cpp" />
+    <ClCompile Include="src\core\FunctionCommand.cpp" />
+    <ClCompile Include="src\core\MethodCommand.cpp" />
+    <ClCompile Include="src\core\EventManager.cpp" />
     <ClCompile Include="src\components\tmpMeshGeo.cpp" />
     <ClCompile Include="src\components\Collider.cpp" />
     <ClCompile Include="src\components\ColliderOBB.cpp" />
@@ -194,6 +204,7 @@
     <ClCompile Include="src\utils\D3DUtils.cpp" />
     <ClCompile Include="src\utils\HResultException.cpp" />
     <ClCompile Include="src\utils\MathHelper.cpp" />
+    <ClCompile Include="src\core\System.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\shaders\Color.hlsl">

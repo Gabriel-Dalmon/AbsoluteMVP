@@ -43,7 +43,7 @@ void Input::Update()
 {
 	for (auto& pair : InputList)
 	{
-		SHORT keyState = GetAsyncKeyState(pair.first);
+		SHORT keyState = GetAsyncKeyState(pair.first); 
 		if (keyState & 0x8000 && pair.second >= 1)
 			pair.second = 2;
 		else if (keyState & 0x1 && pair.second == 0)

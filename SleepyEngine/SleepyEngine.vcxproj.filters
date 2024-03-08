@@ -22,6 +22,11 @@
     <ClCompile Include="src\utils\MathHelper.cpp" />
     <ClCompile Include="src\components\tmpMeshGeo.cpp" />
     <ClCompile Include="src\core\Camera.cpp" />
+    <ClCompile Include="src\core\EventManager.cpp" />
+    <ClCompile Include="src\core\System.cpp" />
+    <ClCompile Include="src\core\AbstractCommand.cpp" />
+    <ClCompile Include="src\core\FunctionCommand.cpp" />
+    <ClCompile Include="src\core\MethodCommand.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Collider.h" />
@@ -56,6 +61,12 @@
     <ClInclude Include="headers\tmpMeshGeo.h" />
     <ClInclude Include="headers\Camera.h" />
     <ClInclude Include="headers\Engine.h" />
+    <ClInclude Include="headers\EventManager.h" />
+    <ClInclude Include="headers\System.h" />
+    <ClInclude Include="headers\EventsName.h" />
+    <ClInclude Include="headers\AbstractCommand.h" />
+    <ClInclude Include="headers\FunctionCommand.h" />
+    <ClInclude Include="headers\MethodCommand.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SleepyEngine.rc" />
