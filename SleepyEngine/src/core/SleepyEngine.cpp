@@ -14,13 +14,24 @@ SleepyEngine::~SleepyEngine()
 
 int SleepyEngine::Run()
 {
-	while (true)
+	float deltaTime = 0.0f;
+	m_isRunning = true;
+	while (m_isRunning)
 	{
-		m_pCurrentGameState->Update();
+		m_pTime->Update();
+		deltaTime = m_pTime->GetDeltaTime();
+		m_pCurrentGameState->Update(deltaTime);
 	}
+	Release();
 }
 
 int SleepyEngine::SwitchGameState()
 {
+	return 0;
+}
+
+int SleepyEngine::Shutdown()
+{
+	m_isRunning = false;
 	return 0;
 }

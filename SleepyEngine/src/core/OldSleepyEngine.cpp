@@ -303,7 +303,7 @@ void OldSleepyEngine::BuildConstantBuffers()
 int OldSleepyEngine::Run()
 {
 
-    HACCEL hAccelTable = LoadAccelerators(m_hAppInstance, MAKEINTRESOURCE(IDC_OldSleepyEngine));
+    HACCEL hAccelTable = LoadAccelerators(m_hAppInstance, MAKEINTRESOURCE(IDC_SLEEPYENGINE));
 
     MSG msg = { 0 };
 
@@ -324,8 +324,8 @@ int OldSleepyEngine::Run()
     );
 
 #if defined (DEBUG) || (_DEBUG)
-    shader.CompileVS(L"../OldSleepyEngine/src/shaders/Color.hlsl");
-    shader.CompilePS(L"../OldSleepyEngine/src/shaders/Color.hlsl");
+    shader.CompileVS(L"../SleepyEngine/src/shaders/Color.hlsl");
+    shader.CompilePS(L"../SleepyEngine/src/shaders/Color.hlsl");
 #else
     shader.CompileVS(L"Shaders/Color.hlsl");
     shader.CompilePS(L"Shaders/Color.hlsl");
@@ -420,7 +420,7 @@ ATOM OldSleepyEngine::RegisterWindowClass()
     wcex.cbClsExtra = 0;
     wcex.cbWndExtra = 0;
     wcex.hInstance = m_hAppInstance;
-    wcex.hIcon = LoadIcon(m_hAppInstance, MAKEINTRESOURCE(IDI_OldSleepyEngine));
+    wcex.hIcon = LoadIcon(m_hAppInstance, MAKEINTRESOURCE(IDI_SLEEPYENGINE));
     wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
     wcex.lpszMenuName = 0;

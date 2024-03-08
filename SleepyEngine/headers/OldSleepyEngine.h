@@ -7,7 +7,6 @@
 #include "MathHelper.h"
 #include "UploadBuffer.h"
 
-
 #define MAX_LOADSTRING 100
 #define SWAP_CHAIN_BUFFER_COUNT 2
 

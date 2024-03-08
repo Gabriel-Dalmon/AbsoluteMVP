@@ -1,5 +1,7 @@
 #pragma once
 
+class System;
+
 class GameState
 {
 public:
@@ -13,7 +15,7 @@ public:
 	GameState* PreviousGameState() { return m_pPreviousGameState; }
 
 	// Update
-	void Update();
+	void Update(float deltaTime);
 
 	// States
 	virtual void Enter();
@@ -28,8 +30,8 @@ public:
 	void Release();
 	
 private:
-	std::vector<Entity*> m_EntityList;
-	std::vector<int> m_SystemList;
+	std::vector<Entity*> m_entitiesList;
+	std::vector<System*> m_systemsList;
 
 	// States
 	GameState* m_pPreviousGameState = nullptr;

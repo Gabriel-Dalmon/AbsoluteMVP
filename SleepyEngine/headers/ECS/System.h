@@ -1,6 +1,6 @@
 #pragma once
 
-class Component;
+class Entity;
 
 class System
 {
@@ -9,15 +9,15 @@ public:
 	~System();
 
 	int Initialize();
-	int Update();
+	int Update(float deltaTime);
 	int Release();
 
-	int AddComponent(Component* component);
-	int RemoveComponent(Component* component);
+	int AddEntity(Entity* entity);
+	int RemoveEntity(Entity* entity);
 
 	//Unsafe
-	void UNSAFE_AddComponent(Component* component);
-	void UNSAFE_RemoveComponent(Component* component);
+	virtual void UNSAFE_AddEntity(Entity* entity);
+	virtual void UNSAFE_RemoveEntity(Entity* entity);
 
 private:
 	int requiredComponents;

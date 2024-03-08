@@ -2,6 +2,7 @@
 #include "Core/GameState.h"
 
 #include "ECS/Entity.h"
+#include "ECS/System.h"
 
 GameState::GameState()
 {
@@ -11,12 +12,13 @@ void GameState::Initialize()
 {
 }
 
-void GameState::Update()
+void GameState::Update(float deltaTime)
 {
-	for (int i = 0; i < m_SystemList.size(); i++)
+	for (System* system : m_systemsList)
 	{
-		// m_SystemList[i].Update();
+		system->Update(deltaTime);
 	}
+	// delete entities
 }
 
 void GameState::Enter()
@@ -33,7 +35,15 @@ void GameState::Exit()
 /// <param name="entity"></param>
 void GameState::AddEntity(Entity* entity)
 {
-	m_EntityList.push_back(entity); 
+	int entityBID = entity->GetComponentsBID();
+	for (System* system : m_systemsList)
+	{
+		if (entityBID & system->GetRequiredComponentsBID())
+		{
+			system->AddEntity(deltaTime);
+		}
+	}
+	m_entitiesList.push_back(entity);
 }
 
 
