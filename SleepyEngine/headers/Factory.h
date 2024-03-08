@@ -1,8 +1,5 @@
 #pragma once
 
-class Entity;
-struct RessourceAllocator;
-
 class Factory 
 {
 public:

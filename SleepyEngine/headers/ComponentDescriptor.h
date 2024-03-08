@@ -1,13 +1,5 @@
 #pragma once
 
-#include <DirectXMath.h>
-#include <vector>
-
-class ID3D12Device;
-class ID3D12GraphicsCommandList;
-struct Vertex;
-class Mesh;
-class Shader;
 
 
 struct Descriptor {

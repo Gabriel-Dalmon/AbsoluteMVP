@@ -14,13 +14,13 @@ void CreateConsoleAndCallEngine(HINSTANCE hInstance)
     AllocConsole();
     FILE* consoleOut;
     freopen_s(&consoleOut, "CONOUT$", "w", stdout);
-    /*SleepyEngine engine(hInstance);
+    SleepyEngine engine(hInstance);
     engine.Initialize();
 
-    engine.Run();*/
+    engine.Run();
 
     Thread game(hInstance);
-    //Thread gameTwo(hInstance);
+    Thread gameTwo(hInstance);
    
     if(consoleOut != 0)
         fclose(consoleOut);

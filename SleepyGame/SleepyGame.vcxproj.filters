@@ -42,7 +42,10 @@
     <ClInclude Include="SystemHeaders.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="pch.h">
+    <ClInclude Include="headers\pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SleepyGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

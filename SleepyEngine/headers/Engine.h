@@ -96,5 +96,6 @@ using namespace DirectX;
 #include "tmpMeshGeo.h"
 #include "UploadBuffer.h"
 #include "PSO.h"
+#include "MathHelper.h"
 #include "SleepyEngine.h"
 
