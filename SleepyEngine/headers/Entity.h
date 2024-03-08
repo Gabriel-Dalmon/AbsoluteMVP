@@ -20,7 +20,7 @@ public: // SETTER / GETTER
 		if (GetComponent<T>() != nullptr)
 			return;
 
-		m_componentsList.push_back(component); 
+		m_componentsList.push_back((Component*)component); 
 	}
 
 	template<typename T>
@@ -56,9 +56,6 @@ public: // SETTER / GETTER
 	void AddChild(Entity* child);
 	void RemoveChild(Entity* child);
 	std::vector<Entity*> GetChildren();
-
-	// RELEASE
-	void Release();
 
 private:
 	std::vector<Component*> m_componentsList;  

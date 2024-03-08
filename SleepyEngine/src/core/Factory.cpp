@@ -1,17 +1,17 @@
-#include "ComponentDescriptor.h"
-#include "Entity.h"
-#include "Factory.h"
-#include "RessourceAllocator.h"
+//#include "ComponentDescriptor.h"
+//#include "Entity.h"
+//#include "Factory.h"
+//#include "RessourceAllocator.h"
 
 #include "pch.h"
 //include components
-#include "ColliderSphere.h"
-#include "Mesh.h"
-#include "MeshRenderer.h"
-#include "Script.h"
-#include "ShaderReference.h"
-#include "MeshRenderer.h"
-#include "Shader.h"
+//#include "ColliderSphere.h"
+//#include "Mesh.h"
+//#include "MeshRenderer.h"
+//#include "Script.h"
+//#include "ShaderReference.h"
+//#include "MeshRenderer.h"
+//#include "Shader.h"
 
 
 Factory::Factory() {};
@@ -44,7 +44,7 @@ void Factory::FillPlayer(Entity* pEntity)
 	ShaderReferenceDescriptor ShaderRefDesc;
 	ShaderRefDesc.shaderRef = new Shader;
 	ShaderRefDesc.shaderRef->Init();
-	ShaderReference* shaderReference;
+	ShaderReference* shaderReference = Component::CreateComponent<ShaderReference>();
 	shaderReference->Init(&ShaderRefDesc);
 	pEntity->AddComponent<ShaderReference*>(shaderReference);
 

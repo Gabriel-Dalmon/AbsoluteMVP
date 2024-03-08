@@ -6,7 +6,7 @@ ShaderReference::ShaderReference()
 
 void ShaderReference::Init(ShaderReferenceDescriptor* desc)
 {
-	m_pShader = desc->meshRef;
+	m_pShader = desc->shaderRef;
 }
 
 void ShaderReference::Release()

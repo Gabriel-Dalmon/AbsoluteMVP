@@ -3,10 +3,10 @@
 #include "pch.h"
 
 #include "resource.h"
-#include "UploadBuffer.h"
-#include "Utils/HResultException.h"
-#include "PSO.h"
-#include "tmpMeshGeo.h"
+//#include "UploadBuffer.h"
+//#include "Utils/HResultException.h"
+//#include "PSO.h"
+//#include "tmpMeshGeo.h"
 
 //#include "Camera.h"
 //#include "Transform.h"
@@ -369,8 +369,8 @@ int SleepyEngine::Run()
             DispatchMessage(&msg);
         }
         else {
-            std::cout << m_Camera.GetPosition() << std::endl;
-            std::cout << m_Camera.GetView() << std::endl;
+            //std::cout << m_Camera.GetPosition() << std::endl;
+            //std::cout << m_Camera.GetView() << std::endl;
             timer.UpdateTimer();
 
             input.Update();
@@ -680,7 +680,7 @@ void SleepyEngine::BuildBoxGeometryBis()
 
 void SleepyEngine::Update()
 {
-    std::cout << "Update" << std::endl;
+    //std::cout << "Update" << std::endl;
     // Convert Spherical to Cartesian coordinates.
     float x = mRadius * sinf(mPhi) * cosf(mTheta); 
     float z = mRadius * sinf(mPhi) * sinf(mTheta); 
@@ -705,7 +705,7 @@ void SleepyEngine::Update()
         yS += 0.005;
         zS += 0.005;
         m_Transform->SetScale(xS, yS, zS);
-        std::cout << m_Transform->m_scaleVect.x << std::endl;
+        //std::cout << m_Transform->m_scaleVect.x << std::endl;
     }
 
     m_Transform->Update();
@@ -786,7 +786,7 @@ void SleepyEngine::Draw()
 
 void SleepyEngine::DrawBis()
 {
-    std::cout << "Drawing" << std::endl;
+    //std::cout << "Drawing" << std::endl;
     CD3DX12_RESOURCE_BARRIER barrier;
 
     barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
@@ -858,10 +858,10 @@ void SleepyEngine::OnMouseUp(WPARAM btnState, int x, int y)
 
 void SleepyEngine::OnMouseMove(WPARAM btnState, int x, int y)
 {
-    std::cout << "Moov Boolet" << std::endl;
+    //std::cout << "Moov Boolet" << std::endl;
     if ((btnState & MK_LBUTTON) != 0)
     {
-        std::cout << "Cam" << std::endl;
+        //std::cout << "Cam" << std::endl;
         // Make each pixel correspond to a quarter of a degree.
         float dx = DirectX::XMConvertToRadians(0.25f * static_cast<float>(x - m_LastMousePos.x));
         float dy = DirectX::XMConvertToRadians(0.25f * static_cast<float>(y - m_LastMousePos.y));

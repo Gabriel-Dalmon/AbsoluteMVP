@@ -17,9 +17,6 @@ Entity* Entity::CreateEmptyEntity()
 	return entity;
 }
 
-
-}
-
 Entity* Entity::GetParent()
 {
 	if (m_pParentEntity == nullptr)

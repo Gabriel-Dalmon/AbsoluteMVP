@@ -61,6 +61,8 @@ class Shader;
 class ShaderReference;
 class Timer;
 class Transform;
+class Factory;
+class RessourceAllocator;
 
 // MACROS
 #define RELEASE(p) {if (p){ p->Release(); p = nullptr;}}
@@ -71,7 +73,7 @@ class Transform;
 using namespace DirectX;
 
 // Classes 
-#include "SleepyEngine.h"
+#include "ComponentDescriptor.h"
 #include "Camera.h"
 #include "Component.h"
 #include "Collider.h"
@@ -89,4 +91,10 @@ using namespace DirectX;
 #include "ShaderReference.h"
 #include "Timer.h"
 #include "Transform.h"
+#include "RessourceAllocator.h"
+#include "Factory.h"
+#include "tmpMeshGeo.h"
+#include "UploadBuffer.h"
+#include "PSO.h"
+#include "SleepyEngine.h"
 

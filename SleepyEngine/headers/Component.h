@@ -25,8 +25,6 @@ public: // Create and kill component
 	}
 
 
-	void Release();
-
 	// Update 
 	virtual void Update() {};
 

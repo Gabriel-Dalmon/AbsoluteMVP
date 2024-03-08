@@ -178,8 +178,6 @@
   <ItemGroup>
     <ClCompile Include="src\core\Factory.cpp" />
     <ClCompile Include="src\core\RessourceAllocator.cpp" />
-    <ClCompile Include="src\GameStates\Pause.cpp" />
-    <ClCompile Include="src\GameStates\Menu.cpp" />
     <ClCompile Include="src\components\tmpMeshGeo.cpp" />
     <ClCompile Include="src\components\Collider.cpp" />
     <ClCompile Include="src\components\ColliderOBB.cpp" />
@@ -208,12 +206,6 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <None Include="SleepyEngine.aps" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\..\..\..\Downloads\icon.ico" />
-    <Image Include="..\..\..\..\downloads\icon2.ico" />
-    <Image Include="icon1.ico" />
     <Image Include="SleepyEngine.ico" />
     <Image Include="small.ico" />
   </ItemGroup>

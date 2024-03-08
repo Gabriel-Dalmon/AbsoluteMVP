@@ -3,7 +3,6 @@
 
 #include "pch.h"
 
-#include "framework.h"
 #include "SleepyGame.h"
 #include "Thread.h"
 #include <iostream>
@@ -15,10 +14,13 @@ void CreateConsoleAndCallEngine(HINSTANCE hInstance)
     AllocConsole();
     FILE* consoleOut;
     freopen_s(&consoleOut, "CONOUT$", "w", stdout);
-    SleepyEngine engine(hInstance);
+    /*SleepyEngine engine(hInstance);
     engine.Initialize();
 
-    engine.Run();
+    engine.Run();*/
+
+    Thread game(hInstance);
+    //Thread gameTwo(hInstance);
    
     if(consoleOut != 0)
         fclose(consoleOut);
@@ -52,10 +54,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         MessageBoxA(NULL, "MEMORY LEAKS", "DISCLAIMER", 0);
     }
 #endif 
-    /*Thread game(hInstance);
-    Thread gameTwo(hInstance);
 
-    while (true) {};*/
+    while (true) {};
 
     return 0;
 }

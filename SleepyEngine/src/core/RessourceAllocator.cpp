@@ -1,10 +1,4 @@
-#include <DirectXMath.h>
-#include <DirectXColors.h>
-
-#include "RessourceAllocator.h"
-#include "Mesh.h"
-
-using namespace DirectX;
+#include "pch.h"
 
 
 void RessourceAllocator::Init(ID3D12Device* device, ID3D12GraphicsCommandList* commandList)
@@ -35,7 +29,7 @@ Mesh* RessourceAllocator::getMesh(const std::string& fileName)
         Vertex({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Magenta) })
     };
 
-    std::vector<int> indices =
+    std::vector<uint16_t> indices =
     {
         // front face
         0, 1, 2,
