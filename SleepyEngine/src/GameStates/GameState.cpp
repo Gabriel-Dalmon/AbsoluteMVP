@@ -1,7 +1,4 @@
 #include "pch.h"
-#include "GameState.h"
-
-#include "Entity.h"
 
 GameState::GameState()
 {
@@ -47,7 +44,7 @@ void GameState::RemoveEntity(Entity* entity)
 	{
 		if (m_EntityList[i] == entity)
 		{
-			entity->Clear();
+			RELEASE(m_EntityList[i]);
 			m_EntityList.erase(m_EntityList.begin() + i);
 		}
 	}
@@ -67,6 +64,11 @@ bool GameState::CheckEntity(Entity* entity)
 			return true;
 	}
 	return false;
+}
+
+void GameState::Release()
+{
+	RELEASE(m_pPreviousGameState);
 }
 
 

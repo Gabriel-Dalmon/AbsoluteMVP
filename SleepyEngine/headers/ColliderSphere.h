@@ -1,7 +1,4 @@
 #pragma once
-#include"Collider.h"
-
-ColliderSphereDescriptor;
 
 class ColliderSphere : public Collider
 {

@@ -1,7 +1,4 @@
 #include "pch.h"
-#include "Component.h"
-
-//#include "Entity.h"
 
 Component::Component()
 {
@@ -9,5 +6,5 @@ Component::Component()
 
 void Component::Release()
 {
-	delete this;
+	RELEASE(m_pEntity);
 }

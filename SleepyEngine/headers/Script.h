@@ -1,5 +1,4 @@
 #pragma once
-#include "Component.h"
 
 class Script : public Component
 {
@@ -8,7 +7,9 @@ public:
 	~Script() {};
 
 	// INIT
-	void Init();
+	void Init() override;
+
+	void Release();
 
 private:
 

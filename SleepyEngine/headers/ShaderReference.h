@@ -1,7 +1,4 @@
 #pragma once
-#include "Component.h"
-
-class Shader;
 
 class ShaderReference : public Component 
 {
@@ -14,6 +11,9 @@ public:
 
 	// SETTER / GETTER
 	Shader* GetShader() { return m_pShader; }
+
+	// Release
+	void Release();
 
 private:
 	Shader* m_pShader = nullptr;

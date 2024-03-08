@@ -1,17 +1,14 @@
 #pragma once
-#include "Component.h"
-#include <DirectXCollision.h>
 
-using namespace DirectX;
-
-
-class Collider :
-    public Component
+class Collider : public Component
 {
 public:
-    Collider();
-    ~Collider();
+	Collider();
+	~Collider() {};
 
-    virtual void Init() {};
+	// INIT
+	void Init() override;
+
+private:
 };
 

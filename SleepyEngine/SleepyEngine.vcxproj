@@ -82,7 +82,7 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -96,7 +96,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -110,12 +110,15 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -124,7 +127,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -136,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="headers\Camera.h" />
     <ClInclude Include="headers\Collider.h" />
     <ClInclude Include="headers\ColliderOBB.h" />
     <ClInclude Include="headers\ColliderSphere.h" />
@@ -145,6 +149,8 @@
     <ClInclude Include="headers\Component.h" />
     <ClInclude Include="headers\D3DUtils.h" />
     <ClInclude Include="headers\Entity.h" />
+    <ClInclude Include="headers\framework.h" />
+    <ClInclude Include="headers\Input.h" />
     <ClInclude Include="headers\MathHelper.h" />
     <ClInclude Include="headers\Mesh.h" />
     <ClInclude Include="headers\pch.h" />
@@ -153,7 +159,10 @@
     <ClInclude Include="headers\RessourceAllocator.h" />
     <ClInclude Include="headers\Shader.h" />
     <ClInclude Include="headers\SleepyEngine.h" />
+    <ClInclude Include="headers\Engine.h" />
     <ClInclude Include="headers\targetver.h" />
+    <ClInclude Include="headers\Timer.h" />
+    <ClInclude Include="headers\tmpMeshGeo.h" />
     <ClInclude Include="headers\Transform.h" />
     <ClInclude Include="headers\d3dx12.h" />
     <ClInclude Include="headers\UploadBuffer.h" />
@@ -163,6 +172,7 @@
     <ClInclude Include="headers\Script.h" />
     <ClInclude Include="headers\Pause.h" />
     <ClInclude Include="headers\Menu.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="src\utils\d3dx12.h" />
   </ItemGroup>
   <ItemGroup>
@@ -170,6 +180,7 @@
     <ClCompile Include="src\core\RessourceAllocator.cpp" />
     <ClCompile Include="src\GameStates\Pause.cpp" />
     <ClCompile Include="src\GameStates\Menu.cpp" />
+    <ClCompile Include="src\components\tmpMeshGeo.cpp" />
     <ClCompile Include="src\components\Collider.cpp" />
     <ClCompile Include="src\components\ColliderOBB.cpp" />
     <ClCompile Include="src\components\ColliderSphere.cpp" />
@@ -179,9 +190,12 @@
     <ClCompile Include="src\components\ShaderReference.cpp" />
     <ClCompile Include="src\GameStates\GameState.cpp" />
     <ClCompile Include="src\components\Mesh.cpp" />
+    <ClCompile Include="src\core\Camera.cpp" />
     <ClCompile Include="src\core\Entity.cpp" />
     <ClCompile Include="src\core\PSO.cpp" />
+    <ClCompile Include="src\core\Input.cpp" />
     <ClCompile Include="src\core\SleepyEngine.cpp" />
+    <ClCompile Include="src\core\Timer.cpp" />
     <ClCompile Include="src\core\Transform.cpp" />
     <ClCompile Include="src\shaders\Shader.cpp" />
     <ClCompile Include="src\utils\D3DUtils.cpp" />
@@ -189,7 +203,7 @@
     <ClCompile Include="src\utils\MathHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="src\shaders\Shader.hlsl">
+    <Text Include="src\shaders\Color.hlsl">
       <FileType>Document</FileType>
     </Text>
   </ItemGroup>
@@ -197,6 +211,9 @@
     <None Include="SleepyEngine.aps" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\Downloads\icon.ico" />
+    <Image Include="..\..\..\..\downloads\icon2.ico" />
+    <Image Include="icon1.ico" />
     <Image Include="SleepyEngine.ico" />
     <Image Include="small.ico" />
   </ItemGroup>

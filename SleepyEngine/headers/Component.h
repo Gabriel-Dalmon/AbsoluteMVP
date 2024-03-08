@@ -1,8 +1,6 @@
 #pragma once
 #include "ComponentDescriptor.h"
 
-class Entity;
-
 class Component
 {
 protected:
@@ -34,6 +32,8 @@ public: // Create and kill component
 
 	// SETTER / GETTER 
 
+	// RELEASE
+	void Release();
 
 protected:
 	Entity* m_pEntity = nullptr; 

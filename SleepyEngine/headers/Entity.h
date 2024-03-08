@@ -1,9 +1,5 @@
 #pragma once
 
-#include <vector>
-
-class Component;
-
 class Entity
 {
 private:
@@ -51,10 +47,23 @@ public: // SETTER / GETTER
 		return nullptr; 
 	}
 	
-	// Clear
-	void Clear();
+	// Parent entity
+	Entity* GetParent(); 
+	void SetParent(Entity* parent);
+	void RemoveParent();
+
+	// Child entity
+	void AddChild(Entity* child);
+	void RemoveChild(Entity* child);
+	std::vector<Entity*> GetChildren();
+
+	// RELEASE
+	void Release();
 
 private:
 	std::vector<Component*> m_componentsList;  
+
+	std::vector<Entity*> m_ChildrenEntities;
+	Entity* m_pParentEntity = nullptr;
 };
 
