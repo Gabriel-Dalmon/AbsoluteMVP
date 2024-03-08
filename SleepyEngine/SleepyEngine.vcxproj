@@ -150,6 +150,7 @@
     <ClInclude Include="headers\pch.h" />
     <ClInclude Include="headers\PSO.h" />
     <ClInclude Include="headers\Resource.h" />
+    <ClInclude Include="headers\RessourceAllocator.h" />
     <ClInclude Include="headers\Shader.h" />
     <ClInclude Include="headers\SleepyEngine.h" />
     <ClInclude Include="headers\targetver.h" />

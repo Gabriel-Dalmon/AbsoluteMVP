@@ -3,6 +3,7 @@
 
 #include "SleepyGame.h"
 #include "SleepyEngine.h"
+#include "Thread.h"
 #include <iostream>
 #include <io.h>
 #include <fcntl.h>
@@ -22,9 +23,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     FILE* consoleOut;
     freopen_s(&consoleOut, "CONOUT$", "w", stdout);
 
-    SleepyEngine engine(hInstance);
-    engine.Initialize();
-    engine.Run();
+    Thread game(hInstance);
+    Thread gameTwo(hInstance);
+
+    while (true) {};
 
     fclose(consoleOut);
     FreeConsole();

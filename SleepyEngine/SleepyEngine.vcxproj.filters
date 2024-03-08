@@ -50,6 +50,7 @@
     <ClInclude Include="headers\Pause.h" />
     <ClInclude Include="headers\Factory.h" />
     <ClInclude Include="headers\ComponentDescriptor.h" />
+    <ClInclude Include="headers\RessourceAllocator.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SleepyEngine.rc" />

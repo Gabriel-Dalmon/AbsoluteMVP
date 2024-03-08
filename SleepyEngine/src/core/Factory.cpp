@@ -9,6 +9,7 @@
 #include "MeshRenderer.h"
 #include "Script.h"
 #include "ShaderReference.h"
+#include "RessourceAllocator.h"
 
 
 Factory::Factory() {};
@@ -32,7 +33,7 @@ void Factory::FillPlayer(Entity* pEntity)
 
 
 	MeshReferenceDescriptor MeshRefDesc;
-	//MDesc->MeshRef =
+	//MDesc->MeshRef = ressourceAllocator->mesCollection("cube")
 	/*MeshReference* meshRef = Component::CreateComponent<MeshReference>();
 	meshRef->Init(&MeshRefDesc);
 	pEntity->AddComponent<Mesh*>(meshRef);*/
