@@ -738,7 +738,8 @@ void SleepyEngine::DrawBis()
 
     m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
+    m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart()); // Get rid of this
+    // SetGraphicsRootConstantBufferView
 
     /* the following code is the one that comse from the book
     * we would like to iterate in the submesh if we had one, maybe later
