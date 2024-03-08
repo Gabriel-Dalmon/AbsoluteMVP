@@ -3,10 +3,6 @@
 #include "pch.h"
 
 #include "resource.h"
-#include "UploadBuffer.h"
-#include "Utils/HResultException.h"
-#include "PSO.h"
-#include "tmpMeshGeo.h"
 
 //#include "Camera.h"
 //#include "Transform.h"

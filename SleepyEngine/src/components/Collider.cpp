@@ -1,6 +1,6 @@
 #include "pch.h"
 
-Collider::Collider()
+Collider::Collider()  
 {
 
 }

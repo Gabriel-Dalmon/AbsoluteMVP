@@ -43,7 +43,6 @@
 #include "MathHelper.h"
 
 // FORWARD DECLARATIONS
-class SleepyEngine;
 class Camera;
 class Component;
 class Collider;
@@ -59,6 +58,7 @@ class Pause;
 class Script;
 class Shader;
 class ShaderReference;
+class SleepyEngine;
 class Timer;
 class Transform;
 
@@ -71,7 +71,6 @@ class Transform;
 using namespace DirectX;
 
 // Classes 
-#include "SleepyEngine.h"
 #include "Camera.h"
 #include "Component.h"
 #include "Collider.h"
@@ -89,4 +88,8 @@ using namespace DirectX;
 #include "ShaderReference.h"
 #include "Timer.h"
 #include "Transform.h"
-
+#include "UploadBuffer.h"
+#include "Utils/HResultException.h"
+#include "PSO.h"
+#include "tmpMeshGeo.h"
+#include "SleepyEngine.h"
