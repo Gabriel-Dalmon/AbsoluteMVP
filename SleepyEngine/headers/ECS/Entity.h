@@ -45,10 +45,13 @@ public:
 		return nullptr; 
 	}
 	
+	int GetCompositionBID() { return m_compositionBID; };
+
 	// RELEASE
 	void Release();
 
 private:
 	std::vector<Component*> m_componentsList;  
+	int m_compositionBID;
 };
 

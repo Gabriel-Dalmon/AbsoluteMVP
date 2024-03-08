@@ -6,7 +6,7 @@ class Timer
 		Timer();
 		bool Init();
 
-		void UpdateTimer();
+		void Update();
 		void UpdateFPS(HWND Window);
 
 		float GetTotalTime();

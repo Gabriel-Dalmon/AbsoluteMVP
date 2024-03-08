@@ -36,7 +36,7 @@ float Timer::GetDeltaTime()
 	return DeltaTime;
 }
 
-void Timer::UpdateTimer()
+void Timer::Update()
 {
 	currTime = GetTotalTime();
 

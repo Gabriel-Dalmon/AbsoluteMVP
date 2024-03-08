@@ -18,11 +18,13 @@ int SleepyEngine::Run()
 	m_isRunning = true;
 	while (m_isRunning)
 	{
-		m_pTime->Update();
-		deltaTime = m_pTime->GetDeltaTime();
+		m_timer.Update();
+		deltaTime = m_timer.GetDeltaTime();
+
 		m_pCurrentGameState->Update(deltaTime);
 	}
 	Release();
+	return 0;
 }
 
 int SleepyEngine::SwitchGameState()
@@ -33,5 +35,11 @@ int SleepyEngine::SwitchGameState()
 int SleepyEngine::Shutdown()
 {
 	m_isRunning = false;
+	return 0;
+}
+
+int SleepyEngine::Release()
+{
+	m_pCurrentGameState->Release();
 	return 0;
 }

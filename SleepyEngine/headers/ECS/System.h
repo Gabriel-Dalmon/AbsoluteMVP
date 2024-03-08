@@ -19,6 +19,9 @@ public:
 	virtual void UNSAFE_AddEntity(Entity* entity);
 	virtual void UNSAFE_RemoveEntity(Entity* entity);
 
+	int GetRequiredComponentsBID() { return m_requiredComponentsBID; };
+
 private:
-	int requiredComponents;
+	int m_requiredComponentsBID;
+	//ComponentTypes* requiredComponents;
 };

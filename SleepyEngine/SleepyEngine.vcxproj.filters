@@ -31,6 +31,7 @@
     <ClCompile Include="src\graphics\CommandQueue.cpp" />
     <ClCompile Include="src\graphics\PipelineStateObject.cpp" />
     <ClCompile Include="src\core\OldSleepyEngine.cpp" />
+    <ClCompile Include="src\core\Camera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Collider.h" />
@@ -74,6 +75,10 @@
     <ClInclude Include="headers\ECS\System.h" />
     <ClInclude Include="headers\Core\SleepyEngine.h" />
     <ClInclude Include="headers\OldSleepyEngine.h" />
+    <ClInclude Include="headers\ECS\Entity.h" />
+    <ClInclude Include="headers\ECS\Component.h" />
+    <ClInclude Include="headers\Engine.h" />
+    <ClInclude Include="headers\Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SleepyEngine.rc" />

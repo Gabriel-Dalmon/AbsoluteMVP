@@ -139,14 +139,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="headers\Camera.h" />
     <ClInclude Include="headers\Collider.h" />
     <ClInclude Include="headers\ColliderOBB.h" />
     <ClInclude Include="headers\ColliderSphere.h" />
     <ClInclude Include="headers\Core\SleepyEngine.h" />
+    <ClInclude Include="headers\ECS\Component.h" />
+    <ClInclude Include="headers\ECS\Entity.h" />
     <ClInclude Include="headers\ECS\System.h" />
     <ClInclude Include="headers\Core\GameState.h" />
     <ClInclude Include="headers\Component.h" />
     <ClInclude Include="headers\D3DUtils.h" />
+    <ClInclude Include="headers\Engine.h" />
     <ClInclude Include="headers\Entity.h" />
     <ClInclude Include="headers\framework.h" />
     <ClInclude Include="headers\Graphics\CommandQueue.h" />
@@ -183,6 +187,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\components\tmpMeshGeo.cpp" />
+    <ClCompile Include="src\core\Camera.cpp" />
     <ClCompile Include="src\core\OldSleepyEngine.cpp" />
     <ClCompile Include="src\GameStates\Pause.cpp" />
     <ClCompile Include="src\GameStates\Menu.cpp" />

@@ -35,12 +35,12 @@ void GameState::Exit()
 /// <param name="entity"></param>
 void GameState::AddEntity(Entity* entity)
 {
-	int entityBID = entity->GetComponentsBID();
+	int entityBID = entity->GetCompositionBID();
 	for (System* system : m_systemsList)
 	{
 		if (entityBID & system->GetRequiredComponentsBID())
 		{
-			system->AddEntity(deltaTime);
+			system->UNSAFE_AddEntity(entity);
 		}
 	}
 	m_entitiesList.push_back(entity);
@@ -53,12 +53,12 @@ void GameState::AddEntity(Entity* entity)
 /// <param name="entity"></param>
 void GameState::RemoveEntity(Entity* entity)
 {
-	for (int i = 0; i < m_EntityList.size(); i++)
+	for (int i = 0; i < m_entitiesList.size(); i++)
 	{
-		if (m_EntityList[i] == entity)
+		if (m_entitiesList[i] == entity)
 		{
-			RELEASE(m_EntityList[i]);
-			m_EntityList.erase(m_EntityList.begin() + i);
+			RELEASE(m_entitiesList[i]);
+			m_entitiesList.erase(m_entitiesList.begin() + i);
 		}
 	}
 }
@@ -71,9 +71,9 @@ void GameState::RemoveEntity(Entity* entity)
 /// <returns>True if the entity is currently handled by GameState class. False if it's not.</returns>
 bool GameState::CheckEntity(Entity* entity)
 {
-	for (int i = 0; i < m_EntityList.size(); i++)
+	for (int i = 0; i < m_entitiesList.size(); i++)
 	{
-		if (m_EntityList[i] == entity)
+		if (m_entitiesList[i] == entity)
 			return true;
 	}
 	return false;

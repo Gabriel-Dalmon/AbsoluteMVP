@@ -1,7 +1,4 @@
 #pragma once
-#include <concepts>
-
-class GameState;
 
 class SleepyEngine
 {
@@ -28,5 +25,6 @@ public:
 
 private:
 	GameState* m_pCurrentGameState;
+	Timer m_timer;
 	bool m_isRunning = false;
 };

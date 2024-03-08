@@ -4,6 +4,7 @@
 #include "framework.h"
 #include "SleepyGame.h"
 #include "OldSleepyEngine.h"
+#include "Core/SleepyEngine.h"
 #include <iostream>
 #include <io.h>
 #include <fcntl.h>
