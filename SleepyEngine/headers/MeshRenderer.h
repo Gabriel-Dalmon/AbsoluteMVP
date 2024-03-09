@@ -13,8 +13,6 @@ public:
 
 	Mesh* GetMesh();
 
-	Mesh* GetMesh();
-
 private:
 	Mesh* m_pMesh = nullptr;
 };
