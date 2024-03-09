@@ -151,6 +151,7 @@
     <ClInclude Include="headers\Entity.h" />
     <ClInclude Include="headers\framework.h" />
     <ClInclude Include="headers\Input.h" />
+    <ClInclude Include="headers\JSonParser.h" />
     <ClInclude Include="headers\MathHelper.h" />
     <ClInclude Include="headers\Mesh.h" />
     <ClInclude Include="headers\pch.h" />
@@ -176,7 +177,9 @@
     <ClInclude Include="src\utils\d3dx12.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\components\ComponentDescriptor.cpp" />
     <ClCompile Include="src\core\Factory.cpp" />
+    <ClCompile Include="src\core\JSonParser.cpp" />
     <ClCompile Include="src\core\RessourceAllocator.cpp" />
     <ClCompile Include="src\components\tmpMeshGeo.cpp" />
     <ClCompile Include="src\components\Collider.cpp" />

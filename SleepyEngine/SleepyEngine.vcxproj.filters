@@ -24,10 +24,10 @@
     <ClCompile Include="src\core\Camera.cpp" />
     <ClCompile Include="src\components\ColliderOBB.cpp" />
     <ClCompile Include="src\components\ColliderSphere.cpp" />
-    <ClCompile Include="src\GameStates\Menu.cpp" />
-    <ClCompile Include="src\GameStates\Pause.cpp" />
     <ClCompile Include="src\core\Factory.cpp" />
     <ClCompile Include="src\core\RessourceAllocator.cpp" />
+    <ClCompile Include="src\components\ComponentDescriptor.cpp" />
+    <ClCompile Include="src\core\JSonParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Collider.h" />
@@ -70,6 +70,7 @@
     <ClInclude Include="headers\Factory.h" />
     <ClInclude Include="headers\ComponentDescriptor.h" />
     <ClInclude Include="headers\RessourceAllocator.h" />
+    <ClInclude Include="headers\JSonParser.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SleepyEngine.rc" />
@@ -77,12 +78,6 @@
   <ItemGroup>
     <Image Include="SleepyEngine.ico" />
     <Image Include="small.ico" />
-    <Image Include="icon1.ico" />
-    <Image Include="..\..\..\..\Downloads\icon.ico" />
-    <Image Include="..\..\..\..\downloads\icon2.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="SleepyEngine.aps" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\shaders\Color.hlsl" />

@@ -1,5 +1,4 @@
-#include "Factory.h"
-#include "Entity.h"
+#include "pch.h"
 #include "CustomScript.h"
 
 Entity* CustomScript::Shoot()

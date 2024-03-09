@@ -1,6 +1,5 @@
-#include "Thread.h"
-#include "SleepyEngine.h"
-#include "iostream"
+#include "pch.h"
+#include "thread.h"
 
 
 std::vector<HANDLE> Thread::threadList = {};
