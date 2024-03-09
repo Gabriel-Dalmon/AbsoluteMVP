@@ -7,7 +7,7 @@
 class Thread
 {
 public:
-	Thread(HINSTANCE hInstance);
+	Thread(HINSTANCE hInstance, FILE* consoleOut);
 	~Thread();
 
 	static void SummonThread(void* functionAdress);
@@ -19,4 +19,5 @@ public:
 	WSADATA m_wsaData;
 	HANDLE m_This;
 	HINSTANCE m_hInstance;
+	FILE* m_pConsoleOut;
 };

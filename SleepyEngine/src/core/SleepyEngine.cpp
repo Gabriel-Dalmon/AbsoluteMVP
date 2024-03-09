@@ -424,6 +424,7 @@ void SleepyEngine::Release()
     RELEASE(m_PSO);
     RELEASE(m_pRootSignature);
     RELEASE(m_pCbvHeap);
+    RELEASE(mBoxGeo);
     
     // "new"
     delete m_pViewPort;
@@ -607,7 +608,7 @@ void SleepyEngine::BuildBoxGeometry()
 
 void SleepyEngine::BuildBoxGeometryBis()
 {
-    std::array<Vertex, 8> vertices =
+    std::vector<Vertex> vertices =
     {
         Vertex({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::White) }),
         Vertex({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Black) }),
@@ -619,7 +620,7 @@ void SleepyEngine::BuildBoxGeometryBis()
         Vertex({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Magenta) })
     };
 
-    std::array<std::uint16_t, 36> indices =
+    std::vector<uint16_t> indices =
     {
         // front face
         0, 1, 2,
@@ -646,7 +647,7 @@ void SleepyEngine::BuildBoxGeometryBis()
         4, 3, 7
     };
 
-    const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
+    /*const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
     const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
 
     mBoxGeoBis = new MeshGeometry(); 
@@ -674,7 +675,11 @@ void SleepyEngine::BuildBoxGeometryBis()
     submesh.StartIndexLocation = 0;
     submesh.BaseVertexLocation = 0;
 
-    mBoxGeoBis->DrawArgs["box"] = submesh;
+    mBoxGeoBis->DrawArgs["box"] = submesh;*/
+
+    Mesh* box = new Mesh;;
+    box->Init(m_pDevice, m_pCommandList, &vertices, &indices);
+    mBoxGeo = box;
 }
 
 
@@ -751,8 +756,8 @@ void SleepyEngine::Draw()
  
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView = mBoxGeo->VertexBufferView();
     D3D12_INDEX_BUFFER_VIEW indexBufferView = mBoxGeo->IndexBufferView();
-    D3D12_VERTEX_BUFFER_VIEW vertexBufferViewBis = mBoxGeoBis->VertexBufferView();
-    D3D12_INDEX_BUFFER_VIEW indexBufferViewBis = mBoxGeoBis->IndexBufferView();
+    D3D12_VERTEX_BUFFER_VIEW vertexBufferViewBis = mBoxGeo->VertexBufferView();
+    D3D12_INDEX_BUFFER_VIEW indexBufferViewBis = mBoxGeo->IndexBufferView();
 
     m_pCommandList->IASetVertexBuffers(0, 1, &vertexBufferView);
     m_pCommandList->IASetIndexBuffer(&indexBufferView);
@@ -766,8 +771,8 @@ void SleepyEngine::Draw()
     *pCommandList->DrawIndexedInstanced(
     *	mesh->DrawArgs["box"].IndexCount,
     *	1, 0, 0, 0);*/
-    UINT indexCount = mBoxGeo->m_indexCount;
-    UINT indexCountBis = mBoxGeoBis->DrawArgs["box"].IndexCount;
+    UINT indexCount = mBoxGeo->m_drawArgs["box"].IndexCount;
+    UINT indexCountBis = mBoxGeo->m_drawArgs["box"].IndexCount;
     m_pCommandList->DrawIndexedInstanced(indexCount, 1, 0, 0, 0);
 
     barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
@@ -811,15 +816,15 @@ void SleepyEngine::DrawBis()
 
     m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
 
-    D3D12_VERTEX_BUFFER_VIEW vertexBufferView = mBoxGeoBis->VertexBufferView();
-    D3D12_INDEX_BUFFER_VIEW indexBufferView = mBoxGeoBis->IndexBufferView();
+    D3D12_VERTEX_BUFFER_VIEW vertexBufferView = mBoxGeo->VertexBufferView();
+    D3D12_INDEX_BUFFER_VIEW indexBufferView = mBoxGeo->IndexBufferView();
 
     m_pCommandList->IASetVertexBuffers(0, 1, &vertexBufferView);
     m_pCommandList->IASetIndexBuffer(&indexBufferView);
 
     m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    m_pCommandList->SetGraphicsRootConstantBufferView(0, GetCurrentBackBuffer()->GetGPUVirtualAddress());
+    m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
     //m_pCommandList->SetGraphicsRootConstantBufferView(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
 
     /* the following code is the one that comse from the book
@@ -828,7 +833,7 @@ void SleepyEngine::DrawBis()
     *	mesh->DrawArgs["box"].IndexCount,
     *	1, 0, 0, 0);*/
 
-    m_pCommandList->DrawIndexedInstanced(mBoxGeoBis->DrawArgs["box"].IndexCount, 1, 0, 0, 0);
+    m_pCommandList->DrawIndexedInstanced(mBoxGeo->m_drawArgs["box"].IndexCount, 1, 0, 0, 0);
 
     barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
     m_pCommandList->ResourceBarrier(1, &barrier);

@@ -7,14 +7,28 @@ Mesh::~Mesh() {}
 
 void Mesh::Init(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, std::vector<Vertex>* vertices, std::vector<uint16_t>* indices)
 {
+	m_pName = "boxGeo";
 	m_vertexByteStride = sizeof(Vertex);
 	m_vertexBufferByteSize = sizeof(Vertex) * vertices->size();
 	m_indexCount = indices->size();
 	m_indexBufferByteSize = sizeof(uint16_t) * m_indexCount;
 	std::cout << "Index BSize" << m_indexBufferByteSize << std::endl;
-	
-	m_pGPUVertexBuffer = D3DUtils::CreateDefaultBuffer(device, commandList, vertices, m_vertexBufferByteSize, m_pUploaderVertexBuffer);
-	m_pGPUIndexBuffer = D3DUtils::CreateDefaultBuffer(device, commandList, vertices, m_indexBufferByteSize, m_pUploaderIndexBuffer);
+
+	ThrowIfFailed(D3DCreateBlob(m_vertexBufferByteSize, &m_CPUVertexBuffer));
+	CopyMemory(m_CPUVertexBuffer->GetBufferPointer(), vertices->data(), m_vertexBufferByteSize);
+
+	ThrowIfFailed(D3DCreateBlob(m_indexBufferByteSize, &m_CPUIndexBuffer));
+	CopyMemory(m_CPUIndexBuffer->GetBufferPointer(), indices->data(), m_indexBufferByteSize);
+
+	m_pGPUVertexBuffer = D3DUtils::CreateDefaultBuffer(device, commandList, vertices->data(), m_vertexBufferByteSize, m_pUploaderVertexBuffer);
+	m_pGPUIndexBuffer = D3DUtils::CreateDefaultBuffer(device, commandList, indices->data(), m_indexBufferByteSize, m_pUploaderIndexBuffer);
+
+	Submesh submesh;
+	submesh.IndexCount = (UINT)indices->size();
+	submesh.StartIndexLocation = 0;
+	submesh.BaseVertexLocation = 0;
+
+	m_drawArgs["box"] = submesh;
 }
 
 void Mesh::Release()

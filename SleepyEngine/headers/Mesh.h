@@ -1,5 +1,15 @@
 #pragma once
 
+struct Submesh
+{
+	UINT IndexCount = 0;
+	UINT StartIndexLocation = 0;
+	INT BaseVertexLocation = 0;
+
+	// Physic stuff below, letting it in comment to treat it later
+	// DirectX::BoundingBox Bounds;
+};
+
 
 class Mesh : public Component
 {
@@ -15,8 +25,8 @@ public:
 
 	char* m_pName;
 
-	std::vector<Vertex>* m_CPUVertexBuffer;
-	std::vector<int>* m_CPUIndexBuffer;
+	ID3DBlob* m_CPUVertexBuffer;
+	ID3DBlob* m_CPUIndexBuffer;
 	
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_pGPUVertexBuffer = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_pGPUIndexBuffer = nullptr;
@@ -33,8 +43,6 @@ public:
 
 	D3D12_VERTEX_BUFFER_VIEW VertexBufferView()const;
 	D3D12_INDEX_BUFFER_VIEW IndexBufferView()const;
-	
 
-	// Physic stuff below, letting it in comment to treat it later
-	// DirectX::BoundingBox Bounds;
+	std::unordered_map<std::string, Submesh> m_drawArgs;
 };
