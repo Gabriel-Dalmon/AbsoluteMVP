@@ -1,15 +1,12 @@
 #include "pch.h"
-#include "Shader.h"
-
-#include "ShaderReference.h"
-
 
 ShaderReference::ShaderReference()
 {
 }
 
-void ShaderReference::Init()
+void ShaderReference::Init(ShaderReferenceDescriptor* desc)
 {
+	m_pShader = desc->shaderRef;
 }
 
 void ShaderReference::Release()

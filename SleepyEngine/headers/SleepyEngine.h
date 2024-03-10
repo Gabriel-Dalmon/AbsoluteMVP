@@ -1,19 +1,5 @@
 #pragma once
 
-#include "resource.h"
-
-#include "d3dx12.h"
-#include <dxgi1_4.h>
-#include "MathHelper.h"
-#include "UploadBuffer.h"
-
-
-#define MAX_LOADSTRING 100
-#define SWAP_CHAIN_BUFFER_COUNT 2
-
-class Mesh;
-class MeshGeometry;
-
 struct ObjectConstants
 {
     XMFLOAT4X4 WorldViewProj = MathHelper::Identity4x4();
@@ -28,9 +14,12 @@ public:
     int Run();
 
     // GETTERS / SETTERS
-    D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferView()const;
+    D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferView()const; 
     ID3D12Resource* GetCurrentBackBuffer()const;
     D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView()const;
+
+    LRESULT MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+    static SleepyEngine* GetApp();
 
     void Release();
 
@@ -42,6 +31,12 @@ private:
     void Draw();
     void DrawBis();
     void Update();
+
+    void OnMouseDown(WPARAM btnState, int x, int y);
+    void OnMouseUp(WPARAM btnState, int x, int y);
+    void OnMouseMove(WPARAM btnState, int x, int y);
+
+    void OnKeyboardInput(Timer& time);
 
     // D3DX12 Initialization
     void InitD3D();
@@ -64,8 +59,8 @@ private:
 
 
 private:
-    WCHAR m_szTitle[MAX_LOADSTRING];                  // The title bar text
-    WCHAR m_szWindowClass[MAX_LOADSTRING];            // the main window class name
+    WCHAR m_szTitle[MAX_LOADSTRING] = L"";                  // The title bar text
+    WCHAR m_szWindowClass[MAX_LOADSTRING] = L"";            // the main window class name
 
     ID3D12Device* m_pDevice = nullptr;
 
@@ -83,6 +78,8 @@ private:
     int m_currentBackBufferOffset = 0;
 
     D3D12_VIEWPORT* m_pViewPort = new D3D12_VIEWPORT();
+
+    Camera m_Camera;
 
     UINT m_4xMsaaQuality = 0;
     bool m_4xMsaaState = false;
@@ -121,4 +118,13 @@ private:
 
     Mesh* mBoxGeo = nullptr;
     MeshGeometry* mBoxGeoBis = nullptr;
+    Transform* m_Transform = nullptr;
+
+    float xS = 0.5f;
+    float yS = 0.5f;
+    float zS = 0.5f;
+
+    POINT m_LastMousePos;
+
+    static SleepyEngine* m_App;
 };

@@ -2,16 +2,42 @@
 //
 #include "pch.h"
 
-#include "SleepyEngine.h"
-#include "Utils/HResultException.h"
-#include "Mesh.h"
-#include "PSO.h"
-#include "Shader.h"
+#include "resource.h"
+//#include "UploadBuffer.h"
+//#include "Utils/HResultException.h"
+//#include "PSO.h"
+//#include "tmpMeshGeo.h"
 
-#include "tmpMeshGeo.h"
-// I don't know where to put them
-#include "Input.h"
-#include "Timer.h"
+//#include "Camera.h"
+//#include "Transform.h"
+//#include "Mesh.h"
+//#include "Shader.h"
+//#include "Input.h"
+//#include "Timer.h"
+// 
+//#include "SleepyEngine.h"
+
+std::ostream& XM_CALLCONV operator<<(std::ostream& os, FXMVECTOR v)
+{
+    XMFLOAT3 dest;
+    XMStoreFloat3(&dest, v);
+
+    os << "(" << dest.x << ", " << dest.y << ", " << dest.z << ")";
+    return os;
+}
+
+std::ostream& XM_CALLCONV operator << (std::ostream& os, FXMMATRIX m)
+{
+    for (int i = 0; i < 4; ++i)
+    {
+        os << XMVectorGetX(m.r[i]) << "\t";
+        os << XMVectorGetY(m.r[i]) << "\t";
+        os << XMVectorGetZ(m.r[i]) << "\t";
+        os << XMVectorGetW(m.r[i]);
+        os << std::endl;
+    }
+    return os;
+}
 
 // Global Variables:
 
@@ -236,6 +262,7 @@ int SleepyEngine::Initialize()
         RegisterWindowClass();
         InitWindow(SW_SHOW);
         InitD3D();
+        m_Camera.SetPosition(0.0f, 2.0f, -10.0f);
     }
     catch (HResultException error)
     {
@@ -251,6 +278,7 @@ int SleepyEngine::Initialize()
         }
         return 1;
     }
+    m_App = this;
     return 0;
 }
 
@@ -290,6 +318,9 @@ void SleepyEngine::BuildConstantBuffers()
 
 int SleepyEngine::Run()
 {
+    m_Transform = new Transform();
+    m_Transform->Identity();  
+    m_Transform->SetScale(.5f, .5f, .5f);
 
     HACCEL hAccelTable = LoadAccelerators(m_hAppInstance, MAKEINTRESOURCE(IDC_SLEEPYENGINE));
 
@@ -338,11 +369,15 @@ int SleepyEngine::Run()
             DispatchMessage(&msg);
         }
         else {
+            //std::cout << m_Camera.GetPosition() << std::endl;
+            //std::cout << m_Camera.GetView() << std::endl;
+            timer.UpdateTimer();
+
             input.Update();
 
-            timer.UpdateTimer();
             timer.UpdateFPS(mhMainWnd);
 
+            OnKeyboardInput(timer);
             Update();
             DrawBis();
         }
@@ -375,28 +410,32 @@ D3D12_CPU_DESCRIPTOR_HANDLE SleepyEngine::GetDepthStencilView()const
 
 void SleepyEngine::Release()
 {
+    // Variables membres avec une méthode Release, et membres DirectX
     RELEASE(m_pDevice);
     RELEASE(m_pFence);
     RELEASE(m_pRtvHeap);
     RELEASE(m_pDsvHeap);
-    // RELEASE(m_pViewPort);
     RELEASE(m_pDepthStencilBuffer);
     RELEASE(m_pCommandQueue);
     RELEASE(m_pDirectCmdListAlloc);
     RELEASE(m_pCommandList);
     RELEASE(m_pDxgiFactory);
     RELEASE(m_pSwapChain);
-    // RELEASE(m_pSwapChainBuffer);
     RELEASE(m_PSO);
     RELEASE(m_pRootSignature);
-    // RELEASE(mhMainWnd);
     RELEASE(m_pCbvHeap);
-    // RELEASE(m_pObjectCB); 
+    
+    // "new"
     delete m_pViewPort;
     delete m_pObjectCB;
+    delete m_Transform;
+    delete mBoxGeo;
+    delete mBoxGeoBis;
 
+    // Window and Window Class
+    DestroyWindow(mhMainWnd); 
+    UnregisterClassW(m_szWindowClass, m_hAppInstance);
 }
-
 
 ATOM SleepyEngine::RegisterWindowClass()
 {
@@ -408,12 +447,12 @@ ATOM SleepyEngine::RegisterWindowClass()
     wcex.cbClsExtra = 0;
     wcex.cbWndExtra = 0;
     wcex.hInstance = m_hAppInstance;
-    wcex.hIcon = LoadIcon(m_hAppInstance, MAKEINTRESOURCE(IDI_SLEEPYENGINE));
+    wcex.hIcon = LoadIcon(m_hAppInstance, MAKEINTRESOURCE(IDI_ICON1));
     wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
     wcex.lpszMenuName = 0;
     wcex.lpszClassName = m_szWindowClass;
-    wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+    wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_ICON1));
 
     return RegisterClassExW(&wcex);
 }
@@ -432,7 +471,18 @@ void SleepyEngine::InitWindow(int nCmdShow)
 
 }
 
+SleepyEngine* SleepyEngine::m_App = nullptr;
+SleepyEngine* SleepyEngine::GetApp()
+{
+    return m_App;
+}
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    return SleepyEngine::GetApp()->MsgProc(hWnd, message, wParam, lParam);
+}
+
+LRESULT SleepyEngine::MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
@@ -464,6 +514,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
+    case WM_LBUTTONDOWN:
+    case WM_MBUTTONDOWN:
+    case WM_RBUTTONDOWN:
+        OnMouseDown(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+        return 0;
+    case WM_LBUTTONUP:
+    case WM_MBUTTONUP:
+    case WM_RBUTTONUP:
+        OnMouseUp(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+        return 0;
+    case WM_MOUSEMOVE:
+        OnMouseMove(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+        return 0;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
@@ -552,7 +615,7 @@ void SleepyEngine::BuildBoxGeometryBis()
         Vertex({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Green) }),
         Vertex({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Blue) }),
         Vertex({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Yellow) }),
-        Vertex({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Cyan) }),
+        Vertex({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Cyan) }), 
         Vertex({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Magenta) })
     };
 
@@ -586,7 +649,7 @@ void SleepyEngine::BuildBoxGeometryBis()
     const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
     const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
 
-    mBoxGeoBis = new MeshGeometry();
+    mBoxGeoBis = new MeshGeometry(); 
     mBoxGeoBis->Name = "boxGeo";
 
     ThrowIfFailed(D3DCreateBlob(vbByteSize, &mBoxGeoBis->VertexBufferCPU));
@@ -617,21 +680,39 @@ void SleepyEngine::BuildBoxGeometryBis()
 
 void SleepyEngine::Update()
 {
+    //std::cout << "Update" << std::endl;
     // Convert Spherical to Cartesian coordinates.
-    float x = mRadius * sinf(mPhi) * cosf(mTheta);
-    float z = mRadius * sinf(mPhi) * sinf(mTheta);
-    float y = mRadius * cosf(mPhi);
+    float x = mRadius * sinf(mPhi) * cosf(mTheta); 
+    float z = mRadius * sinf(mPhi) * sinf(mTheta); 
+    float y = mRadius * cosf(mPhi); 
 
     // Build the view matrix.
-    XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);
-    XMVECTOR target = XMVectorZero();
-    XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+    XMVECTOR pos = XMVectorSet(x, y, z, 1.0f); 
+    XMVECTOR target = XMVectorZero(); 
+    XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f); 
 
-    XMMATRIX view = XMMatrixLookAtLH(pos, target, up);
+    //XMMATRIX view = XMMatrixLookAtLH(pos, target, up); 
+    //XMStoreFloat4x4(&mView, view); 
+    XMMATRIX view = m_Camera.GetView();
     XMStoreFloat4x4(&mView, view);
 
-    XMMATRIX world = XMLoadFloat4x4(&mWorld);
-    XMMATRIX proj = XMLoadFloat4x4(&mProj);
+    // Rotation essai 0:
+    // m_Transform.Identity();
+    m_Transform->Rotate(.001f, .001f, .001f);
+    if (xS <= 1.f && yS <= 1.f && zS <= 1.f)
+    {
+        xS += 0.005;
+        yS += 0.005;
+        zS += 0.005;
+        m_Transform->SetScale(xS, yS, zS);
+        //std::cout << m_Transform->m_scaleVect.x << std::endl;
+    }
+
+    m_Transform->Update();
+
+    XMMATRIX world = XMLoadFloat4x4(&m_Transform->m_transformMatrix);
+    //XMMATRIX proj = XMLoadFloat4x4(&mProj);
+    XMMATRIX proj = m_Camera.GetProj();
     XMMATRIX worldViewProj = world * view * proj;
 
     // Update the constant buffer with the latest worldViewProj matrix.
@@ -705,7 +786,7 @@ void SleepyEngine::Draw()
 
 void SleepyEngine::DrawBis()
 {
-    std::cout << "Drawing" << std::endl;
+    //std::cout << "Drawing" << std::endl;
     CD3DX12_RESOURCE_BARRIER barrier;
 
     barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
@@ -760,4 +841,57 @@ void SleepyEngine::DrawBis()
     ThrowIfFailed(m_pSwapChain->Present(0, 0));
     m_currentBackBufferOffset = (m_currentBackBufferOffset + 1) % SWAP_CHAIN_BUFFER_COUNT;
     FlushCommandQueue();
+}
+
+// Note: the best option is to remove that and make them callbacks with the input class
+void SleepyEngine::OnMouseDown(WPARAM btnState, int x, int y)
+{
+    m_LastMousePos.x = x;
+    m_LastMousePos.y = y;
+
+    SetCapture(mhMainWnd);
+}
+
+void SleepyEngine::OnMouseUp(WPARAM btnState, int x, int y)
+{
+    ReleaseCapture();
+}
+
+void SleepyEngine::OnMouseMove(WPARAM btnState, int x, int y)
+{
+    //std::cout << "Moov Boolet" << std::endl;
+    if ((btnState & MK_LBUTTON) != 0)
+    {
+        //std::cout << "Cam" << std::endl;
+        // Make each pixel correspond to a quarter of a degree.
+        float dx = DirectX::XMConvertToRadians(0.25f * static_cast<float>(x - m_LastMousePos.x));
+        float dy = DirectX::XMConvertToRadians(0.25f * static_cast<float>(y - m_LastMousePos.y));
+
+        m_Camera.Pitch(dy);
+        m_Camera.RotateY(dx);
+
+        m_Camera.UpdateViewMatrix();
+    }
+
+    m_LastMousePos.x = x;
+    m_LastMousePos.y = y;
+}
+
+void SleepyEngine::OnKeyboardInput(Timer& timer)
+{
+    const float dt = timer.GetDeltaTime();
+
+    if (GetAsyncKeyState('Z') & 0x8000)
+        m_Camera.Walk(10.0f * dt);
+
+    if (GetAsyncKeyState('S') & 0x8000)
+        m_Camera.Walk(-10.0f * dt);
+
+    if (GetAsyncKeyState('Q') & 0x8000)
+        m_Camera.Strafe(-10.0f * dt);
+
+    if (GetAsyncKeyState('D') & 0x8000)
+        m_Camera.Strafe(10.0f * dt);
+
+    m_Camera.UpdateViewMatrix();
 }

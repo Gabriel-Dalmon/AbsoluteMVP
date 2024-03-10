@@ -139,9 +139,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="headers\Camera.h" />
     <ClInclude Include="headers\Collider.h" />
     <ClInclude Include="headers\ColliderOBB.h" />
     <ClInclude Include="headers\ColliderSphere.h" />
+    <ClInclude Include="headers\ComponentDescriptor.h" />
+    <ClInclude Include="headers\Factory.h" />
     <ClInclude Include="headers\GameState.h" />
     <ClInclude Include="headers\Component.h" />
     <ClInclude Include="headers\D3DUtils.h" />
@@ -153,8 +156,10 @@
     <ClInclude Include="headers\pch.h" />
     <ClInclude Include="headers\PSO.h" />
     <ClInclude Include="headers\Resource.h" />
+    <ClInclude Include="headers\RessourceAllocator.h" />
     <ClInclude Include="headers\Shader.h" />
     <ClInclude Include="headers\SleepyEngine.h" />
+    <ClInclude Include="headers\Engine.h" />
     <ClInclude Include="headers\targetver.h" />
     <ClInclude Include="headers\Timer.h" />
     <ClInclude Include="headers\tmpMeshGeo.h" />
@@ -171,9 +176,9 @@
     <ClInclude Include="src\utils\d3dx12.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\Factory.cpp" />
+    <ClCompile Include="src\core\RessourceAllocator.cpp" />
     <ClCompile Include="src\components\tmpMeshGeo.cpp" />
-    <ClCompile Include="src\GameStates\Pause.cpp" />
-    <ClCompile Include="src\GameStates\Menu.cpp" />
     <ClCompile Include="src\components\Collider.cpp" />
     <ClCompile Include="src\components\ColliderOBB.cpp" />
     <ClCompile Include="src\components\ColliderSphere.cpp" />
@@ -183,6 +188,7 @@
     <ClCompile Include="src\components\ShaderReference.cpp" />
     <ClCompile Include="src\GameStates\GameState.cpp" />
     <ClCompile Include="src\components\Mesh.cpp" />
+    <ClCompile Include="src\core\Camera.cpp" />
     <ClCompile Include="src\core\Entity.cpp" />
     <ClCompile Include="src\core\PSO.cpp" />
     <ClCompile Include="src\core\Input.cpp" />
@@ -198,9 +204,6 @@
     <Text Include="src\shaders\Color.hlsl">
       <FileType>Document</FileType>
     </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="SleepyEngine.aps" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="SleepyEngine.ico" />

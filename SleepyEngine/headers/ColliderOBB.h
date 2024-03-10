@@ -8,5 +8,5 @@ public:
 
 	void Init();
 
-	BoundingOrientedBox m_box;
+	// BoundingOrientedBox m_box; 
 };

@@ -1,9 +1,5 @@
 #pragma once
 
-#include <d3d12.h>
-#include <d3dx12.h>
-
-
 ID3D12PipelineState* InitPSO(std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout,
 	ID3D12RootSignature* pRootSignature,
 	ID3DBlob* pVSByteCode,

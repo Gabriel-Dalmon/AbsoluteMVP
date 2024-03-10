@@ -1,7 +1,4 @@
 #pragma once
-#include "Component.h"
-
-class Shader;
 
 class ShaderReference : public Component 
 {
@@ -10,7 +7,7 @@ public:
 	~ShaderReference() {};
 
 	// INIT
-	void Init() override;
+	void Init(ShaderReferenceDescriptor* desc);
 
 	// SETTER / GETTER
 	Shader* GetShader() { return m_pShader; }

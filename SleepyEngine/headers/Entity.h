@@ -1,24 +1,26 @@
 #pragma once
 
-#include <vector>
-
 class Entity
 {
-public:
+private:
 	Entity();
 	~Entity() {};
 
 	// INIT
 	void Init();
 
-	// SETTER / GETTER
+public: // Create and kill entity
+	static Entity* CreateEmptyEntity();
+	void Release();
+
+public: // SETTER / GETTER	
 	template<typename T> 
 	void AddComponent(T component)   
 	{
 		if (GetComponent<T>() != nullptr)
 			return;
 
-		m_componentsList.push_back(component); 
+		m_componentsList.push_back((Component*)component); 
 	}
 
 	template<typename T>
@@ -45,10 +47,20 @@ public:
 		return nullptr; 
 	}
 	
-	// RELEASE
-	void Release();
+	// Parent entity
+	Entity* GetParent(); 
+	void SetParent(Entity* parent);
+	void RemoveParent();
+
+	// Child entity
+	void AddChild(Entity* child);
+	void RemoveChild(Entity* child);
+	std::vector<Entity*> GetChildren();
 
 private:
 	std::vector<Component*> m_componentsList;  
+
+	std::vector<Entity*> m_ChildrenEntities;
+	Entity* m_pParentEntity = nullptr;
 };
 

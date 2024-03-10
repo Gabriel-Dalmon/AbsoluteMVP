@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "Timer.h"
 
 //TotalTime: temps en s depuis lancement du jeu : float
 //DeltaTime: temps écoulé entre deux frames: float
@@ -56,7 +55,7 @@ void Timer::UpdateFPS(HWND Window)
 			MaxFPS = FrameCount;
 
 		FrameCount = 0;
-		FPSTimer += GetTotalTime();
+		FPSTimer += GetTotalTime() - FPSTimer;
 		
 		// Might be temporary, might not be
 		// Depends on if we can figure out "fonts"
