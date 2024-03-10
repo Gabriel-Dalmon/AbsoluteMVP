@@ -684,7 +684,7 @@ void SleepyEngine::BuildBoxGeometryBis()
     /*Mesh* box = new Mesh;;
     box->Init(m_pDevice, m_pCommandList, &vertices, &indices);
     mBoxGeo = box;*/
-    mBoxGeo = m_pAllocator->getMesh("cube");
+    mBoxGeo = m_pAllocator->getMesh("pyramide");
 }
 
 
@@ -708,7 +708,7 @@ void SleepyEngine::Update()
 
     // Rotation essai 0:
     // m_Transform.Identity();
-    m_Transform->Rotate(.001f, .001f, .001f);
+    //m_Transform->Rotate(.001f, .001f, .001f);
     if (xS <= 1.f && yS <= 1.f && zS <= 1.f)
     {
         xS += 0.005;

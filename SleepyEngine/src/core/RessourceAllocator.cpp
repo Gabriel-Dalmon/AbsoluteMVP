@@ -65,6 +65,6 @@ Mesh* RessourceAllocator::getMesh(const std::string& name)
 
 void RessourceAllocator::Release()
 {
-    //release every mesh here
+    m_meshCollection->clear();
     delete m_meshCollection;
 }
