@@ -70,7 +70,7 @@ void SleepyEngine::InitD3D()
     BuildDescriptorHeaps();
     BuildConstantBuffers();
     BuildBoxGeometry();
-    BuildBoxGeometryBis();
+    
 
     XMMATRIX P = XMMatrixPerspectiveFovLH(0.25f * MathHelper::Pi, static_cast<float>(m_clientWidth / m_clientHeight), 1.0f, 1000.0f);
     XMStoreFloat4x4(&mProj, P);
@@ -279,6 +279,9 @@ int SleepyEngine::Initialize()
         return 1;
     }
     m_App = this;
+    m_pAllocator = new RessourceAllocator;
+    m_pAllocator->Init(m_pDevice, m_pCommandList);
+    BuildBoxGeometryBis();
     return 0;
 }
 
@@ -425,6 +428,7 @@ void SleepyEngine::Release()
     RELEASE(m_pRootSignature);
     RELEASE(m_pCbvHeap);
     RELEASE(mBoxGeo);
+    RELEASE(m_pAllocator);
     
     // "new"
     delete m_pViewPort;
@@ -677,9 +681,10 @@ void SleepyEngine::BuildBoxGeometryBis()
 
     mBoxGeoBis->DrawArgs["box"] = submesh;*/
 
-    Mesh* box = new Mesh;;
+    /*Mesh* box = new Mesh;;
     box->Init(m_pDevice, m_pCommandList, &vertices, &indices);
-    mBoxGeo = box;
+    mBoxGeo = box;*/
+    mBoxGeo = m_pAllocator->getMesh("cube");
 }
 
 
@@ -899,4 +904,9 @@ void SleepyEngine::OnKeyboardInput(Timer& timer)
         m_Camera.Strafe(10.0f * dt);
 
     m_Camera.UpdateViewMatrix();
+}
+
+void SleepyEngine::SetRessourceAllocator(RessourceAllocator* allocator)
+{
+    m_pAllocator = allocator;
 }

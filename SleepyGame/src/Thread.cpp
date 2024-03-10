@@ -31,8 +31,10 @@ void Thread::RunThread()
     freopen_s(&m_pConsoleOut, "CONOUT$", "w", stdout);
     freopen_s(&m_pConsoleOut, "CONOUT$", "w", stderr);
     SleepyEngine engine(m_hInstance);
+
     std::cout << "we summoned!" << std::endl;
     std::cerr << "we err!" << std::endl;
+
     engine.Initialize();
     engine.Run();
     

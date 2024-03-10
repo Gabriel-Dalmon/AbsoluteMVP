@@ -21,6 +21,8 @@ public:
     LRESULT MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     static SleepyEngine* GetApp();
 
+    void SetRessourceAllocator(RessourceAllocator* allocator);
+
     void Release();
 
 private:
@@ -127,4 +129,6 @@ private:
     POINT m_LastMousePos;
 
     static SleepyEngine* m_App;
+
+    RessourceAllocator* m_pAllocator;
 };

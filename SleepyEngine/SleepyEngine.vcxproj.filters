@@ -82,4 +82,8 @@
   <ItemGroup>
     <Text Include="src\shaders\Color.hlsl" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="JSONRessources.json" />
+  </ItemGroup>
 </Project>
