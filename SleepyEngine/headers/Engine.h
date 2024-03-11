@@ -41,6 +41,7 @@
 #include <DirectXCollision.h>
 #include "d3dx12.h"
 #include "MathHelper.h"
+#include "DDSTextureLoader.h"
 
 // FORWARD DECLARATIONS
 class SleepyEngine;

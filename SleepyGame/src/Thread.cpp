@@ -35,7 +35,8 @@ void Thread::RunThread()
     std::cout << "we summoned!" << std::endl;
     std::cerr << "we err!" << std::endl;
 
-    engine.Initialize();
-    engine.Run();
-    
+    if (engine.Initialize() == 0)
+        engine.Run();
+    else
+        return;
 }

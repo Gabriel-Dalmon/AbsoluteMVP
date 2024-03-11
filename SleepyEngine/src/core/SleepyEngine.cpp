@@ -60,6 +60,7 @@ void SleepyEngine::InitD3D()
     RecoverDescriptorsSize();
     Check4xMSAAQualitySupport();
     CreateCommandObjects();
+    LoadTextures();
     CreateSwapChain();
     CreateDescriptorHeaps();
     CreateRenderTargetView();
@@ -70,6 +71,8 @@ void SleepyEngine::InitD3D()
     BuildDescriptorHeaps();
     BuildConstantBuffers();
     BuildBoxGeometry();
+    BuildMaterials();
+    BuildRenderItems();
     
 
     XMMATRIX P = XMMatrixPerspectiveFovLH(0.25f * MathHelper::Pi, static_cast<float>(m_clientWidth / m_clientHeight), 1.0f, 1000.0f);
@@ -82,6 +85,48 @@ void SleepyEngine::EnableAdditionalD3D12Debug()
     ThrowIfFailed(D3D12GetDebugInterface(__uuidof(ID3D12Debug), (void**)&pDebugController)); //should throw error
     pDebugController->EnableDebugLayer();
     std::cout << "Debug Layer Enabled" << std::endl;
+}
+
+void SleepyEngine::LoadTextures()
+{
+    auto woodCrateTex = std::make_unique<Texture>();
+    woodCrateTex->Name = "woodCrateTex";
+    woodCrateTex->Filename = L"../../../textures/WoodCrate01.dds";
+    ThrowIfFailed(DirectX::CreateDDSTextureFromFile12(m_pDevice,
+        m_pCommandList, woodCrateTex->Filename.c_str(),
+        woodCrateTex->Resource, woodCrateTex->UploadHeap));
+
+    mTextures[woodCrateTex->Name] = std::move(woodCrateTex);
+}
+
+void SleepyEngine::BuildMaterials()
+{
+    auto woodCrate = std::make_unique<Material>();
+    woodCrate->Name = "woodCrate";
+    woodCrate->MatCBIndex = 0;
+    woodCrate->DiffuseSrvHeapIndex = 0;
+    woodCrate->DiffuseAlbedo = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+    woodCrate->FresnelR0 = XMFLOAT3(0.05f, 0.05f, 0.05f);
+    woodCrate->Roughness = 0.2f;
+
+    mMaterials["woodCrate"] = std::move(woodCrate);
+}
+
+void SleepyEngine::BuildRenderItems()
+{
+    auto boxRitem = std::make_unique<RenderItem>();
+    boxRitem->ObjCBIndex = 0;
+    boxRitem->Mat = mMaterials["woodCrate"].get();
+    boxRitem->Geo = mBoxGeoBis;//mGeometries["boxGeo"].get();
+    boxRitem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+    boxRitem->IndexCount = boxRitem->Geo->DrawArgs["box"].IndexCount;
+    boxRitem->StartIndexLocation = boxRitem->Geo->DrawArgs["box"].StartIndexLocation;
+    boxRitem->BaseVertexLocation = boxRitem->Geo->DrawArgs["box"].BaseVertexLocation;
+    mAllRitems.push_back(std::move(boxRitem));
+
+    // All the render items are opaque.
+    for (auto& e : mAllRitems)
+        mOpaqueRitems.push_back(e.get());
 }
 
 void SleepyEngine::CreateDevice()
@@ -175,6 +220,18 @@ void SleepyEngine::CreateRenderTargetView()
 {
     //ID3D12Resource* m_pSwapChainBuffer[SWAP_CHAIN_BUFFER_COUNT]; // must be freed when finished
     CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle(m_pRtvHeap->GetCPUDescriptorHandleForHeapStart());
+
+    auto woodCrateTex = mTextures["woodCrateTex"]->Resource;
+
+    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    srvDesc.Format = woodCrateTex->GetDesc().Format;
+    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Texture2D.MostDetailedMip = 0;
+    srvDesc.Texture2D.MipLevels = woodCrateTex->GetDesc().MipLevels;
+    srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+
+    m_pDevice->CreateShaderResourceView(woodCrateTex.Get(), &srvDesc, rtvHeapHandle);
 
     for (UINT i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
     {
@@ -651,7 +708,7 @@ void SleepyEngine::BuildBoxGeometryBis()
         4, 3, 7
     };
 
-    /*const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
+    const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
     const UINT ibByteSize = (UINT)indices.size() * sizeof(std::uint16_t);
 
     mBoxGeoBis = new MeshGeometry(); 
@@ -679,12 +736,12 @@ void SleepyEngine::BuildBoxGeometryBis()
     submesh.StartIndexLocation = 0;
     submesh.BaseVertexLocation = 0;
 
-    mBoxGeoBis->DrawArgs["box"] = submesh;*/
+    mBoxGeoBis->DrawArgs["box"] = submesh;
 
     /*Mesh* box = new Mesh;;
     box->Init(m_pDevice, m_pCommandList, &vertices, &indices);
     mBoxGeo = box;*/
-    mBoxGeo = m_pAllocator->getMesh("pyramide");
+    //mBoxGeo = m_pAllocator->getMesh("cube");
 }
 
 
@@ -828,8 +885,8 @@ void SleepyEngine::DrawBis()
     m_pCommandList->IASetIndexBuffer(&indexBufferView);
 
     m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart()); // Get rid of this
-    //m_pCommandList->SetGraphicsRootConstantBufferView(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
+    //m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart()); // Get rid of this
+    m_pCommandList->SetGraphicsRootConstantBufferView(0, GetCurrentBackBuffer()->GetGPUVirtualAddress());
 
     /* the following code is the one that comse from the book
     * we would like to iterate in the submesh if we had one, maybe later
@@ -847,7 +904,23 @@ void SleepyEngine::DrawBis()
     ID3D12CommandList* cmdsLists[] = { m_pCommandList };
     m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
 
-    ThrowIfFailed(m_pSwapChain->Present(0, 0));
+    try
+    {
+        ThrowIfFailed(m_pSwapChain->Present(0, 0));
+    }
+    catch (HResultException error)
+    {
+        std::wstring messageBoxText;
+        HRESULT hr = m_pDevice->GetDeviceRemovedReason();
+        if (FAILED(hr))
+        {
+            _com_error error(hr);
+            std::string errorMessage = "Device Removed Reason:\n" + D3DUtils::HrToString(hr);
+            MessageBoxA(nullptr, errorMessage.c_str(), "Device Removed", MB_OK | MB_ICONERROR);
+        }
+        //return 1;
+    }
+    
     m_currentBackBufferOffset = (m_currentBackBufferOffset + 1) % SWAP_CHAIN_BUFFER_COUNT;
     FlushCommandQueue();
 }
