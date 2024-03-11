@@ -316,6 +316,23 @@ int SleepyEngine::Run()
     timer.Init();
 
 
+//    Shader shader;
+//    shader.Init();
+//    ThrowIfFailed(m_pDevice->CreateRootSignature(
+//        0,
+//        shader.m_pSerializedRootSig->GetBufferPointer(),
+//        shader.m_pSerializedRootSig->GetBufferSize(),
+//        IID_PPV_ARGS(&m_pRootSignature))
+//    );
+//
+//#if defined (DEBUG) || (_DEBUG)
+//    shader.CompileVS(L"../SleepyEngine/src/shaders/Color.hlsl");
+//    shader.CompilePS(L"../SleepyEngine/src/shaders/Color.hlsl");
+//#else
+//    shader.CompileVS(L"Shaders/Color.hlsl");
+//    shader.CompilePS(L"Shaders/Color.hlsl");
+//#endif
+
     Shader shader;
     shader.Init();
     ThrowIfFailed(m_pDevice->CreateRootSignature(
@@ -326,11 +343,11 @@ int SleepyEngine::Run()
     );
 
 #if defined (DEBUG) || (_DEBUG)
-    shader.CompileVS(L"../SleepyEngine/src/shaders/Color.hlsl");
-    shader.CompilePS(L"../SleepyEngine/src/shaders/Color.hlsl");
+    shader.CompileVS(L"../SleepyEngine/src/shaders/Texture.hlsl");
+    shader.CompilePS(L"../SleepyEngine/src/shaders/Texture.hlsl");
 #else
-    shader.CompileVS(L"Shaders/Color.hlsl");
-    shader.CompilePS(L"Shaders/Color.hlsl");
+    shader.CompileVS(L"Shaders/Texture.hlsl");
+    shader.CompilePS(L"Shaders/Texture.hlsl");
 #endif
 
     m_PSO = InitPSO(shader.m_pInputLayout, m_pRootSignature, shader.m_pVSByteCode, shader.m_pPSByteCode, m_backBufferFormat, false, 0,
@@ -360,7 +377,10 @@ int SleepyEngine::Run()
             timer.UpdateFPS(mhMainWnd);
 
             Update();
-            DrawBis();
+            //DrawBis();
+
+            DrawMeshWithTexture();
+
         }
         
     }
@@ -649,7 +669,7 @@ void SleepyEngine::BuildBoxGeometryBis()
     mBoxGeoBis->DrawArgs["box"] = submesh;
 }
 
-ID3D12Resource* SleepyEngine::CreateTexture(const wchar_t* fileName)
+void SleepyEngine::CreateTexture(const wchar_t* fileName)
 {
     // reset command list
     m_pDirectCmdListAlloc->Reset();
@@ -669,7 +689,8 @@ ID3D12Resource* SleepyEngine::CreateTexture(const wchar_t* fileName)
     //std::cout << "size d'une case du heap :" << m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) << std::endl;
 
     // On decale d'une case dans le heap ( une case = 32 octets )
-    hDescriptor.Offset(1, 32);
+    hDescriptor.Offset(textureIndex, m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
+    textureIndex = textureIndex + 1;
 
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
     srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -692,10 +713,13 @@ ID3D12Resource* SleepyEngine::CreateTexture(const wchar_t* fileName)
     FlushCommandQueue();
 
     // get and need to store texture
-    ID3D12Resource* pTexture = texture.Get();
+
+    //ID3D12Resource* pTexture = texture.Get();
+    mTexture = texture.Get();
+
     texture.Detach();
 
-    return pTexture;
+    //return pTexture;
 }
 
 
@@ -813,6 +837,7 @@ void SleepyEngine::DrawBis()
     ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvHeap };
     m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
+    // drw mersh
     m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
 
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView = mBoxGeoBis->VertexBufferView();
@@ -835,6 +860,8 @@ void SleepyEngine::DrawBis()
 
     m_pCommandList->DrawIndexedInstanced(mBoxGeoBis->DrawArgs["box"].IndexCount, 1, 0, 0, 0);
 
+    /////
+
     barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
     m_pCommandList->ResourceBarrier(1, &barrier);
 
@@ -850,35 +877,53 @@ void SleepyEngine::DrawBis()
 
 void SleepyEngine::DrawMeshWithTexture()
 {
-    //UINT objCBByteSize = d3dUtil::CalcConstantBufferByteSize(sizeof(ObjectConstants));
-    //UINT matCBByteSize = d3dUtil::CalcConstantBufferByteSize(sizeof(MaterialConstants));
 
-    //auto objectCB = mCurrFrameResource->ObjectCB->Resource();
-    //auto matCB = mCurrFrameResource->MaterialCB->Resource();
+    std::cout << "Drawing" << std::endl;
+    CD3DX12_RESOURCE_BARRIER barrier;
 
-    //// For each render item...
-    //for (size_t i = 0; i < ritems.size(); ++i)
-    //{
-    //    auto ri = ritems[i];
+    barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+    D3D12_CPU_DESCRIPTOR_HANDLE currentBackBufferView = GetCurrentBackBufferView();
+    D3D12_CPU_DESCRIPTOR_HANDLE dephtStencilView = GetDepthStencilView();
 
-    //    cmdList->IASetVertexBuffers(0, 1, &ri->Geo->VertexBufferView());
-    //    cmdList->IASetIndexBuffer(&ri->Geo->IndexBufferView());
-    //    cmdList->IASetPrimitiveTopology(ri->PrimitiveType);
+    m_pDirectCmdListAlloc->Reset();
 
-    //    CD3DX12_GPU_DESCRIPTOR_HANDLE tex(mSrvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-    //    tex.Offset(ri->Mat->DiffuseSrvHeapIndex, mCbvSrvDescriptorSize);
+    m_pCommandList->Reset(m_pDirectCmdListAlloc, nullptr);
+    m_pCommandList->RSSetViewports(1, m_pViewPort);
+    m_pCommandList->RSSetScissorRects(1, &m_scissorRect);
 
-    //    D3D12_GPU_VIRTUAL_ADDRESS objCBAddress = objectCB->GetGPUVirtualAddress() + ri->ObjCBIndex * objCBByteSize;
-    //    D3D12_GPU_VIRTUAL_ADDRESS matCBAddress = matCB->GetGPUVirtualAddress() + ri->Mat->MatCBIndex * matCBByteSize;
+    m_pCommandList->ResourceBarrier(1, &barrier);
 
-    //    cmdList->SetGraphicsRootDescriptorTable(0, tex);
-    //    cmdList->SetGraphicsRootConstantBufferView(1, objCBAddress);
-    //    cmdList->SetGraphicsRootConstantBufferView(3, matCBAddress);
+    m_pCommandList->ClearRenderTargetView(currentBackBufferView, Colors::LightSteelBlue, 0, nullptr);
+    m_pCommandList->ClearDepthStencilView(dephtStencilView, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
-    //    cmdList->DrawIndexedInstanced(ri->IndexCount, 1, ri->StartIndexLocation, ri->BaseVertexLocation, 0);
-    //}
+    m_pCommandList->OMSetRenderTargets(1, &currentBackBufferView, true, &dephtStencilView);
+
+    ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvHeap };
+    m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+
+    m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
+    
+    m_pCommandList->SetPipelineState(m_PSO);
+
+    D3D12_VERTEX_BUFFER_VIEW vertexBufferView = mBoxGeoBis->VertexBufferView();
+    D3D12_INDEX_BUFFER_VIEW indexBufferView = mBoxGeoBis->IndexBufferView();
+
+    m_pCommandList->IASetVertexBuffers(0, 1, &vertexBufferView);
+    m_pCommandList->IASetIndexBuffer(&indexBufferView);
+
+    m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    // m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
+    m_pCommandList->SetGraphicsRootConstantBufferView(0, m_pObjectCB->Resource()->GetGPUVirtualAddress());
+
+
+
+    CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
+
+    tex.Offset(0, m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
+
+    m_pCommandList->SetGraphicsRootDescriptorTable(0, tex);
+
+    m_pCommandList->DrawIndexedInstanced(mBoxGeoBis->DrawArgs["box"].IndexCount, 1, 0, 0, 0);
+
 }
-
-// ( create texture / create mesh ) -> create object (struct) -> Draw Object 
-
-// Dans le draw on va renseigner le mesh en cours et la texture en cours pour les dessiner l'un appliquer sur l'autre

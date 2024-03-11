@@ -64,7 +64,7 @@ private:
     void BuildBoxGeometryBis();
 
     // Texture
-    ID3D12Resource* CreateTexture(const wchar_t* fileName);
+    void CreateTexture(const wchar_t* fileName);
 
 
 
@@ -126,4 +126,7 @@ private:
 
     Mesh* mBoxGeo = nullptr;
     MeshGeometry* mBoxGeoBis = nullptr;
+
+    ID3D12Resource* mTexture = nullptr;
+    int textureIndex = 0;
 };
