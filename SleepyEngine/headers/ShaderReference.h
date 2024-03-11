@@ -15,6 +15,9 @@ public:
 	// Release
 	void Release();
 
+public:
+	void idkyet();
+
 private:
 	Shader* m_pShader = nullptr;
 };

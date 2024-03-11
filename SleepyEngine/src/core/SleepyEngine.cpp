@@ -70,6 +70,7 @@ void SleepyEngine::InitD3D()
     BuildDescriptorHeaps();
     BuildConstantBuffers();
     BuildBoxGeometry();
+    m_heapDescSize = m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
     
 
     XMMATRIX P = XMMatrixPerspectiveFovLH(0.25f * MathHelper::Pi, static_cast<float>(m_clientWidth / m_clientHeight), 1.0f, 1000.0f);
@@ -283,6 +284,17 @@ int SleepyEngine::Initialize()
     m_pAllocator->Init(m_pDevice, m_pCommandList);
     m_pFactory->Init(m_pAllocator);
     BuildBoxGeometryBis();
+
+    //// close command list 
+    //m_pCommandList->Close();
+
+    //// execute command list
+    //ID3D12CommandList* cmdsLists[] = { m_pCommandList };
+    //m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+
+    //// flush command list
+    //FlushCommandQueue();
+    //CreateTexture(L"C:\\Users\\vgautier\\source\\repos\\yoannklt\\Sleepy\\SleepyEngine\\src\\asset\\t_box.dds");
     return 0;
 }
 
@@ -347,11 +359,11 @@ int SleepyEngine::Run()
     );
 
 #if defined (DEBUG) || (_DEBUG)
-    shader.CompileVS(L"../SleepyEngine/src/shaders/Color.hlsl");
-    shader.CompilePS(L"../SleepyEngine/src/shaders/Color.hlsl");
+    shader.CompileVS(L"../SleepyEngine/src/shaders/Texture.hlsl");
+    shader.CompilePS(L"../SleepyEngine/src/shaders/Texture.hlsl");
 #else
-    shader.CompileVS(L"Shaders/Color.hlsl");
-    shader.CompilePS(L"Shaders/Color.hlsl");
+    shader.CompileVS(L"Shaders/Texture.hlsl");
+    shader.CompilePS(L"Shaders/Texture.hlsl");
 #endif
 
     m_PSO = InitPSO(shader.m_pInputLayout, m_pRootSignature, shader.m_pVSByteCode, shader.m_pPSByteCode, m_backBufferFormat, false, 0,
@@ -568,47 +580,47 @@ void SleepyEngine::FlushCommandQueue()
 
 void SleepyEngine::BuildBoxGeometry()
 {
-    std::vector<Vertex> vertices =
-    {
-        Vertex({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::White) }),
-        Vertex({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Black) }),
-        Vertex({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Red) }),
-        Vertex({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Green) }),
-        Vertex({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Blue) }),
-        Vertex({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Yellow) }),
-        Vertex({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Cyan) }),
-        Vertex({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Magenta) })
-    };
+    //std::vector<Vertex> vertices =
+    //{
+    //    Vertex({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::White) }),
+    //    Vertex({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Black) }),
+    //    Vertex({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Red) }),
+    //    Vertex({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Green) }),
+    //    Vertex({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Blue) }),
+    //    Vertex({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Yellow) }),
+    //    Vertex({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Cyan) }),
+    //    Vertex({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Magenta) })
+    //};
 
-    std::vector<uint16_t> indices =
-    {
-        // front face
-        0, 1, 2,
-        0, 2, 3,
+    //std::vector<uint16_t> indices =
+    //{
+    //    // front face
+    //    0, 1, 2,
+    //    0, 2, 3,
 
-        // back face
-        4, 6, 5,
-        4, 7, 6,
+    //    // back face
+    //    4, 6, 5,
+    //    4, 7, 6,
 
-        // left face
-        4, 5, 1,
-        4, 1, 0,
+    //    // left face
+    //    4, 5, 1,
+    //    4, 1, 0,
 
-        // right face
-        3, 2, 6,
-        3, 6, 7,
+    //    // right face
+    //    3, 2, 6,
+    //    3, 6, 7,
 
-        // top face
-        1, 5, 6,
-        1, 6, 2,
+    //    // top face
+    //    1, 5, 6,
+    //    1, 6, 2,
 
-        // bottom face
-        4, 0, 3,
-        4, 3, 7
-    };
+    //    // bottom face
+    //    4, 0, 3,
+    //    4, 3, 7
+    //};
 
-    mBoxGeo = new Mesh();
-    mBoxGeo->Init(m_pDevice, m_pCommandList, &vertices, &indices);
+    //mBoxGeo = new Mesh();
+    //mBoxGeo->Init(m_pDevice, m_pCommandList, &vertices, &indices);
 }
 
 void SleepyEngine::BuildBoxGeometryBis()
@@ -616,8 +628,7 @@ void SleepyEngine::BuildBoxGeometryBis()
     //mBoxGeo = m_pAllocator->getMesh("pyramide");
     Entity* player = Entity::CreateEmptyEntity();
     m_pFactory->FillPlayer(player);
-    MeshRenderer* geo = player->GetComponent<MeshRenderer*>();
-    mBoxGeo = geo->GetMesh();
+    m_entities.push_back(player);
 }
 
 
@@ -667,68 +678,6 @@ void SleepyEngine::Update()
 //void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, ID3D12RootSignature* pRootSignature, Mesh* mesh)
 void SleepyEngine::Draw()
 {
-    std::cout << "Drawing" << std::endl;
-    CD3DX12_RESOURCE_BARRIER barrier;
-
-    barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-    D3D12_CPU_DESCRIPTOR_HANDLE currentBackBufferView = GetCurrentBackBufferView();
-    D3D12_CPU_DESCRIPTOR_HANDLE dephtStencilView = GetDepthStencilView();
-
-    m_pDirectCmdListAlloc->Reset();
-
-    m_pCommandList->Reset(m_pDirectCmdListAlloc, m_PSO);
-    m_pCommandList->RSSetViewports(1, m_pViewPort);
-    m_pCommandList->RSSetScissorRects(1, &m_scissorRect);
-
-    m_pCommandList->ResourceBarrier(1, &barrier);
-
-    m_pCommandList->ClearRenderTargetView(currentBackBufferView, Colors::LightSteelBlue, 0, nullptr);
-    m_pCommandList->ClearDepthStencilView(dephtStencilView, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
-
-    m_pCommandList->OMSetRenderTargets(1, &currentBackBufferView, true, &dephtStencilView);
-
-    ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvHeap };
-    m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
-
-    m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
- 
-    D3D12_VERTEX_BUFFER_VIEW vertexBufferView = mBoxGeo->VertexBufferView();
-    D3D12_INDEX_BUFFER_VIEW indexBufferView = mBoxGeo->IndexBufferView();
-    D3D12_VERTEX_BUFFER_VIEW vertexBufferViewBis = mBoxGeo->VertexBufferView();
-    D3D12_INDEX_BUFFER_VIEW indexBufferViewBis = mBoxGeo->IndexBufferView();
-
-    m_pCommandList->IASetVertexBuffers(0, 1, &vertexBufferView);
-    m_pCommandList->IASetIndexBuffer(&indexBufferView);
-
-    m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-    m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
-
-    /* the following code is the one that comse from the book
-    * we would like to iterate in the submesh if we had one, maybe later
-    *pCommandList->DrawIndexedInstanced(
-    *	mesh->DrawArgs["box"].IndexCount,
-    *	1, 0, 0, 0);*/
-    UINT indexCount = mBoxGeo->m_drawArgs["box"].IndexCount;
-    UINT indexCountBis = mBoxGeo->m_drawArgs["box"].IndexCount;
-    m_pCommandList->DrawIndexedInstanced(indexCount, 1, 0, 0, 0);
-
-    barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-    m_pCommandList->ResourceBarrier(1, &barrier);
-
-    m_pCommandList->Close();
-
-    ID3D12CommandList* cmdsLists[] = { m_pCommandList };
-    m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
-
-    ThrowIfFailed(m_pSwapChain->Present(0, 0));
-    m_currentBackBufferOffset = (m_currentBackBufferOffset + 1) % SWAP_CHAIN_BUFFER_COUNT;
-    FlushCommandQueue();
-}
-
-
-void SleepyEngine::DrawBis()
-{
     //std::cout << "Drawing" << std::endl;
     CD3DX12_RESOURCE_BARRIER barrier;
 
@@ -776,6 +725,73 @@ void SleepyEngine::DrawBis()
     barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
     m_pCommandList->ResourceBarrier(1, &barrier);
 
+    m_pCommandList->Close();
+
+    ID3D12CommandList* cmdsLists[] = { m_pCommandList };
+    m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+
+    ThrowIfFailed(m_pSwapChain->Present(0, 0));
+    m_currentBackBufferOffset = (m_currentBackBufferOffset + 1) % SWAP_CHAIN_BUFFER_COUNT;
+    FlushCommandQueue();
+}
+
+
+void SleepyEngine::DrawBis()
+{
+    //UINT objCBByteSize = D3DUtils::CalcConstantBufferByteSize(sizeof(ObjectConstants));
+
+    CD3DX12_RESOURCE_BARRIER barrier;
+
+    barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+    D3D12_CPU_DESCRIPTOR_HANDLE currentBackBufferView = GetCurrentBackBufferView();
+    D3D12_CPU_DESCRIPTOR_HANDLE dephtStencilView = GetDepthStencilView();
+
+    m_pDirectCmdListAlloc->Reset();
+
+    m_pCommandList->Reset(m_pDirectCmdListAlloc, nullptr);
+    m_pCommandList->RSSetViewports(1, m_pViewPort);
+    m_pCommandList->RSSetScissorRects(1, &m_scissorRect);
+
+    m_pCommandList->ResourceBarrier(1, &barrier);
+
+    m_pCommandList->ClearRenderTargetView(currentBackBufferView, Colors::LightSteelBlue, 0, nullptr);
+    m_pCommandList->ClearDepthStencilView(dephtStencilView, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+    m_pCommandList->OMSetRenderTargets(1, &currentBackBufferView, true, &dephtStencilView);
+
+    Mesh* mesh;
+    for (Entity* entity : m_entities)
+    {
+        ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvHeap };
+        m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps); //
+
+        m_pCommandList->SetGraphicsRootSignature(m_pRootSignature); //
+
+        m_pCommandList->SetPipelineState(m_PSO);
+
+        mesh = entity->GetComponent<MeshRenderer*>()->GetMesh();
+        m_pCommandList->IASetVertexBuffers(0, 1, &mesh->VertexBufferView());
+        m_pCommandList->IASetIndexBuffer(&mesh->IndexBufferView());
+        m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+        //m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
+        m_pCommandList->SetGraphicsRootConstantBufferView(1, m_pObjectCB->Resource()->GetGPUVirtualAddress());
+
+        barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+        m_pCommandList->ResourceBarrier(1, &barrier);
+
+        CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_pDsvHeap->GetGPUDescriptorHandleForHeapStart());
+        tex.Offset(0, m_heapDescSize);
+
+        //D3D12_GPU_VIRTUAL_ADDRESS objCBAddress = m_pObjectCB->Resource()->GetGPUVirtualAddress() + entity->m_ObjCBIndex * objCBByteSize;
+        ////m_pObjectCB->Resource()->GetGPUVirtualAddress()
+
+        m_pCommandList->SetGraphicsRootDescriptorTable(0, tex);
+       // m_pCommandList->SetGraphicsRootConstantBufferView(1, m_pObjectCB);
+
+        //m_pCommandList->DrawIndexedInstanced(mesh->m_drawArgs["box"].IndexCount, 1, mesh->m_drawArgs["box"].StartIndexLocation, mesh->m_drawArgs["box"].BaseVertexLocation, 0);
+        m_pCommandList->DrawIndexedInstanced(mesh->m_drawArgs["box"].IndexCount, 1, 0, 0, 0);
+    }
     m_pCommandList->Close();
 
     ID3D12CommandList* cmdsLists[] = { m_pCommandList };
@@ -847,4 +863,57 @@ void SleepyEngine::SetRessourceAllocator(RessourceAllocator* allocator)
 void SleepyEngine::SetFactory(Factory* factory)
 {
     m_pFactory = factory;
+}
+
+void SleepyEngine::CreateTexture(const wchar_t* fileName)
+{
+    // reset command list
+    m_pDirectCmdListAlloc->Reset();
+    m_pCommandList->Reset(m_pDirectCmdListAlloc, nullptr);
+
+    // init variables textures 
+    Microsoft::WRL::ComPtr<ID3D12Resource> texture;
+    Microsoft::WRL::ComPtr<ID3D12Resource> textureUpload;
+
+    // on load la texture ddsdepuis son emplacment de fichier
+    ThrowIfFailed(CreateDDSTextureFromFile12(m_pDevice, m_pCommandList, fileName, texture, textureUpload));
+
+    // créer un SRV Descriptors 
+    CD3DX12_CPU_DESCRIPTOR_HANDLE hDescriptor(m_pCbvHeap->GetCPUDescriptorHandleForHeapStart());
+
+    // Pour trouver la taille d'une case du heap pour l'offset ici = 32
+    //std::cout << "size d'une case du heap :" << m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) << std::endl;
+
+    // On decale d'une case dans le heap ( une case = 32 octets )
+    hDescriptor.Offset(m_textureIndex, m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
+    m_textureIndex = m_textureIndex + 1;
+
+    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    srvDesc.Format = texture->GetDesc().Format;
+    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Texture2D.MostDetailedMip = 0;
+    srvDesc.Texture2D.MipLevels = texture->GetDesc().MipLevels;
+    srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+    m_pDevice->CreateShaderResourceView(texture.Get(), &srvDesc, hDescriptor);
+
+
+    // close command list 
+    m_pCommandList->Close();
+
+    // execute command list
+    ID3D12CommandList* cmdsLists[] = { m_pCommandList };
+    m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+
+    // flush command list
+    FlushCommandQueue();
+
+    // get and need to store texture
+
+    //ID3D12Resource* pTexture = texture.Get();
+    m_Texture = texture.Get();
+
+    texture.Detach();
+
+    //return pTexture;
 }

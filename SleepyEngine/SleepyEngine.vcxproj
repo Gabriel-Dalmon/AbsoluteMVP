@@ -146,6 +146,7 @@
     <ClInclude Include="headers\ColliderOBB.h" />
     <ClInclude Include="headers\ColliderSphere.h" />
     <ClInclude Include="headers\ComponentDescriptor.h" />
+    <ClInclude Include="headers\DDSTextureLoader.h" />
     <ClInclude Include="headers\Factory.h" />
     <ClInclude Include="headers\GameState.h" />
     <ClInclude Include="headers\Component.h" />
@@ -200,6 +201,7 @@
     <ClCompile Include="src\core\Transform.cpp" />
     <ClCompile Include="src\shaders\Shader.cpp" />
     <ClCompile Include="src\utils\D3DUtils.cpp" />
+    <ClCompile Include="src\utils\DDSTextureLoader.cpp" />
     <ClCompile Include="src\utils\HResultException.cpp" />
     <ClCompile Include="src\utils\MathHelper.cpp" />
   </ItemGroup>
@@ -218,6 +220,11 @@
   <ItemGroup>
     <None Include="JSONRessources.json" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\shaders\Texture.hlsl">
+      <FileType>Document</FileType>
+    </Text>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

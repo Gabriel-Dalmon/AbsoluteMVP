@@ -28,6 +28,7 @@ void Thread::SummonThread(void* Instance)
 
 void Thread::RunThread()
 {
+    OutputDebugStringA("ca marche\n");
     // demander a Sylvain pourquoi il accepte printf et cerr mais pas cout 
     freopen_s(&m_pConsoleOut, "CONOUT$", "w", stdout);
     freopen_s(&m_pConsoleOut, "CONOUT$", "w", stderr);

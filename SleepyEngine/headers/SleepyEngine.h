@@ -5,7 +5,6 @@ struct ObjectConstants
     XMFLOAT4X4 WorldViewProj = MathHelper::Identity4x4();
 };
 
-
 class SleepyEngine
 {
 public:
@@ -59,6 +58,7 @@ private:
     void BuildConstantBuffers();
     void BuildBoxGeometry();
     void BuildBoxGeometryBis();
+    void CreateTexture(const wchar_t* fileName);
 
 
 private:
@@ -76,6 +76,8 @@ private:
 
     ID3D12DescriptorHeap* m_pRtvHeap = nullptr;
     ID3D12DescriptorHeap* m_pDsvHeap = nullptr;
+
+    UINT m_heapDescSize = 0;
 
     DXGI_FORMAT m_backBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
     int m_currentBackBufferOffset = 0;
@@ -133,4 +135,9 @@ private:
 
     RessourceAllocator* m_pAllocator;
     Factory* m_pFactory;
+
+    std::vector<Entity*> m_entities;
+
+    int m_textureIndex = 0;
+    ID3D12Resource* m_Texture = nullptr;
 };

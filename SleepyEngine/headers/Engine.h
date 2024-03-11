@@ -73,10 +73,16 @@ class RessourceAllocator;
 using namespace DirectX;
 
 // STRUCTS
+//struct Vertex
+//{
+//	XMFLOAT3 Pos;
+//	XMFLOAT4 Color;
+//};
+
 struct Vertex
 {
 	XMFLOAT3 Pos;
-	XMFLOAT4 Color;
+	XMFLOAT2 Uv;
 };
 
 // Classes 
@@ -104,5 +110,6 @@ struct Vertex
 #include "UploadBuffer.h"
 #include "PSO.h"
 #include "MathHelper.h"
+#include "DDSTextureLoader.h"
 #include "SleepyEngine.h"
 

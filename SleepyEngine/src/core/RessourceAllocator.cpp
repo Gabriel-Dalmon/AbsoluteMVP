@@ -44,7 +44,10 @@ Mesh* RessourceAllocator::getMesh(const std::string& name)
             JsonVertices[i]["coordinates"][1].asFloat(), 
             JsonVertices[i]["coordinates"][2].asFloat()
             ), 
-            XMFLOAT4(Colors::White)}));
+            XMFLOAT2(
+            JsonVertices[i]["color"][0].asFloat(),
+            JsonVertices[i]["color"][1].asFloat()
+            )}));
     }
 
     std::vector<uint16_t> indices;
