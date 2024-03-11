@@ -9,9 +9,6 @@ public:
 	// Init
 	void Init(RessourceAllocator* rRessourceAllocator);
 
-	// Entity linked functions
-	Entity* CreateEmptyEntity();
-
 protected:
-	RessourceAllocator* m_pRessourceAllocator;
+	RessourceAllocator* m_pRessourceAllocator = nullptr;
 };

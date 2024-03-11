@@ -432,11 +432,11 @@ void SleepyEngine::Release()
     RELEASE(m_pAllocator);
     
     // "new"
-    delete m_pViewPort;
-    delete m_pObjectCB;
-    delete m_Transform;
-    delete mBoxGeo;
-    delete mBoxGeoBis;
+    DELETE(m_pViewPort);
+    DELETE(m_pObjectCB);
+    DELETE(m_Transform);
+    DELETE(mBoxGeo);
+    DELETE(mBoxGeoBis);
 
     // Window and Window Class
     DestroyWindow(mhMainWnd); 

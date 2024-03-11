@@ -29,6 +29,7 @@
 #include <sstream>
 #include <string>
 #include <time.h>
+#include <typeinfo>
 #include <vector>
 #include <unordered_map>
 
@@ -69,6 +70,7 @@ class RessourceAllocator;
 
 // MACROS
 #define RELEASE(p) {if (p){ p->Release(); p = nullptr;}}
+#define DELETE(p) {if (p){ delete p; p = nullptr;}}
 #define MAX_LOADSTRING 100
 #define SWAP_CHAIN_BUFFER_COUNT 2
 

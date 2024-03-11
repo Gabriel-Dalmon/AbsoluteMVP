@@ -37,6 +37,4 @@ void Thread::RunThread()
     engine.SetFactory(factory);
     engine.Initialize();
     engine.Run();
-    
-    engine.Release();
 }
