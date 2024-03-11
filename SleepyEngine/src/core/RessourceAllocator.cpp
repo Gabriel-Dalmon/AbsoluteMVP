@@ -36,7 +36,6 @@ Mesh* RessourceAllocator::getMesh(const std::string& name)
 
     std::vector<Vertex> vertices;
     Json::Value JsonVertices = val[name]["vertices"];
-    std::cerr << JsonVertices;
     for (int i = 0; i < JsonVertices.size(); i++) 
     {
         vertices.push_back(
