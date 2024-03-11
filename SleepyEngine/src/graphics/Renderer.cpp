@@ -28,6 +28,15 @@ void Renderer::Initialize(HINSTANCE hInstance, RendererDescriptor* rendererDescr
 	}
 }
 
+void Renderer::CreateFrameResources()
+{
+	for (int i = 0; i < SWAP_CHAIN_BUFFER_COUNT; ++i)
+	{
+		m_frameResources[i] = new FrameResource();
+		m_frameResources[i]->Initialize(m_pDevice->GetD3DDevice());
+	}
+}
+
 void Renderer::CreateCommandObjects()
 {
 	// Create the command queue.
@@ -79,6 +88,24 @@ void Renderer::SetViewport()
 
 void Renderer::SetScissorRect()
 {
+}
+
+void Renderer::UpdateBuffers()
+{
+	// Cycle through the circular frame resource array.
+	m_currentFrameResourceIndex = (m_currentFrameResourceIndex + 1) % SWAP_CHAIN_BUFFER_COUNT;
+	m_pCurrentFrameResource = m_frameResources[m_currentFrameResourceIndex];
+	// Has the GPU finished processing the commands of the current frame 
+	// resource. If not, wait until the GPU has completed commands up to
+	// this fence point.
+	if (m_pCurrentFrameResource->GetFence() != 0 &&
+		m_pCommandQueue->GetD3DCommandQueue()->GetLastCompletedFence() < m_pCurrentFrameResource->GetFence())
+	{
+		HANDLE eventHandle = CreateEventEx(nullptr, false, false, EVENT_ALL_ACCESS);
+		ThrowIfFailed(m_pCommandQueue->GetD3DCommandQueue()->SetEventOnFenceCompletion(m_pCurrentFrameResource->GetFence(), eventHandle));
+		WaitForSingleObject(eventHandle, INFINITE);
+		CloseHandle(eventHandle);
+	}
 }
 
 void Renderer::RenderFrame()

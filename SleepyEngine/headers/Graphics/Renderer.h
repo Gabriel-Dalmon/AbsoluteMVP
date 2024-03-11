@@ -25,23 +25,34 @@ public:
 	~Renderer();
 
 	void Initialize(HINSTANCE hInstance, RendererDescriptor* rendererDescriptor);
+	void Release();
+
+	void UpdateBuffers();
+	void RenderFrame();
+
+	void UNSAFE_AddEntity(Entity* entity) override;
+	void UNSAFE_RemoveEntity(Entity* entity) override;
+
+private:
+	void CreateFrameResources();
 	void CreateCommandObjects();
 	void CreateDescriptorHeaps();
 	void CreateRenderTargetView();
 	void CreateDepthStencilView();
 	void SetViewport();
 	void SetScissorRect();
-	void RenderFrame();
-	void Release();
 
-	void UNSAFE_AddEntity(Entity* entity) override;
-	void UNSAFE_RemoveEntity(Entity* entity) override;
 
 private:
 	Window* m_pWindow = nullptr;
 
 	IDXGIFactory4* m_pDxgiFactory = nullptr;
 	Device* m_pDevice = nullptr;
+
+	FrameResource* m_frameResources[SWAP_CHAIN_BUFFER_COUNT];
+	FrameResource* m_pCurrentFrameResource = nullptr;
+	int m_currentFrameResourceIndex = 0;
+
 	SwapChain* m_pSwapChain = nullptr;
 	ID3D12RootSignature* m_pRootSignature = nullptr;
 

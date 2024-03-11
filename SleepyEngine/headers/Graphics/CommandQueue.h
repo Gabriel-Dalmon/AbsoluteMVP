@@ -12,6 +12,9 @@ public:
 	void Flush();
 	int Release();
 
+	// Getters
+	ID3D12CommandQueue* GetD3DCommandQueue() const { return m_pD3DCommandQueue; }
+
 
 
 private:
