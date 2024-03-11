@@ -1,10 +1,4 @@
 #include "pch.h"
-#include "Graphics/SwapChain.h"
-#include "Graphics/Device.h"
-#include "Graphics/Window.h"
-
-#include "Utils/Constants.h"
-#include "Utils/HResultException.h"
 
 SwapChain::SwapChain()
 {

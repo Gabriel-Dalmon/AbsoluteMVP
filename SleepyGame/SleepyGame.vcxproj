@@ -139,11 +139,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
+    <ClInclude Include="GameTestGameState.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SleepyGame.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GameTestGameState.cpp" />
     <ClCompile Include="SleepyGame.cpp" />
   </ItemGroup>
   <ItemGroup>

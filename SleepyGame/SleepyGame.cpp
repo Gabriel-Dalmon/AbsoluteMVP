@@ -3,15 +3,12 @@
 
 #include "framework.h"
 #include "SleepyGame.h"
-#include "OldSleepyEngine.h"
-#include "Core/SleepyEngine.h"
-#include "EngineTestGameState.h"
 #include <iostream>
 #include <io.h>
 #include <fcntl.h>
-#include "Core/GameState.h"
-#include "Graphics/Renderer.h"
 
+#include "pch.h"
+#include "GameTestGameState.h"
 
 //int main(int argc, char* argv[])
 
@@ -38,14 +35,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         RendererDescriptor rendererDescriptor;
         rendererDescriptor.windowWidth = 800;
         rendererDescriptor.windowHeight = 600;
-        engine2.Initialize<EngineTestGameState>(hInstance, &rendererDescriptor);
+        // engine2.Initialize<EngineTestGameState>(hInstance, &rendererDescriptor);
+        engine2.Initialize<GameTestGameState>(hInstance, &rendererDescriptor);
         engine2.Run();
-
-        /*OldSleepyEngine engine(hInstance);
-        engine.Initialize();
-        engine.Run();*/
-
-
 
         fclose(consoleOut);
         FreeConsole();

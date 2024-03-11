@@ -1,11 +1,4 @@
 #include "pch.h"
-#include "Core/GameState.h"
-#include "ECS/Entity.h"
-#include "ECS/System.h"
-#include "Utils/Utils.h"
-#include "Graphics/Renderer.h"
-
-using namespace Sleepy;
 
 GameState::GameState()
 {

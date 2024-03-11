@@ -1,11 +1,5 @@
 #pragma once
 
-#include <vector>
-
-class Entity;
-class System;
-struct RendererDescriptor;
-
 class GameState
 {
 public:

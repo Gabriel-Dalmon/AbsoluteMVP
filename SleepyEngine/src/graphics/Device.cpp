@@ -1,8 +1,4 @@
 #include "pch.h"
-#include "Graphics/Device.h"
-
-#include "Utils/Constants.h"
-#include "Utils/HResultException.h"
 
 Device::Device()
 {
@@ -28,7 +24,7 @@ void Device::Initialize(IDXGIFactory4* pDgxiFactory, unsigned int hardwareAdapte
 		__uuidof(ID3D12Device), 
 		(void**)&m_pD3DDevice
 	);
-	pAdapter->Release();
+	RELEASE(pAdapter);
 
 	// Create a device from a WARP adapter if device creation failed with harware adapter
 	if (FAILED(hardwareResult)) 

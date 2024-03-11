@@ -140,9 +140,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="headers\Camera.h" />
-    <ClInclude Include="headers\Collider.h" />
-    <ClInclude Include="headers\ColliderOBB.h" />
-    <ClInclude Include="headers\ColliderSphere.h" />
+    <ClInclude Include="headers\Components\Collider.h" />
+    <ClInclude Include="headers\Components\ColliderOBB.h" />
+    <ClInclude Include="headers\Components\ColliderSphere.h" />
     <ClInclude Include="headers\Components\MeshReference.h" />
     <ClInclude Include="headers\Core\SleepyEngine.h" />
     <ClInclude Include="headers\ECS\Component.h" />
@@ -150,7 +150,7 @@
     <ClInclude Include="headers\ECS\System.h" />
     <ClInclude Include="headers\Core\GameState.h" />
     <ClInclude Include="headers\Component.h" />
-    <ClInclude Include="headers\D3DUtils.h" />
+    <ClInclude Include="headers\Utils\D3DUtils.h" />
     <ClInclude Include="headers\Engine.h" />
     <ClInclude Include="headers\EngineTestGameState.h" />
     <ClInclude Include="headers\Entity.h" />
@@ -162,25 +162,19 @@
     <ClInclude Include="headers\Graphics\Shader.h" />
     <ClInclude Include="headers\Graphics\SwapChain.h" />
     <ClInclude Include="headers\Graphics\Window.h" />
-    <ClInclude Include="headers\MathHelper.h" />
+    <ClInclude Include="headers\Utils\MathHelper.h" />
     <ClInclude Include="headers\Mesh.h" />
-    <ClInclude Include="headers\OldSleepyEngine.h" />
     <ClInclude Include="headers\pch.h" />
-    <ClInclude Include="headers\PSO.h" />
     <ClInclude Include="headers\Resource.h" />
-    <ClInclude Include="headers\OldShader.h" />
-    <ClInclude Include="HEADERS\SHADER.H" />
     <ClInclude Include="headers\SleepyEngine.h" />
-    <ClInclude Include="headers\Timer.h" />
-    <ClInclude Include="headers\tmpMeshGeo.h" />
+    <ClInclude Include="headers\Core\Timer.h" />
     <ClInclude Include="headers\Components\Transform.h" />
-    <ClInclude Include="headers\d3dx12.h" />
-    <ClInclude Include="headers\UploadBuffer.h" />
+    <ClInclude Include="headers\Utils\d3dx12.h" />
+    <ClInclude Include="headers\Utils\UploadBuffer.h" />
     <ClInclude Include="headers\Utils\Constants.h" />
     <ClInclude Include="headers\Utils\HResultException.h" />
     <ClInclude Include="headers\Components\ShaderReference.h" />
-    <ClInclude Include="headers\MeshRenderer.h" />
-    <ClInclude Include="headers\Script.h" />
+    <ClInclude Include="headers\Components\CustomScript.h" />
     <ClInclude Include="headers\Utils\Utils.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\utils\d3dx12.h" />
@@ -188,21 +182,17 @@
   <ItemGroup>
     <ClCompile Include="src\components\MeshReference.cpp" />
     <ClCompile Include="src\ecs\System.cpp" />
-    <ClCompile Include="src\components\tmpMeshGeo.cpp" />
     <ClCompile Include="src\core\Camera.cpp" />
-    <ClCompile Include="src\core\OldSleepyEngine.cpp" />
     <ClCompile Include="src\components\Collider.cpp" />
     <ClCompile Include="src\components\ColliderOBB.cpp" />
     <ClCompile Include="src\components\ColliderSphere.cpp" />
-    <ClCompile Include="src\components\MeshRenderer.cpp" />
-    <ClCompile Include="src\components\Script.cpp" />
+    <ClCompile Include="src\components\CustomScript.cpp" />
     <ClCompile Include="src\ecs\Component.cpp" />
     <ClCompile Include="src\components\ShaderReference.cpp" />
     <ClCompile Include="src\GameStates\EngineTestGameState.cpp" />
     <ClCompile Include="src\GameStates\GameState.cpp" />
-    <ClCompile Include="src\components\Mesh.cpp" />
+    <ClCompile Include="src\core\Mesh.cpp" />
     <ClCompile Include="src\ecs\Entity.cpp" />
-    <ClCompile Include="src\core\PSO.cpp" />
     <ClCompile Include="src\core\SleepyEngine.cpp" />
     <ClCompile Include="src\core\Timer.cpp" />
     <ClCompile Include="src\components\Transform.cpp" />
@@ -213,8 +203,6 @@
     <ClCompile Include="src\graphics\Shader.cpp" />
     <ClCompile Include="src\graphics\SwapChain.cpp" />
     <ClCompile Include="src\graphics\Window.cpp" />
-    <ClCompile Include="src\shaders\OldShader.cpp" />
-    <ClCompile Include="SRC\SHADERS\SHADER.CPP" />
     <ClCompile Include="src\utils\D3DUtils.cpp" />
     <ClCompile Include="src\utils\HResultException.cpp" />
     <ClCompile Include="src\utils\MathHelper.cpp" />

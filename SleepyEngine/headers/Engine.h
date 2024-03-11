@@ -39,74 +39,89 @@
 #include <DirectXPackedVector.h>
 #include <DirectXColors.h>
 #include <DirectXCollision.h>
-#include "d3dx12.h"
-#include "MathHelper.h"
+
 
 // FORWARD DECLARATIONS
 class Utils;
-class Camera;
+class D3DUtils;
+class HResultException;
+class MathHelper;
+
+class Mesh;
+
+// COMPONENTS
 class Component;
+
+class Transform;
+class MeshReference;
+class ShaderReference;
 class Collider;
 class ColliderOBB;
 class ColliderSphere;
+class CustomScript;
+
 class Entity;
-class Mesh;
-class MeshRenderer;
-class MeshReference;
-class Script;
-class Shader;
-class OldShader;
-class ShaderReference;
-class Timer;
-class Transform;
+
+class Window;
 class Device;
 class SwapChain;
 class CommandQueue;
-class Window;
+class FrameResource;
+class Shader;
+
+class Timer;
+class Camera;
 
 struct SystemEntityData;
 class System;
+
 struct RendererEntityData;
 struct RendererDescriptor;
 class Renderer;
+
 class GameState;
 class EngineTestGameState;
+
 class SleepyEngine;
-class OldSleepyEngine;
 
 
 // MACROS
 #define RELEASE(p) {if (p){ p->Release(); p = nullptr;}}
 #define MAX_LOADSTRING 100
 
+
 // NAMESPACES
 using namespace DirectX;
 
 // Classes 
+#include "Resource.h"
+#include "Utils/d3dx12.h"
 #include "Utils/Utils.h"
-#include "UploadBuffer.h"
+using namespace Sleepy;
+
+#include "Utils/D3DUtils.h"
+#include "Utils/MathHelper.h"
 #include "Utils/HResultException.h"
 #include "Utils/Constants.h"
-using namespace Sleepy;
+
+#include "Utils/UploadBuffer.h"
 
 #include "ECS/Component.h"
 #include "Components/Transform.h"
 #include "Components/MeshReference.h"
 #include "Components/ShaderReference.h"
-#include "Collider.h"
-#include "ColliderOBB.h"
-#include "ColliderSphere.h"
-#include "MeshRenderer.h"
-#include "Script.h"
+#include "Components/Collider.h"
+#include "Components/ColliderOBB.h"
+#include "Components/ColliderSphere.h"
+#include "Components/CustomScript.h"
 
 #include "ECS/Entity.h"
 
-#include "PSO.h"
-
+#include "Graphics/Window.h"
 #include "Graphics/Device.h"
 #include "Graphics/SwapChain.h"
+#include "Graphics/FrameResource.h"
 #include "Graphics/CommandQueue.h"
-#include "Graphics/Window.h"
 #include "Graphics/Shader.h"
 
 #include "Mesh.h"
@@ -117,13 +132,8 @@ using namespace Sleepy;
 
 
 #include "Camera.h"
+#include "Core/Timer.h"
 
-#include "OldShader.h"
-
-#include "Timer.h"
-
-#include "tmpMeshGeo.h"
 #include "Core/GameState.h"
 #include "EngineTestGameState.h"
 #include "Core/SleepyEngine.h"
-#include "OldSleepyEngine.h"

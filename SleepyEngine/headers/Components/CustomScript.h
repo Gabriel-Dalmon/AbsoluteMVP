@@ -1,11 +1,10 @@
 #pragma once
-#include "ECS/Component.h"
 
-class Script : public Component
+class CustomScript : public Component
 {
 public:
-	Script();
-	~Script() {};
+	CustomScript();
+	~CustomScript() {};
 
 	// INIT
 	void Initialize() override;

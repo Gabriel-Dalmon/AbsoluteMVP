@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "../../headers/Utils/HResultException.h"
 
 HResultException::HResultException(HRESULT hr, const std::wstring& functionName, const std::wstring& filename, int lineNumber) :
     ErrorCode(hr),

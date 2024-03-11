@@ -6,8 +6,8 @@ public:
 	Window();
 	~Window();
 
-	int Initialize(HINSTANCE hInstance, int windowWidth, int windowHeight);
-	ATOM RegisterWindowClass();
+	int Initialize(HINSTANCE hInstance, RendererDescriptor* rendererDescriptor);
+	ATOM RegisterWindowClass(RendererDescriptor* rendererDescriptor);
 	void Release();
 
 	inline HWND GetWindowHandle() const { return m_hWnd; };

@@ -1,8 +1,4 @@
 #include "pch.h"
-#include "Graphics/Window.h"
-
-#include "Resource.h"
-
 
 Window::Window()
 {
@@ -12,13 +8,26 @@ Window::~Window()
 {
 }
 
-int Window::Initialize(HINSTANCE hInstance, int windowWidth, int windowHeight)
+int Window::Initialize(HINSTANCE hAppInstance, RendererDescriptor* rendererDescriptor)
 {
-    m_hAppInstance = hInstance;
-    m_windowWidth = windowWidth;
-    m_windowHeight = windowHeight;
-    const wchar_t* value = L"SleepyEngineClassName";
-    m_hWnd = CreateWindow(value, value, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, m_windowWidth, m_windowHeight, 0, 0, m_hAppInstance, 0);
+    m_hAppInstance = hAppInstance;
+    m_windowWidth = rendererDescriptor->windowWidth;
+    m_windowHeight = rendererDescriptor->windowHeight;
+    RegisterWindowClass(rendererDescriptor);
+
+    m_hWnd = CreateWindow(
+        rendererDescriptor->hAppClassName, 
+        rendererDescriptor->hAppTitle, 
+        WS_OVERLAPPEDWINDOW, 
+        CW_USEDEFAULT, 
+        CW_USEDEFAULT, 
+        m_windowWidth, 
+        m_windowHeight, 
+        0, 
+        0, 
+        m_hAppInstance, 
+        0
+    );
 
     if (m_hWnd == NULL)
     {
@@ -31,7 +40,7 @@ int Window::Initialize(HINSTANCE hInstance, int windowWidth, int windowHeight)
     return 0;
 }
 
-ATOM Window::RegisterWindowClass()
+ATOM Window::RegisterWindowClass(RendererDescriptor* rendererDescriptor)
 {
     WNDCLASSEXW wcex;
     wcex.cbSize = sizeof(WNDCLASSEX);
@@ -41,11 +50,11 @@ ATOM Window::RegisterWindowClass()
     wcex.cbClsExtra = 0;
     wcex.cbWndExtra = 0;
     wcex.hInstance = m_hAppInstance;
-    wcex.hIcon = LoadIcon(m_hAppInstance, MAKEINTRESOURCE(IDI_SLEEPYENGINE));
-    wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+    wcex.hIcon = rendererDescriptor->hAppIcon == nullptr ? LoadIcon(m_hAppInstance, MAKEINTRESOURCE(IDI_SLEEPYENGINE)) : rendererDescriptor->hAppIcon;
+    wcex.hCursor = rendererDescriptor->hAppCursor == nullptr ? LoadCursor(nullptr, IDC_ARROW) : rendererDescriptor->hAppCursor;
     wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
     wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_SLEEPYENGINE);
-    wcex.lpszClassName = L"SleepyEngine";
+    wcex.lpszClassName = rendererDescriptor->hAppClassName;
     wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
     return RegisterClassExW(&wcex);

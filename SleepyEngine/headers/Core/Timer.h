@@ -4,7 +4,7 @@ class Timer
 {
 	public:
 		Timer();
-		bool Init();
+		bool Initialize();
 
 		void Update();
 		void UpdateFPS(HWND Window);
@@ -13,7 +13,6 @@ class Timer
 		float GetDeltaTime();
 
 	private:
-
 		float StartTime;
 
 		float DeltaTime;

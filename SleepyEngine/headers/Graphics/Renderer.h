@@ -9,8 +9,13 @@ struct RendererEntityData : public SystemEntityData
 
 struct RendererDescriptor
 {
-	int windowWidth;
-	int windowHeight;
+	int windowWidth = 400;
+	int windowHeight = 400;
+	LPCWSTR hAppTitle = L"SleepyEngine";
+	HICON hAppIcon = nullptr;
+	HICON hAppIconSmall = nullptr;
+	HCURSOR hAppCursor = nullptr;
+	LPCWSTR hAppClassName = L"SleepyEngine";
 };
 
 class Renderer : public System

@@ -1,8 +1,5 @@
 #pragma once
 
-class Device;
-class Window;
-
 class SwapChain
 {
 public:

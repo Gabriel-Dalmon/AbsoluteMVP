@@ -18,7 +18,7 @@ Renderer::~Renderer()
 void Renderer::Initialize(HINSTANCE hInstance, RendererDescriptor* rendererDescriptor)
 {
 	try {
-		m_pWindow->Initialize(hInstance, rendererDescriptor->windowWidth, rendererDescriptor->windowHeight);
+		m_pWindow->Initialize(hInstance, rendererDescriptor);
 		ThrowIfFailed(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&m_pDxgiFactory));
 		m_pDevice->Initialize();
 		m_pSwapChain->Initialize(m_pDxgiFactory, m_pDevice, m_pWindow);
@@ -67,6 +67,18 @@ void Renderer::CreateRenderTargetView()
 		m_pDevice->GetD3DDevice()->CreateRenderTargetView(m_pSwapChainBuffer[i], nullptr, rtvHeapHandle);
 		rtvHeapHandle.Offset(1, m_rtvDescriptorSize);
 	}*/
+}
+
+void Renderer::CreateDepthStencilView()
+{
+}
+
+void Renderer::SetViewport()
+{
+}
+
+void Renderer::SetScissorRect()
+{
 }
 
 void Renderer::RenderFrame()

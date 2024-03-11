@@ -2,7 +2,7 @@
 
 SleepyEngine::SleepyEngine()
 {
-
+	m_pTimer = new Timer();
 }
 
 SleepyEngine::~SleepyEngine()

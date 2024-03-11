@@ -7,7 +7,7 @@
 
 Timer::Timer() {}
 
-bool Timer::Init()
+bool Timer::Initialize()
 {
 	StartTime = timeGetTime();
 	DeltaTime = 0.f;

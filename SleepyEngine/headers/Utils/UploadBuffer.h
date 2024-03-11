@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Utils/HResultException.h"
-
 template<typename T>
 class UploadBuffer
 {

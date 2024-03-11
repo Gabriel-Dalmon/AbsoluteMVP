@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "Graphics/FrameResource.h"
 
 FrameResource::FrameResource()
 {

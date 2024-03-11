@@ -1,9 +1,12 @@
 #include "pch.h"
-#include "Graphics/CommandQueue.h"
-#include "Graphics/Device.h"
 
-#include "Utils/HResultException.h"
+CommandQueue::CommandQueue()
+{
+}
 
+CommandQueue::~CommandQueue()
+{
+}
 
 int CommandQueue::Initialize(Device* pDevice)
 {
@@ -17,6 +20,19 @@ int CommandQueue::Initialize(Device* pDevice)
 void CommandQueue::Execute(unsigned int commandsListsCount, ID3D12CommandList* const commandsLists[])
 {
     m_pD3DCommandQueue->ExecuteCommandLists(commandsListsCount, commandsLists);
+}
+
+void CommandQueue::Signal()
+{
+}
+
+void CommandQueue::Flush()
+{
+}
+
+int CommandQueue::Release()
+{
+    return 0;
 }
 
 /*void CommandQueue::Flush()

@@ -1,9 +1,22 @@
 #include "pch.h"
 
+Shader::Shader()
+{
+}
+
+Shader::~Shader()
+{
+}
+
 int Shader::Initialize(Device* pDevice)
 {
 	CompileShader(L"Shaders/Default.hlsl", nullptr, "VS", "vs_5_0");
 	CreateRootSignature(pDevice);
+	return 0;
+}
+
+int Shader::Release()
+{
 	return 0;
 }
 
@@ -52,17 +65,22 @@ int Shader::CreateRootSignature(Device* pDevice)
 	ID3DBlob* pSerializedRootSig = nullptr;
 	HRESULT hr = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &pSerializedRootSig, NULL);
 
-    ThrowIfFailed(pDevice->GetD3DDevice()->CreateRootSignature(
-        0,
+	ThrowIfFailed(pDevice->GetD3DDevice()->CreateRootSignature(
+		0,
 		pSerializedRootSig->GetBufferPointer(),
 		pSerializedRootSig->GetBufferSize(),
-        IID_PPV_ARGS(&m_pRootSignature))
-    );
+		IID_PPV_ARGS(&m_pRootSignature))
+	);
 	return 0;
 }
 
 int Shader::CreateShaders()
 {
-	
+
+	return 0;
+}
+
+int Shader::CreatePSO()
+{
 	return 0;
 }

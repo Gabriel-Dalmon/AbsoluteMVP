@@ -6,5 +6,5 @@ ColliderOBB::~ColliderOBB() {};
 
 void ColliderOBB::Init()
 {
-	MeshRenderer* mesh = m_pEntity->GetComponent<MeshRenderer>();
+	MeshReference* mesh = m_pEntity->GetComponent<MeshReference>();
 };
