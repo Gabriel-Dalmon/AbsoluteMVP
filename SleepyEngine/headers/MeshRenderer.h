@@ -1,6 +1,6 @@
 #pragma once
 
-class MeshRenderer : Component
+class MeshRenderer : public Component
 {
 public:
 	MeshRenderer();

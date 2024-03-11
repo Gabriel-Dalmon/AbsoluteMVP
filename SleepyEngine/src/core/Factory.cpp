@@ -1,17 +1,5 @@
-//#include "ComponentDescriptor.h"
-//#include "Entity.h"
-//#include "Factory.h"
-//#include "RessourceAllocator.h"
-
 #include "pch.h"
-//include components
-//#include "ColliderSphere.h"
-//#include "Mesh.h"
-//#include "MeshRenderer.h"
-//#include "Script.h"
-//#include "ShaderReference.h"
-//#include "MeshRenderer.h"
-//#include "Shader.h"
+#include <typeinfo>
 
 
 Factory::Factory() {};
@@ -39,6 +27,7 @@ void Factory::FillPlayer(Entity* pEntity)
 	MeshRenderer* meshRef = Component::CreateComponent<MeshRenderer>();
 	meshRef->Init(&MeshRefDesc);
 	pEntity->AddComponent<MeshRenderer*>(meshRef);
+	std::cerr << typeid(*meshRef).name();
 
 	// /!\ we create a shader dynamically for tests, dont forget to change it
 	ShaderReferenceDescriptor ShaderRefDesc;
@@ -47,6 +36,8 @@ void Factory::FillPlayer(Entity* pEntity)
 	ShaderReference* shaderReference = Component::CreateComponent<ShaderReference>();
 	shaderReference->Init(&ShaderRefDesc);
 	pEntity->AddComponent<ShaderReference*>(shaderReference);
+
+	//MeshRenderer* test = pEntity->GetComponent<MeshRenderer*>();
 
 	//shoot script here
 };

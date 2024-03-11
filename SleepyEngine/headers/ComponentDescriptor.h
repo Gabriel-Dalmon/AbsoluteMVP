@@ -1,7 +1,5 @@
 #pragma once
 
-
-
 struct Descriptor {
 	ID3D12Device* device;
 	ID3D12GraphicsCommandList* commandList;

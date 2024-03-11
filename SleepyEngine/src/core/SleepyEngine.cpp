@@ -618,6 +618,7 @@ void SleepyEngine::BuildBoxGeometryBis()
     m_pFactory->FillPlayer(player);
     MeshRenderer* geo = player->GetComponent<MeshRenderer*>();
     mBoxGeo = geo->GetMesh();
+    //MeshRenderer* geo = player->GetComponent<MeshRenderer*>();
 }
 
 
