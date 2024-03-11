@@ -113,6 +113,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -139,10 +141,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
-    <ClInclude Include="pch.h" />
+    <ClInclude Include="headers\pch.h" />
     <ClInclude Include="headers\CustomScript.h" />
     <ClInclude Include="headers\GameManager.h" />
-    <ClInclude Include="headers\JSonParser.h" />
     <ClInclude Include="headers\Thread.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="headers\SleepyGame.h" />
@@ -151,7 +152,6 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\JSonParser.cpp" />
     <ClCompile Include="src\CustomScript.cpp" />
     <ClCompile Include="src\GameManager.cpp" />
     <ClCompile Include="src\SleepyGame.cpp" />

@@ -1,64 +1,70 @@
 #include "pch.h"
+#include <json/json.h>
+
 
 
 void RessourceAllocator::Init(ID3D12Device* device, ID3D12GraphicsCommandList* commandList)
 {
 	m_pDevice = device;
 	m_pCommandList = commandList;
+    m_meshCollection = new std::map<std::string, Mesh*>;
 }
 
-Mesh* RessourceAllocator::getMesh(const std::string& fileName)
+Mesh* RessourceAllocator::getMesh(const std::string& name)
 {
-	auto it = m_meshCollection.find(fileName);
-	if (it != m_meshCollection.end())
+	auto it = m_meshCollection->find(name);
+	if (it != m_meshCollection->end())
 	{
 		return it->second;
 	}
 
+    
+#if defined (DEBUG) || (_DEBUG)
+    std::ifstream file("../SleepyEngine/JSONRessources.json");
+#else
+    std::ifstream file("JSONRessources.json");
+#endif
+
+    Json::Value val;
+    Json::CharReaderBuilder builder;
+    builder["collectComments"] = false;
+    JSONCPP_STRING errs;
+    
+    if (!parseFromStream(builder, file, &val, &errs)) {
+        std::cerr << errs << std::endl;
+    }
+
+    std::vector<Vertex> vertices;
+    Json::Value JsonVertices = val[name]["vertices"];
+    std::cerr << JsonVertices;
+    for (int i = 0; i < JsonVertices.size(); i++) 
+    {
+        vertices.push_back(
+            Vertex({ XMFLOAT3(
+            JsonVertices[i]["coordinates"][0].asFloat(), 
+            JsonVertices[i]["coordinates"][1].asFloat(), 
+            JsonVertices[i]["coordinates"][2].asFloat()
+            ), 
+            XMFLOAT4(Colors::White)}));
+    }
+
+    std::vector<uint16_t> indices;
+    Json::Value JsonIndices = val[name]["indices"];
+    for (int i = 0; i < JsonIndices.size(); i++)
+    {
+        indices.push_back(JsonIndices[i].asFloat());
+    }
+
 	Mesh* mesh = new Mesh();
-	//load from json here, lets have a default cube for now
-    std::vector<Vertex> vertices =
-    {
-        Vertex({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::White) }),
-        Vertex({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Black) }),
-        Vertex({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Red) }),
-        Vertex({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Green) }),
-        Vertex({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Blue) }),
-        Vertex({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Yellow) }),
-        Vertex({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Cyan) }),
-        Vertex({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Magenta) })
-    };
-
-    std::vector<uint16_t> indices =
-    {
-        // front face
-        0, 1, 2,
-        0, 2, 3,
-
-        // back face
-        4, 6, 5,
-        4, 7, 6,
-
-        // left face
-        4, 5, 1,
-        4, 1, 0,
-
-        // right face
-        3, 2, 6,
-        3, 6, 7,
-
-        // top face
-        1, 5, 6,
-        1, 6, 2,
-
-        // bottom face
-        4, 0, 3,
-        4, 3, 7
-    };
 
 	mesh->Init(m_pDevice, m_pCommandList, &vertices, &indices);
-	//texture->loadFromFile("data/assets/graphics/images/" + fileName);
-	//textures[fileName] = texture;
+    m_meshCollection->insert(std::pair<std::string, Mesh*>(name, mesh));
 
 	return mesh;
+}
+
+void RessourceAllocator::Release()
+{
+    m_meshCollection->clear();
+    delete m_meshCollection;
 }

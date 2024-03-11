@@ -1,5 +1,4 @@
 #pragma once
-#include "ComponentDescriptor.h"
 
 class Component
 {

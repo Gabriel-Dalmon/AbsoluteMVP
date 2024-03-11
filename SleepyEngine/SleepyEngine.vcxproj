@@ -111,6 +111,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -151,6 +153,7 @@
     <ClInclude Include="headers\Entity.h" />
     <ClInclude Include="headers\framework.h" />
     <ClInclude Include="headers\Input.h" />
+    <ClInclude Include="headers\JSonParser.h" />
     <ClInclude Include="headers\MathHelper.h" />
     <ClInclude Include="headers\Mesh.h" />
     <ClInclude Include="headers\pch.h" />
@@ -176,7 +179,9 @@
     <ClInclude Include="src\utils\d3dx12.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\components\ComponentDescriptor.cpp" />
     <ClCompile Include="src\core\Factory.cpp" />
+    <ClCompile Include="src\core\JSonParser.cpp" />
     <ClCompile Include="src\core\RessourceAllocator.cpp" />
     <ClCompile Include="src\components\tmpMeshGeo.cpp" />
     <ClCompile Include="src\components\Collider.cpp" />
@@ -212,7 +217,18 @@
   <ItemGroup>
     <ResourceCompile Include="SleepyEngine.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="JSONRessources.json" />
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\JsonCpp-source.1.0.2\build\native\JsonCpp-source.targets" Condition="Exists('..\packages\JsonCpp-source.1.0.2\build\native\JsonCpp-source.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\JsonCpp-source.1.0.2\build\native\JsonCpp-source.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JsonCpp-source.1.0.2\build\native\JsonCpp-source.targets'))" />
+  </Target>
 </Project>

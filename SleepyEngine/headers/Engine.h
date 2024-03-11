@@ -72,6 +72,13 @@ class RessourceAllocator;
 // NAMESPACES
 using namespace DirectX;
 
+// STRUCTS
+struct Vertex
+{
+	XMFLOAT3 Pos;
+	XMFLOAT4 Color;
+};
+
 // Classes 
 #include "ComponentDescriptor.h"
 #include "Camera.h"
@@ -96,5 +103,7 @@ using namespace DirectX;
 #include "tmpMeshGeo.h"
 #include "UploadBuffer.h"
 #include "PSO.h"
+#include "MathHelper.h"
+#include "JSonParser.h"
 #include "SleepyEngine.h"
 

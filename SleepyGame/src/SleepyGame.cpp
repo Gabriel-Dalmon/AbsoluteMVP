@@ -9,24 +9,6 @@
 #include <io.h>
 #include <fcntl.h>
 
-void CreateConsoleAndCallEngine(HINSTANCE hInstance)
-{
-    AllocConsole();
-    FILE* consoleOut;
-    freopen_s(&consoleOut, "CONOUT$", "w", stdout);
-    /*SleepyEngine engine(hInstance);
-    engine.Initialize();
-
-    engine.Run();*/
-
-    Thread game(hInstance);
-    //Thread gameTwo(hInstance);
-   
-    if(consoleOut != 0)
-        fclose(consoleOut);
-    FreeConsole();
-}
-
 
 //int main(int argc, char* argv[])
 
@@ -43,8 +25,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
+
+    AllocConsole();
+    FILE consoleOut;
     
-    CreateConsoleAndCallEngine(hInstance);
+    Thread game(hInstance, &consoleOut);
 
 #ifdef _DEBUG
     _CrtMemState memStateEnd, memStateDiff;
@@ -56,6 +41,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 #endif 
 
     while (true) {};
+
+    if (&consoleOut != 0)
+        fclose(&consoleOut);
+    FreeConsole();
 
     return 0;
 }
