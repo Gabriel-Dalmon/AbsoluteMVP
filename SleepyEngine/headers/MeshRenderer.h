@@ -1,6 +1,6 @@
 #pragma once
 
-class MeshRenderer
+class MeshRenderer : Component
 {
 public:
 	MeshRenderer();
@@ -10,6 +10,8 @@ public:
 	void Init(MeshReferenceDescriptor* desc);
 
 	void Release();
+
+	Mesh* GetMesh();
 
 private:
 	Mesh* m_pMesh = nullptr;

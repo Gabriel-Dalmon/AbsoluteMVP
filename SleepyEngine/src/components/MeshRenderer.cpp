@@ -13,3 +13,8 @@ void MeshRenderer::Release()
 {
 	RELEASE(m_pMesh);
 }
+
+Mesh* MeshRenderer::GetMesh()
+{
+	return m_pMesh;
+}

@@ -35,7 +35,10 @@ void Thread::RunThread()
     std::cout << "we summoned!" << std::endl;
     std::cerr << "we err!" << std::endl;
 
+    Factory* factory = new Factory;
+    engine.SetFactory(factory);
     engine.Initialize();
     engine.Run();
     
+    engine.Release();
 }

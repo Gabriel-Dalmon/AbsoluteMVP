@@ -22,6 +22,7 @@ public:
     static SleepyEngine* GetApp();
 
     void SetRessourceAllocator(RessourceAllocator* allocator);
+    void SetFactory(Factory* factory);
 
     void Release();
 
@@ -131,4 +132,5 @@ private:
     static SleepyEngine* m_App;
 
     RessourceAllocator* m_pAllocator;
+    Factory* m_pFactory;
 };
