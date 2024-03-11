@@ -60,7 +60,7 @@ void SleepyEngine::InitD3D()
     RecoverDescriptorsSize();
     Check4xMSAAQualitySupport();
     CreateCommandObjects();
-    LoadTextures();
+    //LoadTextures();
     CreateSwapChain();
     CreateDescriptorHeaps();
     CreateRenderTargetView();
@@ -70,9 +70,9 @@ void SleepyEngine::InitD3D()
     SetScissorRect();
     BuildDescriptorHeaps();
     BuildConstantBuffers();
-    BuildBoxGeometry();
-    BuildMaterials();
-    BuildRenderItems();
+    //BuildBoxGeometryBis();
+    //BuildMaterials();
+    //BuildRenderItems();
     
 
     XMMATRIX P = XMMatrixPerspectiveFovLH(0.25f * MathHelper::Pi, static_cast<float>(m_clientWidth / m_clientHeight), 1.0f, 1000.0f);
@@ -87,17 +87,17 @@ void SleepyEngine::EnableAdditionalD3D12Debug()
     std::cout << "Debug Layer Enabled" << std::endl;
 }
 
-void SleepyEngine::LoadTextures()
+/*void SleepyEngine::LoadTextures()
 {
     auto woodCrateTex = std::make_unique<Texture>();
     woodCrateTex->Name = "woodCrateTex";
-    woodCrateTex->Filename = L"../../../textures/WoodCrate01.dds";
+    woodCrateTex->Filename = L"../../textures/WoodCrate01.dds";
     ThrowIfFailed(DirectX::CreateDDSTextureFromFile12(m_pDevice,
         m_pCommandList, woodCrateTex->Filename.c_str(),
         woodCrateTex->Resource, woodCrateTex->UploadHeap));
 
     mTextures[woodCrateTex->Name] = std::move(woodCrateTex);
-}
+}*/
 
 void SleepyEngine::BuildMaterials()
 {
@@ -168,6 +168,10 @@ void SleepyEngine::CreateCommandObjects()
     ThrowIfFailed(m_pDevice->CreateCommandQueue(&queueDesc, __uuidof(ID3D12CommandQueue), (void**)&m_pCommandQueue));
     ThrowIfFailed(m_pDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, __uuidof(ID3D12CommandAllocator), (void**)&m_pDirectCmdListAlloc));
     ThrowIfFailed(m_pDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_pDirectCmdListAlloc, nullptr, __uuidof(ID3D12CommandList), (void**)&m_pCommandList));
+
+    PassCB = std::make_unique<UploadBuffer<PassConstants>>(device, passCount, true);
+    MaterialCB = std::make_unique<UploadBuffer<MaterialConstants>>(device, materialCount, true);
+    ObjectCB = std::make_unique<UploadBuffer<ObjectConstants>>(device, objectCount, true);
     
     // Start off in a closed state. This is because the first time we 
     // refer to the command list we will Reset it, and it needs to be 
@@ -221,7 +225,7 @@ void SleepyEngine::CreateRenderTargetView()
     //ID3D12Resource* m_pSwapChainBuffer[SWAP_CHAIN_BUFFER_COUNT]; // must be freed when finished
     CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle(m_pRtvHeap->GetCPUDescriptorHandleForHeapStart());
 
-    auto woodCrateTex = mTextures["woodCrateTex"]->Resource;
+    /*auto woodCrateTex = mTextures["woodCrateTex"]->Resource;
 
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
     srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -231,7 +235,7 @@ void SleepyEngine::CreateRenderTargetView()
     srvDesc.Texture2D.MipLevels = woodCrateTex->GetDesc().MipLevels;
     srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 
-    m_pDevice->CreateShaderResourceView(woodCrateTex.Get(), &srvDesc, rtvHeapHandle);
+    m_pDevice->CreateShaderResourceView(woodCrateTex.Get(), &srvDesc, rtvHeapHandle);*/
 
     for (UINT i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
     {
@@ -878,15 +882,15 @@ void SleepyEngine::DrawBis()
 
     m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
 
-    D3D12_VERTEX_BUFFER_VIEW vertexBufferView = mBoxGeo->VertexBufferView();
-    D3D12_INDEX_BUFFER_VIEW indexBufferView = mBoxGeo->IndexBufferView();
+    D3D12_VERTEX_BUFFER_VIEW vertexBufferView = mBoxGeoBis->VertexBufferView();
+    D3D12_INDEX_BUFFER_VIEW indexBufferView = mBoxGeoBis->IndexBufferView();
 
     m_pCommandList->IASetVertexBuffers(0, 1, &vertexBufferView);
     m_pCommandList->IASetIndexBuffer(&indexBufferView);
 
     m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     //m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart()); // Get rid of this
-    m_pCommandList->SetGraphicsRootConstantBufferView(0, GetCurrentBackBuffer()->GetGPUVirtualAddress());
+    m_pCommandList->SetGraphicsRootConstantBufferView(0, m_pObjectCB->Resource()->GetGPUVirtualAddress());
 
     /* the following code is the one that comse from the book
     * we would like to iterate in the submesh if we had one, maybe later
@@ -894,7 +898,7 @@ void SleepyEngine::DrawBis()
     *	mesh->DrawArgs["box"].IndexCount,
     *	1, 0, 0, 0);*/
 
-    m_pCommandList->DrawIndexedInstanced(mBoxGeo->m_drawArgs["box"].IndexCount, 1, 0, 0, 0);
+    m_pCommandList->DrawIndexedInstanced(mBoxGeoBis->DrawArgs["box"].IndexCount, 1, 0, 0, 0);
 
     barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
     m_pCommandList->ResourceBarrier(1, &barrier);
