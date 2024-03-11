@@ -15,13 +15,13 @@ cbuffer cbPerObject : register(b0)
 struct VertexIn
 {
     float3 Pos : POSITION;
-    float2 Uv : UV;
+    float2 Uv : TEXCOORD;
 };
 
 struct VertexOut
 {
     float4 PosH : SV_POSITION;
-    float2 Uv : UV;
+    float2 Uv : TEXCOORD;
 };
 
 VertexOut VS(VertexIn vin)
@@ -37,4 +37,5 @@ VertexOut VS(VertexIn vin)
 float4 PS(VertexOut pin) : SV_Target
 {
     return gDiffuseMap.Sample(gsamPointWrap, pin.Uv);
+    //return float4(1, 0, 0, 1);
 }

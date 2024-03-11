@@ -66,8 +66,6 @@ private:
     // Texture
     void CreateTexture(const wchar_t* fileName);
 
-
-
 private:
     WCHAR m_szTitle[MAX_LOADSTRING];                  // The title bar text
     WCHAR m_szWindowClass[MAX_LOADSTRING];            // the main window class name
