@@ -5,9 +5,6 @@
 
 #include "SleepyGame.h"
 #include "Thread.h"
-#include <iostream>
-#include <io.h>
-#include <fcntl.h>
 
 
 //int main(int argc, char* argv[])
