@@ -9,6 +9,9 @@ public:
 	// INIT
 	void Init() override;
 
+	// Virtual function
+	virtual void OnScript();
+
 	void Release();
 
 private:

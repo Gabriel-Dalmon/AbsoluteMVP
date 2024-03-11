@@ -1,9 +1,5 @@
 #pragma once
 
-#include <Windows.h>
-#include <vector>
-#define WIN32_LEAN_AND_MEAN
-
 class Thread
 {
 public:

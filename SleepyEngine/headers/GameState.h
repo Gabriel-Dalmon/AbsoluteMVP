@@ -7,7 +7,7 @@ public:
 	~GameState() {};
 
 	// INIT
-	void Init();
+	virtual void Init();
 
 	// SETTER / GETTER
 	GameState* PreviousGameState() { return m_pPreviousGameState; }
@@ -27,7 +27,7 @@ public:
 	// Release
 	void Release();
 	
-private:
+protected:
 	std::vector<Entity*> m_EntityList;
 	std::vector<int> m_SystemList;
 

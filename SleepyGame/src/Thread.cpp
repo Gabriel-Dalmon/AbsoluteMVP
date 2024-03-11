@@ -1,7 +1,4 @@
 #include "pch.h"
-#include "thread.h"
-#include "GameFactory.h"
-
 
 std::vector<HANDLE> Thread::threadList = {};
 

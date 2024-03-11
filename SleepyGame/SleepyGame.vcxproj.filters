@@ -27,25 +27,22 @@
     <ClInclude Include="headers\SleepyGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\GameManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\CustomScript.h">
+    <ClInclude Include="headers\PlayerScript.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="headers\Thread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SystemHeaders.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="headers\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SleepyGame.h">
+    <ClInclude Include="headers\GameFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\GameFactory.h">
+    <ClInclude Include="headers\PlayGameState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\EnemyScript.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,16 +50,19 @@
     <ClCompile Include="src\SleepyGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CustomScript.cpp">
+    <ClCompile Include="src\PlayerScript.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Thread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\GameFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlayGameState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EnemyScript.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

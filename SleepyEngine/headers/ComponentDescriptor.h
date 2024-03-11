@@ -5,6 +5,11 @@ struct Descriptor {
 	ID3D12GraphicsCommandList* commandList;
 };
 
+//struct TransformDescriptor : Descriptor
+//{
+//
+//};
+
 struct ColliderSphereDescriptor : Descriptor
 {
 	DirectX::XMFLOAT3 center;

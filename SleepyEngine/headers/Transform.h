@@ -1,6 +1,6 @@
 #pragma once
 
-class Transform 
+class Transform : public Component
 {
 public:
 	Transform();

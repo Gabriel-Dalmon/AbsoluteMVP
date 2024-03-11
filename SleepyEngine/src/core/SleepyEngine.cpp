@@ -613,11 +613,11 @@ void SleepyEngine::BuildBoxGeometry()
 
 void SleepyEngine::BuildBoxGeometryBis()
 {
-    //mBoxGeo = m_pAllocator->getMesh("pyramide");
-    Entity* player = Entity::CreateEmptyEntity();
-    m_pFactory->FillPlayer(player);
-    MeshRenderer* geo = player->GetComponent<MeshRenderer*>();
-    mBoxGeo = geo->GetMesh();
+    ////mBoxGeo = m_pAllocator->getMesh("pyramide");
+    //Entity* player = Entity::CreateEmptyEntity();
+    //m_pFactory->FillPlayer(player);
+    //MeshRenderer* geo = player->GetComponent<MeshRenderer*>();
+    //mBoxGeo = geo->GetMesh();
 }
 
 

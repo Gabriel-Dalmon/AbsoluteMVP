@@ -3,9 +3,6 @@
 
 #include "pch.h"
 
-#include "SleepyGame.h"
-#include "Thread.h"
-
 
 //int main(int argc, char* argv[])
 
