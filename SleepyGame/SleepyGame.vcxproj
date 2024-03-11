@@ -141,6 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
+    <ClInclude Include="headers\GameFactory.h" />
     <ClInclude Include="headers\pch.h" />
     <ClInclude Include="headers\CustomScript.h" />
     <ClInclude Include="headers\GameManager.h" />
@@ -153,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CustomScript.cpp" />
+    <ClCompile Include="src\GameFactory.cpp" />
     <ClCompile Include="src\GameManager.cpp" />
     <ClCompile Include="src\SleepyGame.cpp" />
     <ClCompile Include="src\Thread.cpp" />

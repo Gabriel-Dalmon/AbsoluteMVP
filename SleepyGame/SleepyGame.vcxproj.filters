@@ -45,6 +45,9 @@
     <ClInclude Include="SleepyGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="headers\GameFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\SleepyGame.cpp">
@@ -57,6 +60,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Thread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

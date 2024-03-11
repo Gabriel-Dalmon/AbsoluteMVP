@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "thread.h"
+#include "GameFactory.h"
 
 
 std::vector<HANDLE> Thread::threadList = {};
@@ -35,7 +36,7 @@ void Thread::RunThread()
     std::cout << "we summoned!" << std::endl;
     std::cerr << "we err!" << std::endl;
 
-    Factory* factory = new Factory;
+    GameFactory* factory = new GameFactory;
     engine.SetFactory(factory);
     engine.Initialize();
     engine.Run();

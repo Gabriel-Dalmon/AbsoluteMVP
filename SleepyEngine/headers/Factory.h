@@ -7,11 +7,6 @@ public:
 	~Factory();
 	void Init(RessourceAllocator* rRessourceAllocator);
 
-private:
+protected:
 	RessourceAllocator* m_pRessourceAllocator;
-
-public:
-	void FillPlayer(Entity* pEntity);
-	void FillEnemy(Entity* pEntity);
-	void FillBullet(Entity* pEntity);
 };
