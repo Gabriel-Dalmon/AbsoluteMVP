@@ -770,7 +770,6 @@ void SleepyEngine::DrawBis()
         m_pCommandList->IASetIndexBuffer(&mesh->IndexBufferView());
         m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-        //m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
         m_pCommandList->SetGraphicsRootConstantBufferView(1, m_pObjectCB->Resource()->GetGPUVirtualAddress());
 
         barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
@@ -783,7 +782,6 @@ void SleepyEngine::DrawBis()
         ////m_pObjectCB->Resource()->GetGPUVirtualAddress()
 
         m_pCommandList->SetGraphicsRootDescriptorTable(0, tex);
-       // m_pCommandList->SetGraphicsRootConstantBufferView(1, m_pObjectCB);
 
         m_pCommandList->DrawIndexedInstanced(mesh->m_drawArgs["box"].IndexCount, 1, mesh->m_drawArgs["box"].StartIndexLocation, mesh->m_drawArgs["box"].BaseVertexLocation, 0);
     }
