@@ -294,7 +294,7 @@ int SleepyEngine::Initialize()
 
     //// flush command list
     //FlushCommandQueue();
-    //CreateTexture(L"C:\\Users\\vgautier\\source\\repos\\yoannklt\\Sleepy\\SleepyEngine\\src\\asset\\t_box.dds");
+    CreateTexture(L"C:\\Users\\Deadly Sins\\source\\repos\\yoannklt\\Sleepy\\SleepyEngine\\src\\asset\\t_box.dds");
     return 0;
 }
 
@@ -369,7 +369,7 @@ int SleepyEngine::Run()
     m_PSO = InitPSO(shader.m_pInputLayout, m_pRootSignature, shader.m_pVSByteCode, shader.m_pPSByteCode, m_backBufferFormat, false, 0,
         DXGI_FORMAT_D24_UNORM_S8_UINT, m_pDevice, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
 
-    ThrowIfFailed(m_pCommandList->Close());
+    //ThrowIfFailed(m_pCommandList->Close());
     ID3D12CommandList* cmdsLists[] = { m_pCommandList };
     m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
     FlushCommandQueue();
@@ -629,6 +629,7 @@ void SleepyEngine::BuildBoxGeometryBis()
     Entity* player = Entity::CreateEmptyEntity();
     m_pFactory->FillPlayer(player);
     m_entities.push_back(player);
+    mBoxGeo = player->GetComponent<MeshRenderer*>()->GetMesh();
 }
 
 
@@ -738,8 +739,69 @@ void SleepyEngine::Draw()
 
 void SleepyEngine::DrawBis()
 {
-    //UINT objCBByteSize = D3DUtils::CalcConstantBufferByteSize(sizeof(ObjectConstants));
+    ////UINT objCBByteSize = D3DUtils::CalcConstantBufferByteSize(sizeof(ObjectConstants));
 
+    //CD3DX12_RESOURCE_BARRIER barrier;
+
+    //barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+    //D3D12_CPU_DESCRIPTOR_HANDLE currentBackBufferView = GetCurrentBackBufferView();
+    //D3D12_CPU_DESCRIPTOR_HANDLE dephtStencilView = GetDepthStencilView();
+
+    //m_pDirectCmdListAlloc->Reset();
+
+    //m_pCommandList->Reset(m_pDirectCmdListAlloc, nullptr);
+    //m_pCommandList->RSSetViewports(1, m_pViewPort);
+    //m_pCommandList->RSSetScissorRects(1, &m_scissorRect);
+
+    //m_pCommandList->ResourceBarrier(1, &barrier);
+
+    //m_pCommandList->ClearRenderTargetView(currentBackBufferView, Colors::LightSteelBlue, 0, nullptr);
+    //m_pCommandList->ClearDepthStencilView(dephtStencilView, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+    //m_pCommandList->OMSetRenderTargets(1, &currentBackBufferView, true, &dephtStencilView);
+
+    //Mesh* mesh;
+    //for (Entity* entity : m_entities)
+    //{
+    //    ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvHeap };
+    //    m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps); //
+
+    //    m_pCommandList->SetGraphicsRootSignature(m_pRootSignature); //
+
+    //    m_pCommandList->SetPipelineState(m_PSO);
+
+    //    mesh = entity->GetComponent<MeshRenderer*>()->GetMesh();
+    //    m_pCommandList->IASetVertexBuffers(0, 1, &mesh->VertexBufferView());
+    //    m_pCommandList->IASetIndexBuffer(&mesh->IndexBufferView());
+    //    m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    //    //m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
+    //    m_pCommandList->SetGraphicsRootConstantBufferView(1, m_pObjectCB->Resource()->GetGPUVirtualAddress());
+
+    //    barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+    //    m_pCommandList->ResourceBarrier(1, &barrier);
+
+    //    CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_pDsvHeap->GetGPUDescriptorHandleForHeapStart());
+    //    tex.Offset(0, m_heapDescSize);
+
+    //    //D3D12_GPU_VIRTUAL_ADDRESS objCBAddress = m_pObjectCB->Resource()->GetGPUVirtualAddress() + entity->m_ObjCBIndex * objCBByteSize;
+    //    ////m_pObjectCB->Resource()->GetGPUVirtualAddress()
+
+    //    m_pCommandList->SetGraphicsRootDescriptorTable(0, tex);
+    //   // m_pCommandList->SetGraphicsRootConstantBufferView(1, m_pObjectCB);
+
+    //    //m_pCommandList->DrawIndexedInstanced(mesh->m_drawArgs["box"].IndexCount, 1, mesh->m_drawArgs["box"].StartIndexLocation, mesh->m_drawArgs["box"].BaseVertexLocation, 0);
+    //    m_pCommandList->DrawIndexedInstanced(mesh->m_drawArgs["box"].IndexCount, 1, 0, 0, 0);
+    //}
+    //m_pCommandList->Close();
+
+    //ID3D12CommandList* cmdsLists[] = { m_pCommandList };
+    //m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+
+    //ThrowIfFailed(m_pSwapChain->Present(0, 0));
+    //m_currentBackBufferOffset = (m_currentBackBufferOffset + 1) % SWAP_CHAIN_BUFFER_COUNT;
+    //FlushCommandQueue();
+    std::cout << "Drawing" << std::endl;
     CD3DX12_RESOURCE_BARRIER barrier;
 
     barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
@@ -759,39 +821,33 @@ void SleepyEngine::DrawBis()
 
     m_pCommandList->OMSetRenderTargets(1, &currentBackBufferView, true, &dephtStencilView);
 
-    Mesh* mesh;
-    for (Entity* entity : m_entities)
-    {
-        ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvHeap };
-        m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps); //
+    ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvHeap };
+    m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
-        m_pCommandList->SetGraphicsRootSignature(m_pRootSignature); //
+    m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
 
-        m_pCommandList->SetPipelineState(m_PSO);
+    m_pCommandList->SetPipelineState(m_PSO);
 
-        mesh = entity->GetComponent<MeshRenderer*>()->GetMesh();
-        m_pCommandList->IASetVertexBuffers(0, 1, &mesh->VertexBufferView());
-        m_pCommandList->IASetIndexBuffer(&mesh->IndexBufferView());
-        m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    D3D12_VERTEX_BUFFER_VIEW vertexBufferView = mBoxGeo->VertexBufferView();
+    D3D12_INDEX_BUFFER_VIEW indexBufferView = mBoxGeo->IndexBufferView();
 
-        //m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
-        m_pCommandList->SetGraphicsRootConstantBufferView(1, m_pObjectCB->Resource()->GetGPUVirtualAddress());
+    m_pCommandList->IASetVertexBuffers(0, 1, &vertexBufferView);
+    m_pCommandList->IASetIndexBuffer(&indexBufferView);
 
-        barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-        m_pCommandList->ResourceBarrier(1, &barrier);
+    m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-        CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_pDsvHeap->GetGPUDescriptorHandleForHeapStart());
-        tex.Offset(0, m_heapDescSize);
+    CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
+    tex.Offset(0, m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
+    m_pCommandList->SetGraphicsRootDescriptorTable(0, tex);
 
-        //D3D12_GPU_VIRTUAL_ADDRESS objCBAddress = m_pObjectCB->Resource()->GetGPUVirtualAddress() + entity->m_ObjCBIndex * objCBByteSize;
-        ////m_pObjectCB->Resource()->GetGPUVirtualAddress()
+    m_pCommandList->SetGraphicsRootConstantBufferView(1, m_pObjectCB->Resource()->GetGPUVirtualAddress());
 
-        m_pCommandList->SetGraphicsRootDescriptorTable(0, tex);
-       // m_pCommandList->SetGraphicsRootConstantBufferView(1, m_pObjectCB);
+    m_pCommandList->DrawIndexedInstanced(mBoxGeo->m_drawArgs["box"].IndexCount, 1, 0, 0, 0);
 
-        //m_pCommandList->DrawIndexedInstanced(mesh->m_drawArgs["box"].IndexCount, 1, mesh->m_drawArgs["box"].StartIndexLocation, mesh->m_drawArgs["box"].BaseVertexLocation, 0);
-        m_pCommandList->DrawIndexedInstanced(mesh->m_drawArgs["box"].IndexCount, 1, 0, 0, 0);
-    }
+
+    barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+    m_pCommandList->ResourceBarrier(1, &barrier);
+
     m_pCommandList->Close();
 
     ID3D12CommandList* cmdsLists[] = { m_pCommandList };

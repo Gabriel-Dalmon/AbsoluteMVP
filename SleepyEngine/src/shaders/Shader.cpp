@@ -51,7 +51,7 @@ ID3DBlob* Shader::CompileShader(const std::wstring& filename, const D3D_SHADER_M
 	// ThrowIfFailed(x)
 	if (hr != S_OK)
 	{
-		std::cout << "HR MARCHE PAS !!!" << std::endl;
+		std::cerr << "HR MARCHE PAS !!!" << std::endl;
 		return nullptr;
 	}
 
