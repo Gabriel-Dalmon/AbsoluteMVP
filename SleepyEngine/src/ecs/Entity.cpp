@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "ECS/Entity.h"
 
 Entity::Entity()
 {

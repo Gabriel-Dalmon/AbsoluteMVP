@@ -6,12 +6,12 @@
 #include <dxgi1_4.h>
 #include "MathHelper.h"
 #include "UploadBuffer.h"
+#include "Utils/Constants.h"
 
 #define MAX_LOADSTRING 100
-#define SWAP_CHAIN_BUFFER_COUNT 2
 
 class Mesh;
-class MeshGeometry;
+struct MeshGeometry;
 
 struct ObjectConstants
 {

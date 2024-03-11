@@ -5,8 +5,8 @@
 
 typedef enum ComponentTypes
 {
-	TRANSFORM = 0,
-	MESH_REFERENCE,
-	SHADER_REFERENCE,
+	TRANSFORM = 1 << 0,
+	MESH_REFERENCE = 1 << 1,
+	SHADER_REFERENCE = 1 << 2,
 	COMPONENT_TYPES_COUNT	
 } ComponentType;

@@ -1,20 +1,36 @@
 #pragma once
 
-class Device;
-class SwapChain;
-class Window;
-class CommandQueue;
+struct RendererEntityData : public SystemEntityData
+{
+	Transform* transform;
+	MeshReference* meshReference;
+	ShaderReference* shaderReference;
+};
 
-class Renderer
+struct RendererDescriptor
+{
+	int windowWidth;
+	int windowHeight;
+};
+
+class Renderer : public System
 {
 public:
 	Renderer();
 	~Renderer();
 
-	void Initialize(HINSTANCE hInstance, int windowWidth, int windowHeight);
-	void BuildRootSignature();
+	void Initialize(HINSTANCE hInstance, RendererDescriptor* rendererDescriptor);
+	void CreateCommandObjects();
+	void CreateDescriptorHeaps();
+	void CreateRenderTargetView();
+	void CreateDepthStencilView();
+	void SetViewport();
+	void SetScissorRect();
 	void RenderFrame();
-	void CleanUp();
+	void Release();
+
+	void UNSAFE_AddEntity(Entity* entity) override;
+	void UNSAFE_RemoveEntity(Entity* entity) override;
 
 private:
 	Window* m_pWindow = nullptr;
@@ -26,4 +42,10 @@ private:
 
 	CommandQueue* m_pCommandQueue = nullptr;
 	ID3D12GraphicsCommandList* m_pCommandList = nullptr;
+	ID3D12CommandAllocator* m_pCommandAllocator = nullptr;
+
+	ID3D12DescriptorHeap* m_pRtvHeap = nullptr;
+	ID3D12DescriptorHeap* m_pDsvHeap = nullptr;
+
+	std::vector<RendererEntityData*> m_entitiesDataList;
 };

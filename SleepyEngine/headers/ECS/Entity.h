@@ -34,24 +34,24 @@ public:
 	}
 	
 	template<typename T>
-	T GetComponent() {
+	T* GetComponent() {
 		for (int i = 0; i < m_componentsList.size(); i++)
 		{
-			if (dynamic_cast<T>(m_componentsList[i]) != NULL)  
+			if (dynamic_cast<T*>(m_componentsList[i]) != NULL)  
 			{
-				return (T)m_componentsList[i];
+				return (T*)m_componentsList[i];
 			}
 		}
 		return nullptr; 
 	}
 	
-	int GetCompositionBID() { return m_compositionBID; };
+	int GetCompositionFlags() { return m_compositionFlags; };
 
 	// RELEASE
 	void Release();
 
 private:
 	std::vector<Component*> m_componentsList;  
-	int m_compositionBID;
+	int m_compositionFlags;
 };
 

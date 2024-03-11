@@ -11,7 +11,7 @@ public:
 
 	void Initialize(IDXGIFactory4* pDgxiFacotry, Device* pDevice, Window* pWindow);
 	void CreateSwapChain(IDXGIFactory4* pDgxiFacotry, Device* pDevice, Window* pWindow);
-	void CleanUp();
+	void Release();
 
 private:
 	IDXGISwapChain* m_pSwapChain = nullptr;

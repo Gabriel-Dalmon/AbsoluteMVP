@@ -43,53 +43,87 @@
 #include "MathHelper.h"
 
 // FORWARD DECLARATIONS
+class Utils;
 class Camera;
 class Component;
 class Collider;
 class ColliderOBB;
 class ColliderSphere;
 class Entity;
-class GameState;
-class Input;
-class Menu;
 class Mesh;
 class MeshRenderer;
-class Pause;
+class MeshReference;
 class Script;
 class Shader;
+class OldShader;
 class ShaderReference;
-class SleepyEngine;
 class Timer;
 class Transform;
+class Device;
+class SwapChain;
+class CommandQueue;
+class Window;
+
+struct SystemEntityData;
+class System;
+struct RendererEntityData;
+struct RendererDescriptor;
+class Renderer;
+class GameState;
+class EngineTestGameState;
+class SleepyEngine;
+class OldSleepyEngine;
+
 
 // MACROS
 #define RELEASE(p) {if (p){ p->Release(); p = nullptr;}}
 #define MAX_LOADSTRING 100
-#define SWAP_CHAIN_BUFFER_COUNT 2
 
 // NAMESPACES
 using namespace DirectX;
 
 // Classes 
-#include "Camera.h"
+#include "Utils/Utils.h"
+#include "UploadBuffer.h"
+#include "Utils/HResultException.h"
+#include "Utils/Constants.h"
+using namespace Sleepy;
+
 #include "ECS/Component.h"
+#include "Components/Transform.h"
+#include "Components/MeshReference.h"
+#include "Components/ShaderReference.h"
 #include "Collider.h"
 #include "ColliderOBB.h"
 #include "ColliderSphere.h"
-#include "ECS/Entity.h"
-#include "Core/GameState.h"
-#include "Input.h"
-#include "Menu.h"
-#include "Mesh.h"
 #include "MeshRenderer.h"
-#include "Pause.h"
 #include "Script.h"
-#include "Shader.h"
-#include "ShaderReference.h"
-#include "Timer.h"
-#include "Transform.h"
-#include "UploadBuffer.h"
-#include "Utils/HResultException.h"
+
+#include "ECS/Entity.h"
+
 #include "PSO.h"
+
+#include "Graphics/Device.h"
+#include "Graphics/SwapChain.h"
+#include "Graphics/CommandQueue.h"
+#include "Graphics/Window.h"
+#include "Graphics/Shader.h"
+
+#include "Mesh.h"
+
+
+#include "ECS/System.h"
+#include "Graphics/Renderer.h"
+
+
+#include "Camera.h"
+
+#include "OldShader.h"
+
+#include "Timer.h"
+
 #include "tmpMeshGeo.h"
+#include "Core/GameState.h"
+#include "EngineTestGameState.h"
+#include "Core/SleepyEngine.h"
 #include "OldSleepyEngine.h"

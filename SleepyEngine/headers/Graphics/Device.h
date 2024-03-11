@@ -9,7 +9,7 @@ public:
 	void Initialize(IDXGIFactory4* pDgxiFactory = nullptr, unsigned int hardwareAdapterIndex = 0);
 	void Initialize(IDXGIAdapter* pAdapter);
 	void Check4xMSAAQualitySupport();
-	void CleanUp();
+	void Release();
 
 	inline ID3D12Device* GetD3DDevice() const { return m_pD3DDevice; }
 	inline unsigned int Get4xMSAAQuality() const { return m_4xMsaaQuality; }

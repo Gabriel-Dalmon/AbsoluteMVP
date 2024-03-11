@@ -1,4 +1,4 @@
-#include "ColliderSphere.h"
+#include "pch.h"
 
 ColliderSphere::ColliderSphere() {};
 

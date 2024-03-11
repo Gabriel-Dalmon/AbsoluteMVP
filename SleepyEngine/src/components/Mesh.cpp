@@ -1,7 +1,4 @@
 #include "pch.h"
-#include "ECS/Entity.h"
-#include "Mesh.h"
-#include "D3DUtils.h"
 
 Mesh::Mesh() {}
 

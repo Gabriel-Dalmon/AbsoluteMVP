@@ -9,7 +9,7 @@ public:
 	~Component() {};
 
 	// Init
-	virtual void Init() {};
+	virtual void Initialize() {};
 
 	// Update 
 	virtual void Update() {};

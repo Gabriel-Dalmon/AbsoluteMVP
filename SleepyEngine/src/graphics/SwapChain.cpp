@@ -45,7 +45,7 @@ void SwapChain::CreateSwapChain(IDXGIFactory4* pDgxiFacotry, Device* pDevice, Wi
     ThrowIfFailed(pDgxiFacotry->CreateSwapChain(pDevice->GetD3DDevice(), &swapChainDescriptor, &m_pSwapChain))
 }
 
-void SwapChain::CleanUp()
+void SwapChain::Release()
 {
     if (m_pSwapChain)
     {

@@ -6,7 +6,7 @@ Script::Script()
 
 }
 
-void Script::Init()
+void Script::Initialize()
 {
 }
 

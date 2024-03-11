@@ -8,7 +8,7 @@ public:
 	~Script() {};
 
 	// INIT
-	void Init() override;
+	void Initialize() override;
 
 	void Release();
 

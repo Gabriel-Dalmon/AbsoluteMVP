@@ -1,7 +1,4 @@
 #pragma once
-#include "ECS/Component.h"
-
-class Shader;
 
 class ShaderReference : public Component 
 {
@@ -10,7 +7,7 @@ public:
 	~ShaderReference() {};
 
 	// INIT
-	void Init() override;
+	void Initialize() override;
 
 	// SETTER / GETTER
 	Shader* GetShader() { return m_pShader; }

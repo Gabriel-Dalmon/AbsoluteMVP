@@ -1,6 +1,9 @@
 #pragma once
 
-class Entity;
+struct SystemEntityData
+{
+	Entity* entity;
+};
 
 class System
 {
@@ -16,12 +19,11 @@ public:
 	int RemoveEntity(Entity* entity);
 
 	//Unsafe
-	virtual void UNSAFE_AddEntity(Entity* entity);
-	virtual void UNSAFE_RemoveEntity(Entity* entity);
+	virtual void UNSAFE_AddEntity(Entity* entity) = 0;
+	virtual void UNSAFE_RemoveEntity(Entity* entity) = 0;
 
-	int GetRequiredComponentsBID() { return m_requiredComponentsBID; };
+	int GetRequiredComponentsFlags() { return m_requiredComponentsFlags; };
 
-private:
-	int m_requiredComponentsBID;
-	//ComponentTypes* requiredComponents;
+protected:
+	int m_requiredComponentsFlags;
 };

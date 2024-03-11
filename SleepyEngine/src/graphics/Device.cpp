@@ -73,7 +73,7 @@ void Device::Check4xMSAAQualitySupport()
 	m_4xMsaaState = true;
 }
 
-void Device::CleanUp()
+void Device::Release()
 {
 	if (m_pD3DDevice)
 	{

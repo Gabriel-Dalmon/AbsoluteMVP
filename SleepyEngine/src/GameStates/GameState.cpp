@@ -1,14 +1,29 @@
 #include "pch.h"
 #include "Core/GameState.h"
-
 #include "ECS/Entity.h"
 #include "ECS/System.h"
+#include "Utils/Utils.h"
+#include "Graphics/Renderer.h"
+
+using namespace Sleepy;
 
 GameState::GameState()
 {
 }
 
-void GameState::Initialize()
+/**
+* Initializes the game state and its systems. By default a game state is created with a renderer system and gameplay system. 
+* The physic system must be manually added.
+* @return void
+*/
+void GameState::Initialize(HINSTANCE hAppInstance, RendererDescriptor* pRendererDescriptor)
+{
+	Renderer* pRenderer = new Renderer();
+	pRenderer->Initialize(hAppInstance, pRendererDescriptor);
+	m_systemsList.push_back(pRenderer);
+}
+
+void GameState::Initialize(GameState* previousGameState)
 {
 }
 
@@ -29,30 +44,33 @@ void GameState::Exit()
 {
 }
 
-/// <summary>
-/// Adds the entity passed in argument into the EntityList, making it handled by the GameState class.
-/// </summary>
-/// <param name="entity"></param>
-void GameState::AddEntity(Entity* entity)
+/*
+* Adds an entity to the game state and distributes its components to the expected systems.
+* @param Entity* entity
+* @return int
+*/
+int GameState::AddEntity(Entity* entity)
 {
-	int entityBID = entity->GetCompositionBID();
+	int entityBID = entity->GetCompositionFlags();
 	for (System* system : m_systemsList)
 	{
-		if (entityBID & system->GetRequiredComponentsBID())
+		if (Sleepy::Utils::CheckFlags(entityBID, system->GetRequiredComponentsFlags()))
 		{
 			system->UNSAFE_AddEntity(entity);
 		}
 	}
 	m_entitiesList.push_back(entity);
+	return 0;
 }
 
-
-/// <summary>
-/// Removes the entity passed in argument from the EntityList, making it not handled by the GameState class.
-/// </summary>
-/// <param name="entity"></param>
-void GameState::RemoveEntity(Entity* entity)
+/**
+* Removes an entity from the game state and the systems linked to it.
+* @param Entity* entity
+* @return int
+*/
+int GameState::RemoveEntity(Entity* entity)
 {
+	int entityBID = entity->GetCompositionFlags();
 	for (int i = 0; i < m_entitiesList.size(); i++)
 	{
 		if (m_entitiesList[i] == entity)
@@ -61,22 +79,7 @@ void GameState::RemoveEntity(Entity* entity)
 			m_entitiesList.erase(m_entitiesList.begin() + i);
 		}
 	}
-}
-
-
-/// <summary>
-/// Checks if the entity passed in argument is handled by GameState and returns a boolean.
-/// </summary>
-/// <param name="entity"></param>
-/// <returns>True if the entity is currently handled by GameState class. False if it's not.</returns>
-bool GameState::CheckEntity(Entity* entity)
-{
-	for (int i = 0; i < m_entitiesList.size(); i++)
-	{
-		if (m_entitiesList[i] == entity)
-			return true;
-	}
-	return false;
+	return 0;
 }
 
 void GameState::Release()

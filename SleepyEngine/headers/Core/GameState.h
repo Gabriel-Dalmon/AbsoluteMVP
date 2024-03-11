@@ -1,6 +1,10 @@
 #pragma once
 
+#include <vector>
+
+class Entity;
 class System;
+struct RendererDescriptor;
 
 class GameState
 {
@@ -9,10 +13,11 @@ public:
 	~GameState() {};
 
 	// INIT
-	void Initialize();
+	void Initialize(HINSTANCE hAppInstance, RendererDescriptor* pRendererDescriptor);
+	void Initialize(GameState* previousGameState);
 
 	// SETTER / GETTER
-	GameState* PreviousGameState() { return m_pPreviousGameState; }
+	GameState* GetPreviousGameState() { return m_pPreviousGameState; }
 
 	// Update
 	void Update(float deltaTime);
@@ -22,9 +27,8 @@ public:
 	virtual void Exit();
 
 	// Entities
-	void AddEntity(Entity* entity); 
-	void RemoveEntity(Entity* entity);
-	bool CheckEntity(Entity* entity);
+	int AddEntity(Entity* entity);
+	int RemoveEntity(Entity* entity);
 
 	// Release
 	void Release();

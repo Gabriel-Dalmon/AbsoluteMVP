@@ -8,7 +8,7 @@ public:
 
 	int Initialize(HINSTANCE hInstance, int windowWidth, int windowHeight);
 	ATOM RegisterWindowClass();
-	void CleanUp(); 
+	void Release();
 
 	inline HWND GetWindowHandle() const { return m_hWnd; };
 	inline int GetWindowWidth() const { return m_windowWidth; };

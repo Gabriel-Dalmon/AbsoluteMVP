@@ -51,7 +51,7 @@ ATOM Window::RegisterWindowClass()
     return RegisterClassExW(&wcex);
 }
 
-void Window::CleanUp()
+void Window::Release()
 {
     // Close window
 }

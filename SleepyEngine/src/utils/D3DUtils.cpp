@@ -1,7 +1,4 @@
 #include "pch.h" 
-#include "D3DUtils.h"
-#include "Utils/HResultException.h"
-
 
 ID3DBlob* D3DUtils::CompileFromFile(const std::wstring& filename, const D3D_SHADER_MACRO* defines, const std::string& entrypoint, const std::string& target)
 {

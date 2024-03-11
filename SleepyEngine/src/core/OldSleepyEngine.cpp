@@ -10,7 +10,6 @@
 
 #include "tmpMeshGeo.h"
 // I don't know where to put them
-#include "Input.h"
 #include "Timer.h"
 
 // Global Variables:
@@ -307,14 +306,11 @@ int OldSleepyEngine::Run()
 
     MSG msg = { 0 };
 
-    Input input;
-    input.Init();
-
     Timer timer;
     timer.Init();
 
 
-    Shader shader;
+    OldShader shader;
     shader.Init();
     ThrowIfFailed(m_pDevice->CreateRootSignature(
         0,
@@ -350,9 +346,7 @@ int OldSleepyEngine::Run()
             DispatchMessage(&msg);
         }
         else {
-            input.Update();
-
-            timer.UpdateTimer();
+            timer.Update();
             timer.UpdateFPS(mhMainWnd);
 
             Update();

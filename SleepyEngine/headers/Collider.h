@@ -1,5 +1,4 @@
 #pragma once
-#include "ECS/Component.h"
 
 class Collider : public Component
 {
@@ -8,7 +7,7 @@ public:
 	~Collider() {};
 
 	// INIT
-	void Init() override;
+	void Initialize() override;
 
 private:
 };

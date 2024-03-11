@@ -1,6 +1,4 @@
 #include "pch.h"
-#include "Core/SleepyEngine.h"
-#include "Core/GameState.h"
 
 SleepyEngine::SleepyEngine()
 {
@@ -18,8 +16,8 @@ int SleepyEngine::Run()
 	m_isRunning = true;
 	while (m_isRunning)
 	{
-		m_timer.Update();
-		deltaTime = m_timer.GetDeltaTime();
+		m_pTimer->Update();
+		deltaTime = m_pTimer->GetDeltaTime();
 
 		m_pCurrentGameState->Update(deltaTime);
 	}
