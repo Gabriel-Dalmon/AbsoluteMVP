@@ -18,7 +18,8 @@ public:
 	~Mesh();
 
 	// Init
-	void Init(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, std::vector<Vertex>* vertices, std::vector<uint16_t>* indices);
+	void Init(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, std::vector<VertexTexture>* vertices, std::vector<uint16_t>* indices);
+	void Init(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, std::vector<VertexColor>* vertices, std::vector<uint16_t>* indices);
 
 	// Release
 	void Release();

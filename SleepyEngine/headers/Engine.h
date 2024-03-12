@@ -73,13 +73,13 @@ class RessourceAllocator;
 using namespace DirectX;
 
 // STRUCTS
-//struct Vertex
-//{
-//	XMFLOAT3 Pos;
-//	XMFLOAT4 Color;
-//};
+struct VertexColor
+{
+	XMFLOAT3 Pos;
+	XMFLOAT4 Color;
+};
 
-struct Vertex
+struct VertexTexture
 {
 	XMFLOAT3 Pos;
 	XMFLOAT2 Uv;

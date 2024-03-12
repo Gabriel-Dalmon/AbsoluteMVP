@@ -348,26 +348,52 @@ int SleepyEngine::Run()
     Timer timer;
     timer.Init();
 
-
-    Shader shader;
-    shader.Init();
+    
+    // We setup PSO and load shader for textures
+    ShaderTexture shaderTexture;
+    shaderTexture.Init();
     ThrowIfFailed(m_pDevice->CreateRootSignature(
         0,
-        shader.m_pSerializedRootSig->GetBufferPointer(),
-        shader.m_pSerializedRootSig->GetBufferSize(),
-        IID_PPV_ARGS(&m_pRootSignature))
+        shaderTexture.m_pSerializedRootSig->GetBufferPointer(),
+        shaderTexture.m_pSerializedRootSig->GetBufferSize(),
+        IID_PPV_ARGS(&m_pRootSignatureTexture))
     );
 
 #if defined (DEBUG) || (_DEBUG)
-    shader.CompileVS(L"../SleepyEngine/src/shaders/Texture.hlsl");
-    shader.CompilePS(L"../SleepyEngine/src/shaders/Texture.hlsl");
+    shaderTexture.CompileVS(L"../SleepyEngine/src/shaders/Texture.hlsl");
+    shaderTexture.CompilePS(L"../SleepyEngine/src/shaders/Texture.hlsl");
 #else
-    shader.CompileVS(L"Shaders/Texture.hlsl");
-    shader.CompilePS(L"Shaders/Texture.hlsl");
+    shaderTexture.CompileVS(L"Shaders/Texture.hlsl");
+    shaderTexture.CompilePS(L"Shaders/Texture.hlsl");
 #endif
 
-    m_PSO = InitPSO(shader.m_pInputLayout, m_pRootSignature, shader.m_pVSByteCode, shader.m_pPSByteCode, m_backBufferFormat, false, 0,
+    m_PSOTexture = InitPSO(shaderTexture.m_pInputLayout, m_pRootSignatureTexture, shaderTexture.m_pVSByteCode, shaderTexture.m_pPSByteCode, m_backBufferFormat, false, 0,
         DXGI_FORMAT_D24_UNORM_S8_UINT, m_pDevice, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+
+
+    // We setup PSO and load shader for Color
+    ShaderColor shaderColor;
+    shaderColor.Init();
+    ThrowIfFailed(m_pDevice->CreateRootSignature(
+        0,
+        shaderColor.m_pSerializedRootSig->GetBufferPointer(),
+        shaderColor.m_pSerializedRootSig->GetBufferSize(),
+        IID_PPV_ARGS(&m_pRootSignatureColor))
+    );
+
+#if defined (DEBUG) || (_DEBUG)
+    shaderColor.CompileVS(L"../SleepyEngine/src/shaders/Color.hlsl");
+    shaderColor.CompilePS(L"../SleepyEngine/src/shaders/Color.hlsl");
+#else
+    shaderColor.CompileVS(L"Shaders/Color.hlsl");
+    shaderColor.CompilePS(L"Shaders/Color.hlsl");
+#endif
+
+    m_PSOColor = InitPSO(shaderColor.m_pInputLayout, m_pRootSignatureColor, shaderColor.m_pVSByteCode, shaderColor.m_pPSByteCode, m_backBufferFormat, false, 0,
+        DXGI_FORMAT_D24_UNORM_S8_UINT, m_pDevice, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+
+    m_pFactory->SetSignatureAndPSO(this);
+
 
     // Main message loop:
     while (msg.message != WM_QUIT)
@@ -395,7 +421,8 @@ int SleepyEngine::Run()
         
     }
     Release();
-    shader.Release();
+    shaderTexture.Release();
+    shaderColor.Release();
 
     return (int)msg.wParam;
 }
@@ -432,8 +459,10 @@ void SleepyEngine::Release()
     RELEASE(m_pCommandList);
     RELEASE(m_pDxgiFactory);
     RELEASE(m_pSwapChain);
-    RELEASE(m_PSO);
-    RELEASE(m_pRootSignature);
+    RELEASE(m_PSOTexture);
+    RELEASE(m_pRootSignatureTexture);
+    RELEASE(m_PSOColor);
+    RELEASE(m_pRootSignatureColor);
     RELEASE(m_pCbvHeap);
     RELEASE(mBoxGeo);
     RELEASE(m_pAllocator);
@@ -625,6 +654,13 @@ void SleepyEngine::BuildBoxGeometryBis()
     m_pFactory->FillPlayer(player);
     m_entities.push_back(player);
     mBoxGeo = player->GetComponent<MeshRenderer*>()->GetMesh();
+    MeshRenderer* temp;
+    Mesh* mesh;
+    for (Entity* entity : m_entities)
+    {
+        temp = entity->GetComponent<MeshRenderer*>();
+        mesh = temp->GetMesh();
+    }
 }
 
 
@@ -674,68 +710,11 @@ void SleepyEngine::Update()
 //void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, ID3D12RootSignature* pRootSignature, Mesh* mesh)
 void SleepyEngine::Draw()
 {
-    //std::cout << "Drawing" << std::endl;
-    CD3DX12_RESOURCE_BARRIER barrier;
-
-    barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-    D3D12_CPU_DESCRIPTOR_HANDLE currentBackBufferView = GetCurrentBackBufferView();
-    D3D12_CPU_DESCRIPTOR_HANDLE dephtStencilView = GetDepthStencilView();
-
-    m_pDirectCmdListAlloc->Reset();
-
-    m_pCommandList->Reset(m_pDirectCmdListAlloc, m_PSO);
-    m_pCommandList->RSSetViewports(1, m_pViewPort);
-    m_pCommandList->RSSetScissorRects(1, &m_scissorRect);
-
-    m_pCommandList->ResourceBarrier(1, &barrier);
-
-    m_pCommandList->ClearRenderTargetView(currentBackBufferView, Colors::LightSteelBlue, 0, nullptr);
-    m_pCommandList->ClearDepthStencilView(dephtStencilView, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
-
-    m_pCommandList->OMSetRenderTargets(1, &currentBackBufferView, true, &dephtStencilView);
-
-    ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvHeap };
-    m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
-
-    m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
-
-    D3D12_VERTEX_BUFFER_VIEW vertexBufferView = mBoxGeo->VertexBufferView();
-    D3D12_INDEX_BUFFER_VIEW indexBufferView = mBoxGeo->IndexBufferView();
-
-    m_pCommandList->IASetVertexBuffers(0, 1, &vertexBufferView);
-    m_pCommandList->IASetIndexBuffer(&indexBufferView);
-
-    m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-    m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
-    //m_pCommandList->SetGraphicsRootConstantBufferView(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
-
-    /* the following code is the one that comse from the book
-    * we would like to iterate in the submesh if we had one, maybe later
-    *pCommandList->DrawIndexedInstanced(
-    *	mesh->DrawArgs["box"].IndexCount,
-    *	1, 0, 0, 0);*/
-
-    m_pCommandList->DrawIndexedInstanced(mBoxGeo->m_drawArgs["box"].IndexCount, 1, 0, 0, 0);
-
-    barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-    m_pCommandList->ResourceBarrier(1, &barrier);
-
-    m_pCommandList->Close();
-
-    ID3D12CommandList* cmdsLists[] = { m_pCommandList };
-    m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
-
-    ThrowIfFailed(m_pSwapChain->Present(0, 0));
-    m_currentBackBufferOffset = (m_currentBackBufferOffset + 1) % SWAP_CHAIN_BUFFER_COUNT;
-    FlushCommandQueue();
 }
 
 
 void SleepyEngine::DrawBis()
 {
-    //UINT objCBByteSize = D3DUtils::CalcConstantBufferByteSize(sizeof(ObjectConstants));
-
     CD3DX12_RESOURCE_BARRIER barrier;
 
     barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
@@ -754,18 +733,19 @@ void SleepyEngine::DrawBis()
     m_pCommandList->ClearDepthStencilView(dephtStencilView, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
     m_pCommandList->OMSetRenderTargets(1, &currentBackBufferView, true, &dephtStencilView);
-
+    MeshRenderer* temp;
     Mesh* mesh;
     for (Entity* entity : m_entities)
     {
         ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvHeap };
         m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps); //
 
-        m_pCommandList->SetGraphicsRootSignature(m_pRootSignature); //
+        m_pCommandList->SetGraphicsRootSignature(entity->GetComponent<ShaderReference*>()->GetRootSignature()); //
 
-        m_pCommandList->SetPipelineState(m_PSO);
+        m_pCommandList->SetPipelineState(entity->GetComponent<ShaderReference*>()->GetPSO());
 
-        mesh = entity->GetComponent<MeshRenderer*>()->GetMesh();
+        temp = entity->GetComponent<MeshRenderer*>();
+        mesh = temp->GetMesh();
         m_pCommandList->IASetVertexBuffers(0, 1, &mesh->VertexBufferView());
         m_pCommandList->IASetIndexBuffer(&mesh->IndexBufferView());
         m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -777,9 +757,6 @@ void SleepyEngine::DrawBis()
 
         CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_pDsvHeap->GetGPUDescriptorHandleForHeapStart());
         tex.Offset(0, m_heapDescSize);
-
-        //D3D12_GPU_VIRTUAL_ADDRESS objCBAddress = m_pObjectCB->Resource()->GetGPUVirtualAddress() + entity->m_ObjCBIndex * objCBByteSize;
-        ////m_pObjectCB->Resource()->GetGPUVirtualAddress()
 
         m_pCommandList->SetGraphicsRootDescriptorTable(0, tex);
 
@@ -909,4 +886,20 @@ void SleepyEngine::CreateTexture(const wchar_t* fileName)
     texture.Detach();
 
     //return pTexture;
+}
+
+ID3D12PipelineState* SleepyEngine::GetPSOTexture() {
+    return m_PSOTexture;
+}
+
+ID3D12PipelineState* SleepyEngine::GetPSOColor() {
+    return m_PSOColor;
+}
+
+ID3D12RootSignature* SleepyEngine::GetRootSignatureTexture() {
+    return m_pRootSignatureTexture;
+}
+
+ID3D12RootSignature* SleepyEngine::GetRootSignatureColor() {
+    return m_pRootSignatureColor;
 }

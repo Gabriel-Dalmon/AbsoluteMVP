@@ -20,8 +20,8 @@ void GameFactory::FillPlayer(Entity* pEntity)
 
 	// /!\ we create a shader dynamically for tests, dont forget to change it
 	ShaderReferenceDescriptor ShaderRefDesc;
-	ShaderRefDesc.shaderRef = new Shader;
-	ShaderRefDesc.shaderRef->Init();
+	ShaderRefDesc.PSO = m_PSOTexture;
+	ShaderRefDesc.rootSignature = m_pRootSignatureTexture;
 	ShaderReference* shaderReference = Component::CreateComponent<ShaderReference>();
 	shaderReference->Init(&ShaderRefDesc);
 	pEntity->AddComponent<ShaderReference*>(shaderReference);

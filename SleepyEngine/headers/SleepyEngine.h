@@ -16,6 +16,11 @@ public:
     D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferView()const; 
     ID3D12Resource* GetCurrentBackBuffer()const;
     D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView()const;
+    ID3D12PipelineState* GetPSOTexture();
+    ID3D12PipelineState* GetPSOColor();
+    ID3D12RootSignature* GetRootSignatureTexture();
+    ID3D12RootSignature* GetRootSignatureColor();
+
 
     LRESULT MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     static SleepyEngine* GetApp();
@@ -99,8 +104,10 @@ private:
     IDXGISwapChain* m_pSwapChain = nullptr;
     ID3D12Resource* m_pSwapChainBuffer[SWAP_CHAIN_BUFFER_COUNT] = {nullptr, nullptr};
 
-    ID3D12PipelineState* m_PSO = nullptr;
-    ID3D12RootSignature* m_pRootSignature = nullptr;
+    ID3D12PipelineState* m_PSOTexture = nullptr;
+    ID3D12PipelineState* m_PSOColor = nullptr;
+    ID3D12RootSignature* m_pRootSignatureTexture = nullptr;
+    ID3D12RootSignature* m_pRootSignatureColor = nullptr;
 
     int m_clientWidth = 600;
     int m_clientHeight = 600;

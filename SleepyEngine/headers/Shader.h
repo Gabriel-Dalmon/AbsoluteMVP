@@ -10,11 +10,11 @@ const CD3DX12_STATIC_SAMPLER_DESC pointWrap(
 class Shader
 {
 public:
-	Shader();
+	Shader() {};
 	~Shader() {};
 
 	// INIT
-	virtual void Init();
+	virtual void Init() {};
 
 	// COMPILE SHADER
 	ID3DBlob* CompileShader(const std::wstring& filename, const D3D_SHADER_MACRO* defines, const std::string& entrypoint, const std::string& target);
@@ -38,3 +38,18 @@ public:
 	std::vector<D3D12_INPUT_ELEMENT_DESC> m_pInputLayout;
 };
 
+class ShaderColor : public Shader
+{
+public:
+	ShaderColor() {};
+	~ShaderColor() {};
+	void Init();
+};
+
+class ShaderTexture : public Shader
+{
+public:
+	ShaderTexture() {};
+	~ShaderTexture() {};
+	void Init();
+};

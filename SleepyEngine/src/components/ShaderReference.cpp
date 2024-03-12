@@ -6,11 +6,11 @@ ShaderReference::ShaderReference()
 
 void ShaderReference::Init(ShaderReferenceDescriptor* desc)
 {
-	m_pShader = desc->shaderRef;
+	m_pRootSignature = desc->rootSignature;
+	m_pPSO = desc->PSO;
 }
 
 void ShaderReference::Release()
 {
-	RELEASE(m_pShader);
 }
 

@@ -13,7 +13,7 @@ struct ColliderSphereDescriptor : Descriptor
 
 struct ColliderOBBDescriptor : Descriptor
 {
-	std::vector<Vertex>* vertices;
+	std::vector<VertexTexture>* vertices;
 	std::vector<int>* indices;
 };
 
@@ -24,5 +24,6 @@ struct MeshReferenceDescriptor : Descriptor
 
 struct ShaderReferenceDescriptor : Descriptor
 {
-	Shader* shaderRef;
+	ID3D12RootSignature* rootSignature = nullptr;
+	ID3D12PipelineState* PSO = nullptr;
 };

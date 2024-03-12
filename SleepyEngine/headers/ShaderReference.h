@@ -10,7 +10,8 @@ public:
 	void Init(ShaderReferenceDescriptor* desc);
 
 	// SETTER / GETTER
-	Shader* GetShader() { return m_pShader; }
+	ID3D12RootSignature* GetRootSignature() { return m_pRootSignature; }
+	ID3D12PipelineState* GetPSO() { return m_pPSO; }
 
 	// Release
 	void Release();
@@ -19,6 +20,7 @@ public:
 	void idkyet();
 
 private:
-	Shader* m_pShader = nullptr;
+	ID3D12RootSignature* m_pRootSignature = nullptr;
+	ID3D12PipelineState* m_pPSO = nullptr;
 };
 
