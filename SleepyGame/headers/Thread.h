@@ -15,5 +15,5 @@ public:
 	WSADATA m_wsaData;
 	HANDLE m_This;
 	HINSTANCE m_hInstance;
-	FILE* m_pConsoleOut;
+	FILE* m_pConsoleOut = nullptr;
 };

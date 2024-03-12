@@ -1,10 +1,6 @@
 // SleepyGame.cpp : Defines the entry point for the application.
 //
-
 #include "pch.h"
-
-
-//int main(int argc, char* argv[])
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,

@@ -39,3 +39,7 @@ void EnemyScript::Die()
 
 }
 
+void EnemyScript::Release()
+{
+}
+
