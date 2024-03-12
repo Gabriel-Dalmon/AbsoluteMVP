@@ -13,11 +13,6 @@ int System::Initialize()
     return 0;
 }
 
-int System::Update(float deltaTime)
-{
-    return 0;
-}
-
 int System::Release()
 {
     return 0;

@@ -12,7 +12,7 @@ public:
 	~System();
 
 	int Initialize();
-	int Update(float deltaTime);
+	virtual void Update(float deltaTime) = 0;
 	int Release();
 
 	int AddEntity(Entity* entity);

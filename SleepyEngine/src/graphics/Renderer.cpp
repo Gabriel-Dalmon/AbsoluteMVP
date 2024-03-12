@@ -69,13 +69,12 @@ void Renderer::CreateRenderTargetView()
 {
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle(m_pRtvHeap->GetCPUDescriptorHandleForHeapStart());
 
-	// Should create render target view from FrameResource
-	/*for (UINT i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
+	for (UINT i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
 	{
-		ThrowIfFailed(m_pSwapChain->GetBuffer(i, __uuidof(ID3D12Resource), (void**)&m_pSwapChainBuffer[i]));
-		m_pDevice->GetD3DDevice()->CreateRenderTargetView(m_pSwapChainBuffer[i], nullptr, rtvHeapHandle);
+		ThrowIfFailed(m_pSwapChain->GetD3DSwapChain->GetBuffer(i, __uuidof(ID3D12Resource), (void**)&m_pSwapChainBuffer[i]));
+		m_pDevice->GetD3DDevice()->CreateRenderTargetView(m_pSwapChain->GetBuffer()[i], nullptr, rtvHeapHandle);
 		rtvHeapHandle.Offset(1, m_rtvDescriptorSize);
-	}*/
+	}
 }
 
 void Renderer::CreateDepthStencilView()
@@ -90,7 +89,14 @@ void Renderer::SetScissorRect()
 {
 }
 
-void Renderer::UpdateBuffers()
+void Renderer::Update(float deltaTime)
+{
+	WaitForFrameResource();
+	UpdateBuffers();
+	RenderFrame();
+}
+
+void Renderer::WaitForFrameResource()
 {
 	// Cycle through the circular frame resource array.
 	m_currentFrameResourceIndex = (m_currentFrameResourceIndex + 1) % SWAP_CHAIN_BUFFER_COUNT;
@@ -99,17 +105,26 @@ void Renderer::UpdateBuffers()
 	// resource. If not, wait until the GPU has completed commands up to
 	// this fence point.
 	if (m_pCurrentFrameResource->GetFence() != 0 &&
-		m_pCommandQueue->GetD3DCommandQueue()->GetLastCompletedFence() < m_pCurrentFrameResource->GetFence())
+		m_pCommandQueue->GetLastCompletedFence() < m_pCurrentFrameResource->GetFence())
 	{
 		HANDLE eventHandle = CreateEventEx(nullptr, false, false, EVENT_ALL_ACCESS);
-		ThrowIfFailed(m_pCommandQueue->GetD3DCommandQueue()->SetEventOnFenceCompletion(m_pCurrentFrameResource->GetFence(), eventHandle));
+		ThrowIfFailed(m_pCommandQueue->SetEventOnFenceCompletion(m_pCurrentFrameResource->GetFence(), eventHandle));
 		WaitForSingleObject(eventHandle, INFINITE);
 		CloseHandle(eventHandle);
 	}
 }
 
+void Renderer::UpdateBuffers()
+{
+
+}
+
 void Renderer::RenderFrame()
 {
+	// [...] Build and submit command lists for this frame.
+
+	m_pCurrentFrameResource->IncrementFence();
+	m_pCommandQueue->Signal(m_pCurrentFrameResource->GetFence());
 }
 
 void Renderer::Release()

@@ -27,6 +27,8 @@ public:
 	void Initialize(HINSTANCE hInstance, RendererDescriptor* rendererDescriptor);
 	void Release();
 
+	void Update(float deltaTime) override;
+	void WaitForFrameResource();
 	void UpdateBuffers();
 	void RenderFrame();
 

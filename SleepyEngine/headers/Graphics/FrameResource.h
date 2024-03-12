@@ -9,11 +9,13 @@ public:
 	void Initialize(ID3D12Device* pDevice);
 	void CleanUp();
 
-	// Getters
-	unsigned __int64 GetFence() const { return m_fence; }
+	// GETTERS & SETTERS
+	unsigned __int64 GetFence() const { return m_currentFence; }
+	inline void IncrementFence() { m_currentFence++;  };
 
 private:
 	ID3D12CommandAllocator* m_pCommandAllocator = nullptr;
-	// Constant buffers
-	unsigned __int64 m_fence = 0;
+	unsigned __int64 m_currentFence = 0;
+
+	// Constant Buffers
 };
