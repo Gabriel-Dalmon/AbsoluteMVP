@@ -594,44 +594,83 @@ void SleepyEngine::BuildBoxGeometryBis()
     //};
 
     //Avec uv pour les textures
-    std::array<VertexTexture, 8> vertices =
-    {
-        VertexTexture({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT2(0.0f, 0.0f) }), // Coin inférieur gauche, face avant
-        VertexTexture({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT2(0.0f, 1.0f) }), // Coin supérieur gauche, face avant
-        VertexTexture({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT2(1.0f, 1.0f) }), // Coin supérieur droit, face avant
-        VertexTexture({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT2(1.0f, 0.0f) }), // Coin inférieur droit, face avant
+    //std::array<VertexTexture, 8> vertices =
+    //{
+    //    VertexTexture({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT2(0.0f, 0.0f) }), // Coin inférieur gauche, face avant
+    //    VertexTexture({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT2(0.0f, 1.0f) }), // Coin supérieur gauche, face avant
+    //    VertexTexture({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT2(1.0f, 1.0f) }), // Coin supérieur droit, face avant
+    //    VertexTexture({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT2(1.0f, 0.0f) }), // Coin inférieur droit, face avant
 
-        VertexTexture({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT2(0.0f, 0.0f) }), // Coin inférieur gauche, face arrière
-        VertexTexture({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT2(0.0f, 1.0f) }), // Coin supérieur gauche, face arrière
-        VertexTexture({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT2(1.0f, 1.0f) }), // Coin supérieur droit, face arrière
-        VertexTexture({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT2(1.0f, 0.0f) }), // Coin inférieur droit, face arrière
+    //    VertexTexture({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT2(0.0f, 0.0f) }), // Coin inférieur gauche, face arrière
+    //    VertexTexture({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT2(0.0f, 1.0f) }), // Coin supérieur gauche, face arrière
+    //    VertexTexture({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT2(1.0f, 1.0f) }), // Coin supérieur droit, face arrière
+    //    VertexTexture({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT2(1.0f, 0.0f) }), // Coin inférieur droit, face arrière
+    //};
+
+    std::array<VertexTexture, 24> vertices =
+    {
+        // Face avant
+        VertexTexture({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT2(0.0f, 0.0f) }),
+        VertexTexture({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT2(0.0f, 1.0f) }),
+        VertexTexture({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT2(1.0f, 1.0f) }),
+        VertexTexture({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT2(1.0f, 0.0f) }),
+
+        // Face arrière
+        VertexTexture({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT2(0.0f, 0.0f) }),
+        VertexTexture({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT2(0.0f, 1.0f) }),
+        VertexTexture({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT2(1.0f, 1.0f) }),
+        VertexTexture({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT2(1.0f, 0.0f) }),
+
+        // Face gauche
+        VertexTexture({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT2(0.0f, 0.0f) }),
+        VertexTexture({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT2(0.0f, 1.0f) }),
+        VertexTexture({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT2(1.0f, 1.0f) }),
+        VertexTexture({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT2(1.0f, 0.0f) }),
+
+        // Face droite
+        VertexTexture({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT2(0.0f, 0.0f) }),
+        VertexTexture({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT2(0.0f, 1.0f) }),
+        VertexTexture({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT2(1.0f, 1.0f) }),
+        VertexTexture({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT2(1.0f, 0.0f) }),
+
+        // Face supérieure
+        VertexTexture({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT2(0.0f, 0.0f) }),
+        VertexTexture({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT2(0.0f, 1.0f) }),
+        VertexTexture({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT2(1.0f, 1.0f) }),
+        VertexTexture({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT2(1.0f, 0.0f) }),
+
+        // Face inférieure
+        VertexTexture({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT2(0.0f, 0.0f) }),
+        VertexTexture({ XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT2(0.0f, 1.0f) }),
+        VertexTexture({ XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT2(1.0f, 1.0f) }),
+        VertexTexture({ XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT2(1.0f, 0.0f) }),
     };
 
     std::array<std::uint16_t, 36> indices =
     {
-        // front face
+        // Face avant
         0, 1, 2,
         0, 2, 3,
 
-        // back face
-        4, 6, 5,
-        4, 7, 6,
+        // Face arrière
+        4, 5, 6,
+        4, 6, 7,
 
-        // left face
-        4, 5, 1,
-        4, 1, 0,
+        // Face gauche
+        8, 9, 10,
+        8, 10, 11,
 
-        // right face
-        3, 2, 6,
-        3, 6, 7,
+        // Face droite
+        12, 14, 13,
+        12, 15, 14,
 
-        // top face
-        1, 5, 6,
-        1, 6, 2,
+        // Face supérieure
+        16, 17, 18,
+        16, 18, 19,
 
-        // bottom face
-        4, 0, 3,
-        4, 3, 7
+        // Face inférieure
+        20, 21, 22,
+        20, 22, 23
     };
 
     //const UINT vbByteSize = (UINT)vertices.size() * sizeof(Vertex);
