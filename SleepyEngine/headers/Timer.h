@@ -23,6 +23,6 @@ class Timer
 		float prevTime = 0.0f;
 
 		float FPSTimer = 0.0f;
-		int FrameCount = 0.0f;
-		int MaxFPS = 0.0f;
+		int FrameCount = 0;
+		int MaxFPS = 0;
 };

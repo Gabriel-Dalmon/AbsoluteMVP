@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "System.h"
+//#include "System.h"
 #include "EventManager.h"
 
 template<typename Key, typename Value>
@@ -14,6 +14,8 @@ std::ostream& operator << (std::ostream& os, std::map<Key, Value>& map)
 
 	return os;
 }
+
+void EventManager::Init() {}
 
 void EventManager::HandleEvents()
 {

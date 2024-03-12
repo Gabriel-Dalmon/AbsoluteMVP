@@ -51,6 +51,7 @@ class ColliderSphere;
 class Entity;
 class GameState;
 class Input;
+class EventManager;
 class Menu;
 class Mesh;
 class MeshRenderer;
@@ -78,6 +79,7 @@ using namespace DirectX;
 #include "ColliderSphere.h"
 #include "Entity.h"
 #include "GameState.h"
+#include "EventManager.h"
 #include "Input.h"
 #include "Menu.h"
 #include "Mesh.h"

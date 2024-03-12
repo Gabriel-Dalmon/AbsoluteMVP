@@ -1,6 +1,8 @@
 #pragma once
+#include "System.h"
 #include "EventsName.h"
-#include "AbstractCommand.h"
+#include "FunctionCommand.h"
+#include "MethodCommand.h"
 
 typedef enum EventCallbackReturn
 {

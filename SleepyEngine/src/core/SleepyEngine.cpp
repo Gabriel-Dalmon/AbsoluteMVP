@@ -312,6 +312,10 @@ void SleepyEngine::BuildConstantBuffers()
 
 }
 
+void func() {
+    std::cout << "Half a A press" << std::endl;
+}
+
 int SleepyEngine::Run()
 {
     m_Transform = new Transform();
@@ -322,8 +326,10 @@ int SleepyEngine::Run()
 
     MSG msg = { 0 };
 
-    Input input;
+    EventManager input;
     input.Init();
+    input.subscribe(KEY_A_RELEASED, new FunctionCommand(&func));
+    input.unsubscribe(KEY_A_RELEASED, new FunctionCommand(&func));
 
     Timer timer;
     timer.Init();
@@ -365,11 +371,11 @@ int SleepyEngine::Run()
             DispatchMessage(&msg);
         }
         else {
-            std::cout << m_Camera.GetPosition() << std::endl;
-            std::cout << m_Camera.GetView() << std::endl;
+            //std::cout << m_Camera.GetPosition() << std::endl;
+            //std::cout << m_Camera.GetView() << std::endl;
             timer.UpdateTimer();
 
-            input.Update();
+            input.HandleEvents();
 
             timer.UpdateFPS(mhMainWnd);
 
