@@ -4,7 +4,6 @@
 
 #include "pch.h"
 
-//using namespace DirectX;
 
 Camera::Camera()
 {

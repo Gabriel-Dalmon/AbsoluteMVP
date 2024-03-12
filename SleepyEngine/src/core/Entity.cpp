@@ -1,7 +1,5 @@
 #include "pch.h"
 
-
-
 Entity::Entity()
 {
 }

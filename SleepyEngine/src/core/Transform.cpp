@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "Transform.h"
 
 Transform::Transform(){}
 
@@ -10,17 +11,16 @@ void Transform::Identity()
 	XMStoreFloat4x4(&m_scaleMatrix, XMMatrixIdentity());
 
 	m_right = { 1.0f, 0.0f, 0.0f };
-	m_up = { 0.0f, 1.0f, 0.0f };
-	m_dir = { 0.0f, 0.0f, 1.0f };
+	m_up    = { 0.0f, 1.0f, 0.0f };
+	m_dir   = { 0.0f, 0.0f, 1.0f };
 
 	m_currentRotateQuat = { 0.0f, 0.0f, 0.0f, 1.0f }; 
-	m_scaleVect = { 1.0f, 1.0f, 1.0f };
+	m_scaleVect         = { 1.0f, 1.0f, 1.0f };
 
 	XMStoreFloat4x4(&m_currentRotateMatrix, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_positionMatrix, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_transformMatrix, XMMatrixIdentity());
 }
-
 
 void Transform::Rotate(float yaw, float pitch, float roll)
 {
@@ -52,11 +52,9 @@ void Transform::Rotate(float yaw, float pitch, float roll)
 	rotateQuat = XMQuaternionMultiply(rotateQuat, currentRotateQuat);
 
 	XMMATRIX rotationMatrix;
-	rotationMatrix =  XMMatrixRotationQuaternion(rotateQuat);
+	rotationMatrix = XMMatrixRotationQuaternion(rotateQuat);
 
 	//and we store our axis
-	XMVECTOR storageBuffer = XMVectorZero();
-
 	XMStoreFloat3(&m_right, rotationMatrix.r[0]);
 	XMStoreFloat3(&m_up, rotationMatrix.r[1]);
 	XMStoreFloat3(&m_dir, rotationMatrix.r[2]);
@@ -98,3 +96,30 @@ void Transform::SetPosition(float x, float y, float z)
 
 	XMStoreFloat4x4(&m_positionMatrix, mPosTemp); 
 }
+
+void Transform::LookAt(float x, float y, float z)
+{
+	XMVECTOR up = XMVectorSet(0, 1, 0, 1);
+	XMVECTOR trg = XMVectorSet(x, y, z, 1);
+
+	XMMATRIX m = XMMatrixLookAtLH(XMLoadFloat3(&m_positionVect), trg, up);
+	m = XMMatrixInverse(nullptr, m);
+	//XMFLOAT4X4 mm;
+	//XMStoreFloat4x4(&mm, m);
+	//mm._41 = 0.0f;
+	//mm._42 = 0.0f;
+	//mm._43 = 0.0f;
+	//m = XMLoadFloat4x4(&mm);
+	XMVECTOR q = XMQuaternionRotationMatrix(m);
+
+	XMMATRIX rotationMatrix;
+	rotationMatrix = XMMatrixRotationQuaternion(q);
+
+	XMStoreFloat3(&m_right, rotationMatrix.r[0]);
+	XMStoreFloat3(&m_up, rotationMatrix.r[1]);
+	XMStoreFloat3(&m_dir, rotationMatrix.r[2]);
+
+	XMStoreFloat4(&m_currentRotateQuat, q); 
+	XMStoreFloat4x4(&m_currentRotateMatrix, rotationMatrix); 
+}
+

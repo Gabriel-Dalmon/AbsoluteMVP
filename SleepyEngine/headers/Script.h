@@ -10,7 +10,7 @@ public:
 	void Init() override;
 
 	// Virtual function
-	virtual void OnScript();
+	virtual void OnScript() {};
 
 	void Release();
 

@@ -302,20 +302,20 @@ void SleepyEngine::BuildConstantBuffers()
 {
     m_pObjectCB = new UploadBuffer<ObjectConstants>(m_pDevice, 1, true);
 
-    UINT objCBByteSize = ((sizeof(ObjectConstants) + 255) & ~255);
-
-    D3D12_GPU_VIRTUAL_ADDRESS cbAddress = m_pObjectCB->Resource()->GetGPUVirtualAddress();
-    // Offset to the ith object constant buffer in the buffer.
-    int boxCBufIndex = 0;
-    cbAddress += boxCBufIndex * objCBByteSize;
-
-    D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc;
-    cbvDesc.BufferLocation = cbAddress;
-    cbvDesc.SizeInBytes = ((sizeof(ObjectConstants) + 255) & ~255);
-
-    m_pDevice->CreateConstantBufferView(
-        &cbvDesc,
-        m_pCbvHeap->GetCPUDescriptorHandleForHeapStart());
+    //UINT objCBByteSize = ((sizeof(ObjectConstants) + 255) & ~255);
+    //
+    //D3D12_GPU_VIRTUAL_ADDRESS cbAddress = m_pObjectCB->Resource()->GetGPUVirtualAddress();
+    //// Offset to the ith object constant buffer in the buffer.
+    //int boxCBufIndex = 0;
+    //cbAddress += boxCBufIndex * objCBByteSize;
+    //
+    //D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc;
+    //cbvDesc.BufferLocation = cbAddress;
+    //cbvDesc.SizeInBytes = ((sizeof(ObjectConstants) + 255) & ~255);
+    //
+    //m_pDevice->CreateConstantBufferView(
+    //    &cbvDesc,
+    //    m_pCbvHeap->GetCPUDescriptorHandleForHeapStart());
 
 
 }
@@ -570,14 +570,14 @@ void SleepyEngine::BuildBoxGeometry()
 {
     std::vector<Vertex> vertices =
     {
-        Vertex({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::White) }),
-        Vertex({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Black) }),
-        Vertex({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Red) }),
-        Vertex({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Green) }),
-        Vertex({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Blue) }),
-        Vertex({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Yellow) }),
-        Vertex({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Cyan) }),
-        Vertex({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Magenta) })
+        Vertex({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Red) }),
+        Vertex({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::White) }),
+        Vertex({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::White) }),
+        Vertex({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::White) }),
+        Vertex({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::White) }),
+        Vertex({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::White) }),
+        Vertex({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::White) }),
+        Vertex({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Blue) })
     };
 
     std::vector<uint16_t> indices =
@@ -642,14 +642,19 @@ void SleepyEngine::Update()
     // Rotation essai 0:
     // m_Transform.Identity();
     //m_Transform->Rotate(.001f, .001f, .001f);
-    if (xS <= 1.f && yS <= 1.f && zS <= 1.f)
+    if (xS <= 1.f /*&& yS <= 1.f && zS <= 1.f*/)
     {
         xS += 0.005;
-        yS += 0.005;
-        zS += 0.005;
+        /*yS += 0.005;
+        zS += 0.005;*/
         m_Transform->SetScale(xS, yS, zS);
         //std::cout << m_Transform->m_scaleVect.x << std::endl;
     }
+    float xC = XMVectorGetX(m_Camera.GetPosition());  
+    float yC = XMVectorGetY(m_Camera.GetPosition());  
+    float zC = XMVectorGetZ(m_Camera.GetPosition());  
+     
+    m_Transform->LookAt(xC, yC, zC);
 
     m_Transform->Update();
 
@@ -762,8 +767,8 @@ void SleepyEngine::DrawBis()
 
     m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
-    //m_pCommandList->SetGraphicsRootConstantBufferView(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
+    //m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
+    m_pCommandList->SetGraphicsRootConstantBufferView(0, m_pObjectCB->Resource()->GetGPUVirtualAddress());
 
     /* the following code is the one that comse from the book
     * we would like to iterate in the submesh if we had one, maybe later
@@ -807,8 +812,8 @@ void SleepyEngine::OnMouseMove(WPARAM btnState, int x, int y)
     {
         //std::cout << "Cam" << std::endl;
         // Make each pixel correspond to a quarter of a degree.
-        float dx = DirectX::XMConvertToRadians(0.25f * static_cast<float>(x - m_LastMousePos.x));
-        float dy = DirectX::XMConvertToRadians(0.25f * static_cast<float>(y - m_LastMousePos.y));
+        float dx = XMConvertToRadians(0.25f * static_cast<float>(x - m_LastMousePos.x));
+        float dy = XMConvertToRadians(0.25f * static_cast<float>(y - m_LastMousePos.y));
 
         m_Camera.Pitch(dy);
         m_Camera.RotateY(dx);
@@ -825,16 +830,16 @@ void SleepyEngine::OnKeyboardInput(Timer& timer)
     const float dt = timer.GetDeltaTime();
 
     if (GetAsyncKeyState('Z') & 0x8000)
-        m_Camera.Walk(10.0f * dt);
+        m_Camera.Walk(5.0f * dt);
 
     if (GetAsyncKeyState('S') & 0x8000)
-        m_Camera.Walk(-10.0f * dt);
+        m_Camera.Walk(-5.0f * dt);
 
     if (GetAsyncKeyState('Q') & 0x8000)
-        m_Camera.Strafe(-10.0f * dt);
+        m_Camera.Strafe(-5.0f * dt);
 
     if (GetAsyncKeyState('D') & 0x8000)
-        m_Camera.Strafe(10.0f * dt);
+        m_Camera.Strafe(5.0f * dt);
 
     m_Camera.UpdateViewMatrix();
 }

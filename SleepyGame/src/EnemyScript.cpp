@@ -13,7 +13,7 @@ void EnemyScript::ShootAt()
 {
 	// TO DO:
 	/*
-		// Peut être mit dans une méthode plus spécifique type "LookAt()"
+		// Peut être mit dans une méthode plus spécifique type "LookAt(Entity* entity || Transform* transform)"
 		//
 		Vector playerPosition = Entity player->GetComponent<Transform*>()
 		Entity* bullet = Entity::CreateEmptyEntity();
