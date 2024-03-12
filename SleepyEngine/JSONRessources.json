@@ -143,87 +143,165 @@
     "crate": {
         "type": "texture",
         "vertices": [
-            {
-                "coordinates": [ -1, -1, -1 ],
-                "UV": [ 0, 0 ]
-            },
-            {
-                "coordinates": [ -1, 1, -1 ],
-                "UV": [ 0, 1 ]
-            },
-            {
-                "coordinates": [ 1, 1, -1 ],
-                "UV": [ 1, 1 ]
-            },
-            {
-                "coordinates": [ 1, -1, -1 ],
-                "UV": [ 1, 0 ]
-            },
-            {
-                "coordinates": [ -1, -1, 1 ],
-                "UV": [ 0, 0 ]
-            },
-            {
-                "coordinates": [ -1, 1, 1 ],
-                "UV": [ 0, 1 ]
-            },
-            {
-                "coordinates": [ 1, 1, 1 ],
-                "UV": [ 1, 1 ]
-            },
-            {
-                "coordinates": [ 1, -1, 1 ],
-                "UV": [ 1, 0 ]
-            }
-        ],
-        "indices": [
-            // front face
-            0,
-            1,
-            2,
-            0,
-            2,
-            3,
 
-            // back face
-            4,
-            6,
-            5,
-            4,
-            7,
-            6,
+          // face avant
+          {
+            "coordinates": [ -1, -1, -1 ],
+            "UV": [ 0, 0 ]
+          },
+          {
+            "coordinates": [ -1, 1, -1 ],
+            "UV": [ 0, 1 ]
+          },
+          {
+            "coordinates": [ 1, 1, -1 ],
+            "UV": [ 1, 1 ]
+          },
+          {
+            "coordinates": [ 1, -1, -1 ],
+            "UV": [ 1, 0 ]
+          },
+          //
 
-            // left face
-            4,
-            5,
-            1,
-            4,
-            1,
-            0,
 
-            // right face
-            3,
-            2,
-            6,
-            3,
-            6,
-            7,
+          // face arrière
+          {
+            "coordinates": [ -1, -1, 1 ],
+            "UV": [ 0, 0 ]
+          },
+          {
+            "coordinates": [ -1, 1, 1 ],
+            "UV": [ 0, 1 ]
+          },
+          {
+            "coordinates": [ 1, 1, 1 ],
+            "UV": [ 1, 1 ]
+          },
+          {
+            "coordinates": [ 1, -1, 1 ],
+            "UV": [ 1, 0 ]
+          },
+          //
 
-            // top face
-            1,
-            5,
-            6,
-            1,
-            6,
-            2,
 
-            // bottom face
-            4,
-            0,
-            3,
-            4,
-            3,
-            7
-        ]
+          // face gauche
+          {
+            "coordinates": [ -1, -1, -1 ],
+            "UV": [ 0, 0 ]
+          },
+          {
+            "coordinates": [ -1, 1, -1 ],
+            "UV": [ 0, 1 ]
+          },
+          {
+            "coordinates": [ -1, 1, 1 ],
+            "UV": [ 1, 1 ]
+          },
+          {
+            "coordinates": [ -1, -1, 1 ],
+            "UV": [ 1, 0 ]
+          },
+          //
+
+
+          // face droite 
+          {
+            "coordinates": [ 1, -1, -1 ],
+            "UV": [ 0, 0 ]
+          },
+          {
+            "coordinates": [ 1, 1, -1 ],
+            "UV": [ 0, 1 ]
+          },
+          {
+            "coordinates": [ 1, 1, 1 ],
+            "UV": [ 1, 1 ]
+          },
+          {
+            "coordinates": [ 1, -1, 1 ],
+            "UV": [ 1, 0 ]
+          },
+          //
+
+
+          // face supérieur 
+          {
+            "coordinates": [ -1, 1, -1 ],
+            "UV": [ 0, 0 ]
+          },
+          {
+            "coordinates": [ -1, 1, 1 ],
+            "UV": [ 0, 1 ]
+          },
+          {
+            "coordinates": [ 1, 1, 1 ],
+            "UV": [ 1, 1 ]
+          },
+          {
+            "coordinates": [ 1, 1, -1 ],
+            "UV": [ 1, 0 ]
+          },
+          //
+
+
+          // face inférieur 
+          {
+            "coordinates": [ -1, -1, -1 ],
+            "UV": [ 0, 0 ]
+          },
+          {
+            "coordinates": [ -1, -1, 1 ],
+            "UV": [ 0, 1 ]
+          },
+          {
+            "coordinates": [ 1, -1, 1 ],
+            "UV": [ 1, 1 ]
+          },
+          {
+            "coordinates": [ 1, -1, -1 ],
+            "UV": [ 1, 0 ]
+          }
+          //
+
+         ],
+
+      "indices": [
+
+        // Face avant
+        0,1,2,
+        0,2,3,
+        //
+
+
+        // Face arrière
+        4,5,6,
+        4,6,7,
+        //
+
+
+        // Face gauche
+        8,9,10,
+        8,10,11,
+        //
+
+
+        // Face droite
+        12,14,13,
+        12,15,14,
+        //
+
+
+        // Face supérieure
+        16,17,18,
+        16,18,19,
+        //
+
+
+        // Face inférieure
+        20,21,22,
+        20,22,23
+        //
+
+      ]
     }
 }
