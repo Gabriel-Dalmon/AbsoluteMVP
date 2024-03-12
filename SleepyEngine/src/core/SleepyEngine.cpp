@@ -283,7 +283,8 @@ int SleepyEngine::Initialize()
     m_pAllocator = new RessourceAllocator;
     m_pAllocator->Init(m_pDevice, m_pCommandList);
     m_pFactory->Init(m_pAllocator);
-    BuildBoxGeometryBis();
+    
+    
 
     // close command list 
     m_pCommandList->Close();
@@ -294,7 +295,13 @@ int SleepyEngine::Initialize()
 
     // flush command list
     FlushCommandQueue();
-    CreateTexture(L"C:\\Users\\Deadly Sins\\source\\repos\\yoannklt\\Sleepy\\SleepyEngine\\src\\asset\\t_box.dds");
+
+#if defined (DEBUG) || (_DEBUG)
+    CreateTexture(L"../SleepyEngine/src/asset/t_box.dds");
+#else
+    CreateTexture(L"asset/t_box.dds");
+#endif
+
     return 0;
 }
 
@@ -393,6 +400,16 @@ int SleepyEngine::Run()
         DXGI_FORMAT_D24_UNORM_S8_UINT, m_pDevice, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
 
     m_pFactory->SetSignatureAndPSO(this);
+
+    m_pDirectCmdListAlloc->Reset();
+    m_pCommandList->Reset(m_pDirectCmdListAlloc, nullptr);
+
+    BuildBoxGeometryBis();
+
+    m_pCommandList->Close();
+    ID3D12CommandList* cmdsLists[] = { m_pCommandList };
+    m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+    FlushCommandQueue();
 
 
     // Main message loop:
@@ -654,13 +671,6 @@ void SleepyEngine::BuildBoxGeometryBis()
     m_pFactory->FillPlayer(player);
     m_entities.push_back(player);
     mBoxGeo = player->GetComponent<MeshRenderer*>()->GetMesh();
-    MeshRenderer* temp;
-    Mesh* mesh;
-    for (Entity* entity : m_entities)
-    {
-        temp = entity->GetComponent<MeshRenderer*>();
-        mesh = temp->GetMesh();
-    }
 }
 
 
@@ -737,31 +747,40 @@ void SleepyEngine::DrawBis()
     Mesh* mesh;
     for (Entity* entity : m_entities)
     {
+        temp = entity->GetComponent<MeshRenderer*>();
+        mesh = temp->GetMesh();
+
+
         ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvHeap };
         m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps); //
 
         m_pCommandList->SetGraphicsRootSignature(entity->GetComponent<ShaderReference*>()->GetRootSignature()); //
+        //m_pCommandList->SetGraphicsRootSignature(m_pRootSignatureTexture); //
 
         m_pCommandList->SetPipelineState(entity->GetComponent<ShaderReference*>()->GetPSO());
+        //m_pCommandList->SetPipelineState(m_PSOTexture);
 
-        temp = entity->GetComponent<MeshRenderer*>();
-        mesh = temp->GetMesh();
+        
         m_pCommandList->IASetVertexBuffers(0, 1, &mesh->VertexBufferView());
         m_pCommandList->IASetIndexBuffer(&mesh->IndexBufferView());
         m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
         m_pCommandList->SetGraphicsRootConstantBufferView(1, m_pObjectCB->Resource()->GetGPUVirtualAddress());
 
-        barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-        m_pCommandList->ResourceBarrier(1, &barrier);
-
-        CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_pDsvHeap->GetGPUDescriptorHandleForHeapStart());
-        tex.Offset(0, m_heapDescSize);
-
+        CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
+        tex.Offset(0, m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
         m_pCommandList->SetGraphicsRootDescriptorTable(0, tex);
 
-        m_pCommandList->DrawIndexedInstanced(mesh->m_drawArgs["box"].IndexCount, 1, mesh->m_drawArgs["box"].StartIndexLocation, mesh->m_drawArgs["box"].BaseVertexLocation, 0);
+
+
+
+        m_pCommandList->DrawIndexedInstanced(mesh->m_drawArgs["crate"].IndexCount, 1, mesh->m_drawArgs["crate"].StartIndexLocation, mesh->m_drawArgs["crate"].BaseVertexLocation, 0);
+        //m_pCommandList->DrawIndexedInstanced(mesh->m_drawArgs["crate"].IndexCount, 1, 0, 0, 0);
     }
+
+    barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+    m_pCommandList->ResourceBarrier(1, &barrier);
+
     m_pCommandList->Close();
 
     ID3D12CommandList* cmdsLists[] = { m_pCommandList };

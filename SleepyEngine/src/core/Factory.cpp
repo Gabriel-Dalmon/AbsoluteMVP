@@ -34,9 +34,7 @@ void Factory::FillPlayer(Entity* pEntity)
 	MeshRenderer* meshRef = Component::CreateComponent<MeshRenderer>();
 	meshRef->Init(&MeshRefDesc);
 	pEntity->AddComponent<MeshRenderer*>(meshRef);
-	std::cerr << typeid(*meshRef).name();
 
-	// /!\ we create a shader dynamically for tests, dont forget to change it
 	ShaderReferenceDescriptor ShaderRefDesc;
 	ShaderRefDesc.PSO = m_PSOTexture;
 	ShaderRefDesc.rootSignature = m_pRootSignatureTexture;
