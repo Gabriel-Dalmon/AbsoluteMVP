@@ -125,6 +125,11 @@ private:
     Mesh* mBoxGeo = nullptr;
     MeshGeometry* mBoxGeoBis = nullptr;
 
+    // texture
     ID3D12Resource* mTexture = nullptr;
     int textureIndex = 0;
+
+    //sprite 
+    ID3D12Resource* mSprite;
+    XMFLOAT2 mSpritePos;
 };
