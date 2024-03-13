@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="headers\BulletScript.h" />
     <ClInclude Include="headers\EnemyScript.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="headers\GameFactory.h" />
@@ -155,6 +156,7 @@
     <ClInclude Include="headers\TempFunction.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\BulletScript.cpp" />
     <ClCompile Include="src\EnemyScript.cpp" />
     <ClCompile Include="src\PlayGameState.cpp" />
     <ClCompile Include="src\PlayerScript.cpp" />

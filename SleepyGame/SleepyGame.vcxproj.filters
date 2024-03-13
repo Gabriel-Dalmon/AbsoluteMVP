@@ -48,6 +48,9 @@
     <ClInclude Include="headers\TempFunction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="headers\BulletScript.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\SleepyGame.cpp">
@@ -69,6 +72,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\TempFunction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BulletScript.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

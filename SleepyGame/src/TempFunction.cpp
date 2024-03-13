@@ -20,7 +20,5 @@ void TempFunction::BlankPreLoop()
     ((GameFactory*)m_pFactory)->FillPlayer(player);
     m_entities.push_back(player);
     MeshRenderer* temp;
-    temp = player->GetComponent<MeshRenderer*>();
-    mBoxGeo = temp->GetMesh();
     OutputDebugStringA("entity loaded\n");
 }

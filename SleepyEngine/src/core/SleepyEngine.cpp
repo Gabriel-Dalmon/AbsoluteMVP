@@ -725,7 +725,7 @@ void SleepyEngine::Update()
     float yC = XMVectorGetY(m_Camera.GetPosition());  
     float zC = XMVectorGetZ(m_Camera.GetPosition());  
      
-    m_Transform->LookAt(xC, yC, zC);
+    //m_Transform->LookAt(xC, yC, zC);
 
     m_Transform->Update();
 
@@ -795,9 +795,12 @@ void SleepyEngine::DrawBis()
             CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_pCbvHeap->GetGPUDescriptorHandleForHeapStart()); //
             tex.Offset(shaderRef->GetTexID(), m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)); //
             m_pCommandList->SetGraphicsRootDescriptorTable(0, tex); //
+            m_pCommandList->SetGraphicsRootConstantBufferView(1, m_pObjectCB->Resource()->GetGPUVirtualAddress());//
+        }
+        else if (shaderRef->GetPSO() == m_PSOColor) {
+            m_pCommandList->SetGraphicsRootConstantBufferView(0, m_pObjectCB->Resource()->GetGPUVirtualAddress());//
         }
 
-        m_pCommandList->SetGraphicsRootConstantBufferView(1, m_pObjectCB->Resource()->GetGPUVirtualAddress());//
 
         m_pCommandList->DrawIndexedInstanced(mesh->m_drawArgs["box"].IndexCount, 1, mesh->m_drawArgs["box"].StartIndexLocation, mesh->m_drawArgs["box"].BaseVertexLocation, 0);
     }
