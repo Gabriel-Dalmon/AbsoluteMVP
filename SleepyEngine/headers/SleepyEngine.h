@@ -152,4 +152,6 @@ protected:
 
     int m_textureIndex = 0;
     ID3D12Resource* m_Texture = nullptr;
+
+    int m_CBindex;
 };

@@ -200,7 +200,7 @@
     <ClCompile Include="src\core\Input.cpp" />
     <ClCompile Include="src\core\SleepyEngine.cpp" />
     <ClCompile Include="src\core\Timer.cpp" />
-    <ClCompile Include="src\core\Transform.cpp" />
+    <ClCompile Include="src\components\Transform.cpp" />
     <ClCompile Include="src\shaders\Shader.cpp" />
     <ClCompile Include="src\utils\D3DUtils.cpp" />
     <ClCompile Include="src\utils\DDSTextureLoader.cpp" />

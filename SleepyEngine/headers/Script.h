@@ -7,7 +7,7 @@ public:
 	~Script() {};
 
 	// INIT
-	void Init() override;
+	void Init(ScriptDescriptor* desc);
 
 	// Virtual function
 	virtual void OnScript() {};

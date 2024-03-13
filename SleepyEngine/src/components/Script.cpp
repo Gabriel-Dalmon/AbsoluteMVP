@@ -5,8 +5,9 @@ Script::Script()
 
 }
 
-void Script::Init()
+void Script::Init(ScriptDescriptor* desc)
 {
+	m_pEntity = desc->motherEntity;
 }
 
 void Script::Release()

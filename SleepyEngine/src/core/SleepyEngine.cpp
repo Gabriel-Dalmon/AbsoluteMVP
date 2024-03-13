@@ -446,6 +446,24 @@ int SleepyEngine::Run()
 
             timer.UpdateFPS(mhMainWnd);
 
+            //for (Entity* entity : m_entities) {
+            //for (int i = 0; i < m_entities.size(); i++) {
+            //    if (m_entities[i]->GetComponent<Script*>() != nullptr) {
+            //        m_entities[i]->GetComponent<Script*>()->OnScript();
+            //        m_entities[i]->GetComponent<Transform*>()->Update();
+
+            //        XMMATRIX view = m_Camera.GetView();
+            //        XMMATRIX world = XMLoadFloat4x4(&m_entities[i]->GetComponent<Transform*>()->m_transformMatrix);
+            //        XMMATRIX proj = m_Camera.GetProj();
+            //        XMMATRIX worldViewProj = world * view * proj;
+
+            //        // Update the constant buffer with the latest worldViewProj matrix.
+            //        ObjectConstants objConstants;
+            //        XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
+            //        m_pObjectCB->CopyData(i+1, objConstants);
+            //    }
+            //}
+
             OnKeyboardInput(timer);
             Update();
             DrawBis();
@@ -637,47 +655,6 @@ void SleepyEngine::FlushCommandQueue()
 
 void SleepyEngine::BuildBoxGeometry()
 {
-    //std::vector<Vertex> vertices =
-    //{
-    //    Vertex({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::White) }),
-    //    Vertex({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Black) }),
-    //    Vertex({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::Red) }),
-    //    Vertex({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Green) }),
-    //    Vertex({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Blue) }),
-    //    Vertex({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Yellow) }),
-    //    Vertex({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::Cyan) }),
-    //    Vertex({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Magenta) })
-    //};
-
-    //std::vector<uint16_t> indices =
-    //{
-    //    // front face
-    //    0, 1, 2,
-    //    0, 2, 3,
-
-    //    // back face
-    //    4, 6, 5,
-    //    4, 7, 6,
-
-    //    // left face
-    //    4, 5, 1,
-    //    4, 1, 0,
-
-    //    // right face
-    //    3, 2, 6,
-    //    3, 6, 7,
-
-    //    // top face
-    //    1, 5, 6,
-    //    1, 6, 2,
-
-    //    // bottom face
-    //    4, 0, 3,
-    //    4, 3, 7
-    //};
-
-    //mBoxGeo = new Mesh();
-    //mBoxGeo->Init(m_pDevice, m_pCommandList, &vertices, &indices);
 }
 
 void SleepyEngine::BuildBoxGeometryBis()
@@ -727,7 +704,7 @@ void SleepyEngine::Update()
      
     //m_Transform->LookAt(xC, yC, zC);
 
-    m_Transform->Update();
+    
 
     XMMATRIX world = XMLoadFloat4x4(&m_Transform->m_transformMatrix);
     //XMMATRIX proj = XMLoadFloat4x4(&mProj);
@@ -738,6 +715,22 @@ void SleepyEngine::Update()
     ObjectConstants objConstants;
     XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
     m_pObjectCB->CopyData(0, objConstants);
+
+    m_CBindex = 0;
+    for (Entity* entity : m_entities) {
+        if (entity->GetComponent<Script*>() != nullptr) {
+            ++m_CBindex;
+            entity->GetComponent<Script*>()->OnScript();
+            entity->GetComponent<Transform*>()->Update();
+
+            world = XMLoadFloat4x4(&entity->GetComponent<Transform*>()->m_transformMatrix);
+            worldViewProj = world * view * proj;
+
+            // Update the constant buffer with the latest worldViewProj matrix.
+            XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
+            m_pObjectCB->CopyData(m_CBindex, objConstants);
+        }
+    }
 }
 
 //void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, ID3D12RootSignature* pRootSignature, Mesh* mesh)

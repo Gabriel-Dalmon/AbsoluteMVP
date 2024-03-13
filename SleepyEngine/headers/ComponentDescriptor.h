@@ -40,3 +40,8 @@ struct VelocityDescriptor
 	float y = 0;
 	float z = 0;
 };
+
+struct ScriptDescriptor : Descriptor
+{
+	Entity* motherEntity;
+};

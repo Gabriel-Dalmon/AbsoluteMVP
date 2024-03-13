@@ -3,10 +3,10 @@
 class Velocity : public Component
 {
 public:
-	Velocity();
-	~Velocity();
+	Velocity() {};
+	~Velocity() {};
 
-	void Init(VelocityDescriptor*);
+	void Init(VelocityDescriptor* desc);
 
 public:
 	void SetVelocity(float x, float y, float z);
