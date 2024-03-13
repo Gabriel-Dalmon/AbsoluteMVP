@@ -33,7 +33,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         SleepyEngine engine2;
 
         RendererDescriptor rendererDescriptor;
-        rendererDescriptor.windowWidth = 800;
+        rendererDescriptor.windowWidth = 600;
         rendererDescriptor.windowHeight = 600;
         // engine2.Initialize<EngineTestGameState>(hInstance, &rendererDescriptor);
         engine2.Initialize<GameTestGameState>(hInstance, &rendererDescriptor);

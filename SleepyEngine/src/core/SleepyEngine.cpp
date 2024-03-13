@@ -13,13 +13,22 @@ SleepyEngine::~SleepyEngine()
 int SleepyEngine::Run()
 {
 	float deltaTime = 0.0f;
-	m_isRunning = true;
-	while (m_isRunning)
-	{
-		m_pTimer->Update();
-		deltaTime = m_pTimer->GetDeltaTime();
+	MSG msg = { 0 };
 
-		m_pCurrentGameState->Update(deltaTime);
+	while (msg.message != WM_QUIT)
+	{
+		if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+		{
+
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+		else {
+			m_pTimer->Update();
+			deltaTime = m_pTimer->GetDeltaTime();
+
+			m_pCurrentGameState->Update(deltaTime);
+		}
 	}
 	Release();
 	return 0;

@@ -196,10 +196,15 @@ void Renderer::WaitForFrameResource()
 	if (m_pCurrentFrameResource->GetFence() != 0 &&
 		m_pCommandQueue->GetLastCompletedFence() < m_pCurrentFrameResource->GetFence())
 	{
+		std::cout << "Waiting for frame resource to be ready. LastFence : " << m_pCommandQueue->GetLastCompletedFence() << "Fence : " << m_pCurrentFrameResource->GetFence() << m_currentFrameResourceIndex << std::endl;
 		HANDLE eventHandle = CreateEventEx(nullptr, false, false, EVENT_ALL_ACCESS);
 		ThrowIfFailed(m_pCommandQueue->SetEventOnFenceCompletion(m_pCurrentFrameResource->GetFence(), eventHandle));
 		WaitForSingleObject(eventHandle, INFINITE);
 		CloseHandle(eventHandle);
+	}
+	else
+	{
+		std::cout << "Frame resource is ready" << m_pCommandQueue->GetLastCompletedFence() << "Fence : " << m_pCurrentFrameResource->GetFence() << " Frame Resource : " << m_currentFrameResourceIndex << std::endl;
 	}
 }
 
@@ -215,10 +220,22 @@ void Renderer::RenderFrame()
 	D3D12_CPU_DESCRIPTOR_HANDLE currentBackBufferView = GetCurrentBackBufferView();
 	D3D12_CPU_DESCRIPTOR_HANDLE dephtStencilView = GetDepthStencilView();
 
+	XMVECTORF32 color = Colors::LightSteelBlue;
+	switch (m_currentFrameResourceIndex)
+	{
+		case 1:
+			color = Colors::Gold;
+			break;
+		case 2:
+			color = Colors::OliveDrab;
+			break;
+	}
+	
+
 	m_pCommandList->RSSetViewports(1, m_pViewPort);
 	m_pCommandList->RSSetScissorRects(1, m_pScissorRect);	
 
-	m_pCommandList->ClearRenderTargetView(currentBackBufferView, Colors::LightSteelBlue, 0, nullptr);
+	m_pCommandList->ClearRenderTargetView(currentBackBufferView, color, 0, nullptr);
 	m_pCommandList->ClearDepthStencilView(dephtStencilView, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
 	m_pCommandList->OMSetRenderTargets(1, &currentBackBufferView, true, &dephtStencilView);
@@ -260,9 +277,11 @@ void Renderer::UNSAFE_RemoveEntity(Entity* entity)
 
 void Renderer::ResetRendering()
 {
-	m_pCurrentFrameResource->ResetCommandAllocator();
+	HRESULT hr = m_pCurrentFrameResource->ResetCommandAllocator();
 	ID3D12CommandAllocator* cmdAlloc = m_pCurrentFrameResource->GetD3DCommandAllocator();
-	m_pCommandList->Reset(cmdAlloc, nullptr); //nullptr should be replaced with a pso
+	hr = m_pCommandList->Reset(cmdAlloc, nullptr); //nullptr should be replaced with a pso
+	std::cout << hr << std::endl;
+
 	ID3D12Resource* currBackBuff = m_pSwapChain->GetCurrentBackBuffer();
 	CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(
 		currBackBuff,
@@ -284,8 +303,12 @@ void Renderer::CloseAndExecuteRendering()
 
 	ThrowIfFailed(m_pSwapChain->GetD3DSwapChain()->Present(0, 0));
 
+	std::cout << "Frame " << m_currentFrameResourceIndex << " presented" << std::endl;
 	m_pSwapChain->NextBackBuffer();
 	m_pCurrentFrameResource->IncrementFence();
-	m_pCommandQueue->Signal(m_pCurrentFrameResource->GetFence());
-
+	if (m_currentFrameResourceIndex == 0)
+	{
+		m_pCommandQueue->Signal(m_pCurrentFrameResource->GetFence());
+	}
+	std::cout << "Next fence value : " << m_pCurrentFrameResource->GetFence() << " Currently on " << m_pCommandQueue->GetLastCompletedFence() << std::endl;
 }
