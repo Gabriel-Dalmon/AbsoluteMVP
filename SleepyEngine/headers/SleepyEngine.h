@@ -26,7 +26,7 @@ public:
 
     void Release();
 
-private:
+protected:
     void InitWindow(int nCmdShow);
     ATOM RegisterWindowClass();
 
@@ -60,8 +60,12 @@ private:
     void BuildBoxGeometry();
     void BuildBoxGeometryBis();
 
+    // blank init & update 
+    void BlankInit();
+    void BlankUpdate();
 
-private:
+
+protected:
     WCHAR m_szTitle[MAX_LOADSTRING] = L"";                  // The title bar text
     WCHAR m_szWindowClass[MAX_LOADSTRING] = L"";            // the main window class name
 

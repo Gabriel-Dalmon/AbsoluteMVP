@@ -50,6 +50,9 @@ SleepyEngine::SleepyEngine(HINSTANCE hInstance)
     m_hAppInstance = hInstance;
 }
 
+void SleepyEngine::BlankInit() {};
+void SleepyEngine::BlankUpdate() {};
+
 void SleepyEngine::InitD3D()
 {
 #if defined(DEBUG) || defined(_DEBUG)
@@ -283,6 +286,10 @@ int SleepyEngine::Initialize()
     m_pAllocator->Init(m_pDevice, m_pCommandList);
     m_pFactory->Init(m_pAllocator);
     BuildBoxGeometryBis();
+
+    // temp 
+    BlankInit();
+
     return 0;
 }
 
@@ -667,6 +674,9 @@ void SleepyEngine::Update()
     ObjectConstants objConstants;
     XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
     m_pObjectCB->CopyData(0, objConstants);
+
+    // temp
+    BlankUpdate();
 }
 
 //void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, ID3D12RootSignature* pRootSignature, Mesh* mesh)

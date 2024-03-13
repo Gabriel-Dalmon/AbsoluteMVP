@@ -8,10 +8,12 @@ TempFunction::TempFunction()
 {
 }
 
-void TempFunction::Init()
+void TempFunction::BlankInit()
 {
+
 }
 
-void TempFunction::Blank()
+void TempFunction::BlankUpdate()
 {
+
 }

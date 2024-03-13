@@ -7,8 +7,8 @@ public:
 	TempFunction();
 	~TempFunction() {};
 
-	void Init() override;
-	void Blank() override;
+	void BlankInit() override;
+	void BlankUpdate() override;
 
 private:
 
