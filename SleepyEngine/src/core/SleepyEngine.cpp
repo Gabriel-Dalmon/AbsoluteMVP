@@ -307,9 +307,11 @@ int SleepyEngine::Initialize()
 #if defined (DEBUG) || (_DEBUG)
     CreateTexture(L"../SleepyEngine/src/asset/t_box.dds");
     CreateTexture(L"../SleepyEngine/src/asset/t_bricks.dds");
+    CreateTexture(L"../SleepyEngine/src/asset/t_skybox.dds");
 #else
     CreateTexture(L"asset/t_box.dds");
     CreateTexture(L"asset/t_bricks.dds");
+    CreateTexture(L"asset/t_skybox.dds");
 #endif
 
     return 0;
@@ -677,10 +679,12 @@ void SleepyEngine::BuildBoxGeometry()
 void SleepyEngine::BuildBoxGeometryBis()
 {
     //mBoxGeo = m_pAllocator->getMesh("pyramide");
-    Entity* player = Entity::CreateEmptyEntity();
+    /*Entity* player = Entity::CreateEmptyEntity();
     m_pFactory->FillPlayer(player);
     m_entities.push_back(player);
-    mBoxGeo = player->GetComponent<MeshRenderer*>()->GetMesh();
+    MeshRenderer* temp;
+    temp = player->GetComponent<MeshRenderer*>();
+    mBoxGeo = temp->GetMesh();*/
 }
 
 

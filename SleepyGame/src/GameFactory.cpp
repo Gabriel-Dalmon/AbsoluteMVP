@@ -27,8 +27,11 @@ void GameFactory::FillPlayer(Entity* pEntity)
 	std::cerr << typeid(*meshRef).name();
 
 	ShaderReferenceDescriptor ShaderRefDesc;
-	ShaderRefDesc.PSO = m_PSOTexture;
-	ShaderRefDesc.rootSignature = m_pRootSignatureTexture;
+	//ShaderRefDesc.PSO = m_PSOTexture;
+	ShaderRefDesc.PSO = m_PSOColor;
+	//ShaderRefDesc.rootSignature = m_pRootSignatureTexture;
+	ShaderRefDesc.rootSignature = m_pRootSignatureColor;
+	ShaderRefDesc.id = 1;
 	ShaderReference* shaderReference = Component::CreateComponent<ShaderReference>();
 	shaderReference->Init(&ShaderRefDesc);
 	pEntity->AddComponent<ShaderReference*>(shaderReference);
