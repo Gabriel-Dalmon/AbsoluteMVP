@@ -69,7 +69,7 @@ private:
 	std::vector<int> m_InputList;
 	std::map<int, EventName> m_CodeToEventNamePressed;
 	std::map<int, EventName> m_CodeToEventNameReleased;
-	std::map<EventName, int> m_EventPressControl;
+	std::vector<int> m_EventPressControl;
 };
 
 

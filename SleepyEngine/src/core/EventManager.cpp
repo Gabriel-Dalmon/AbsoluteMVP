@@ -17,18 +17,6 @@ std::ostream& operator << (std::ostream& os, std::map<Key, Value>& map)
 
 void EventManager::Init()
 {
-	m_InputList = {
-		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-		'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-		'U', 'V', 'W', 'X', 'Y', 'Z',
-		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-		VK_BACK, VK_TAB, VK_RETURN, VK_ESCAPE, VK_SPACE, VK_PRIOR, VK_NEXT, VK_END, VK_HOME, VK_LEFT, VK_UP, VK_RIGHT, VK_DOWN,
-		VK_INSERT, VK_DELETE, VK_OEM_PLUS, VK_OEM_MINUS, VK_OEM_PERIOD, VK_OEM_COMMA, VK_OEM_1, VK_OEM_2, VK_OEM_3,
-		VK_OEM_4, VK_OEM_5, VK_OEM_6, VK_OEM_7,
-		VK_NUMPAD0, VK_NUMPAD1, VK_NUMPAD2, VK_NUMPAD3, VK_NUMPAD4, VK_NUMPAD5, VK_NUMPAD6, VK_NUMPAD7, VK_NUMPAD8, VK_NUMPAD9,
-		VK_MULTIPLY, VK_ADD, VK_SEPARATOR, VK_SUBTRACT, VK_DECIMAL, VK_DIVIDE
-	};
-
 	m_CodeToEventNamePressed = {
 		{'A', EventName::KEY_A_PRESSED},
 		{'B', EventName::KEY_B_PRESSED},
@@ -241,9 +229,10 @@ void EventManager::Init()
 		{VK_RIGHT, EventName::KEY_ARROW_RIGHT_RELEASED},
 	};
 
-	for (auto& pair : m_CodeToEventNameReleased)
+	for (auto& pairs : m_CodeToEventNamePressed)
 	{
-		m_EventPressControl.insert({ pair.second, 0 });
+		m_InputList.push_back(pairs.first);
+		m_EventPressControl.push_back(0);
 	}
 }
 
@@ -252,37 +241,22 @@ void EventManager::HandleEvents()
 	for (int i = 0; i < m_InputList.size(); i++)
 	{
 		SHORT keyState = GetAsyncKeyState(m_InputList[i]);
-		if (keyState & 0x1)
+		if (keyState & 0x8000 && m_EventPressControl[i] >= 1)
+			m_EventPressControl[i] = 2;
+		else if (keyState & 0x1 && m_EventPressControl[i] == 0)
+			m_EventPressControl[i] = 1;
+		else if (m_EventPressControl[i] > 0)
+			m_EventPressControl[i] = -1;
+		else
+			m_EventPressControl[i] = 0;
+
+		if (m_EventPressControl[i] == 1)
 		{
-			for (auto& pair : m_CodeToEventNamePressed)
-			{
-				if (pair.first == m_InputList[i] && m_EventPressControl[pair.second] == 0)
-				{
-					for (int j = 0; j < eventCallbacksMap[pair.second].size(); j++)
-					{
-						eventCallbacksMap[pair.second][i]->execute();
-						if (m_EventPressControl[pair.second] == 0)
-						{
-							m_EventPressControl[pair.second] = 1;
-						}
-						break;
-					}
-				}
-			}
+			OnKeyPressed(m_InputList[i]);
 		}
-		else if (!(keyState & 0x800))
+		else if (m_EventPressControl[i] == -1)
 		{
-			for (auto& pair : m_EventPressControl)
-			{
-				if (pair.second == 1)
-				{
-					pair.second = 0;
-					for (int j = 0; j < eventCallbacksMap[pair.first].size(); j++)
-					{
-						eventCallbacksMap[pair.first][j]->execute();
-					}
-				}
-			}
+			OnKeyReleased(m_InputList[i]);
 		}
 	}
 }
@@ -290,9 +264,31 @@ void EventManager::HandleEvents()
 void EventManager::OnKeyPressed(int key)
 {
 	std::cout << "Key pressed: " << key << std::endl;
+	for (auto& pairs : m_CodeToEventNamePressed)
+	{
+		if (pairs.first == key)
+		{
+			for (int i = 0; i < eventCallbacksMap[pairs.second].size(); i++)
+			{
+				eventCallbacksMap[pairs.second][i]->execute();
+			}
+			break;
+		}
+	}
 }
 
 void EventManager::OnKeyReleased(int key)
 {
 	std::cout << "Key released: " << key << std::endl;
+	for (auto& pairs : m_CodeToEventNameReleased)
+	{
+		if (pairs.first == key)
+		{
+			for (int i = 0; i < eventCallbacksMap[pairs.second].size(); i++)
+			{
+				eventCallbacksMap[pairs.second][i]->execute();
+			}
+			break;
+		}
+	}
 }
