@@ -70,7 +70,6 @@ void SleepyEngine::InitD3D()
     BuildDescriptorHeaps();
     BuildConstantBuffers();
     BuildBoxGeometry();
-    m_heapDescSize = m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
     
 
     XMMATRIX P = XMMatrixPerspectiveFovLH(0.25f * MathHelper::Pi, static_cast<float>(m_clientWidth / m_clientHeight), 1.0f, 1000.0f);
@@ -743,21 +742,22 @@ void SleepyEngine::DrawBis()
     m_pCommandList->ClearDepthStencilView(dephtStencilView, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
     m_pCommandList->OMSetRenderTargets(1, &currentBackBufferView, true, &dephtStencilView);
-    MeshRenderer* mesComponent;
+
     Mesh* mesh;
+    ShaderReference* shaderRef;
     for (Entity* entity : m_entities)
     {
-        mesComponent = entity->GetComponent<MeshRenderer*>();
-        mesh = mesComponent->GetMesh();
+        mesh = entity->GetComponent<MeshRenderer*>()->GetMesh();
+        shaderRef = entity->GetComponent<ShaderReference*>();
 
 
         ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvHeap };
         m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
-        m_pCommandList->SetGraphicsRootSignature(entity->GetComponent<ShaderReference*>()->GetRootSignature());//
+        m_pCommandList->SetGraphicsRootSignature(shaderRef->GetRootSignature());//
         //m_pCommandList->SetGraphicsRootSignature(m_pRootSignatureTexture);
 
-        m_pCommandList->SetPipelineState(entity->GetComponent<ShaderReference*>()->GetPSO());//
+        m_pCommandList->SetPipelineState(shaderRef->GetPSO());//
         //m_pCommandList->SetPipelineState(m_PSOTexture);
 
         
@@ -765,9 +765,9 @@ void SleepyEngine::DrawBis()
         m_pCommandList->IASetIndexBuffer(&mesh->IndexBufferView());
         m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-        CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
-        tex.Offset(0, m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
-        m_pCommandList->SetGraphicsRootDescriptorTable(0, tex);
+        CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_pCbvHeap->GetGPUDescriptorHandleForHeapStart()); //
+        tex.Offset(shaderRef->GetOffset(), m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)); //
+        m_pCommandList->SetGraphicsRootDescriptorTable(0, tex); //
 
         m_pCommandList->SetGraphicsRootConstantBufferView(1, m_pObjectCB->Resource()->GetGPUVirtualAddress());
 

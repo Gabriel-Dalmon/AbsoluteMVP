@@ -24,6 +24,7 @@ struct MeshReferenceDescriptor : Descriptor
 
 struct ShaderReferenceDescriptor : Descriptor
 {
-	ID3D12RootSignature* rootSignature = nullptr;
-	ID3D12PipelineState* PSO = nullptr;
+	ID3D12RootSignature* rootSignature;
+	ID3D12PipelineState* PSO;
+	int offset = 0;
 };
