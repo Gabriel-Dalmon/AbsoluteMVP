@@ -66,7 +66,6 @@ void Device::Check4xMSAAQualitySupport()
 	ThrowIfFailed(m_pD3DDevice->CheckFeatureSupport(D3D12_FEATURE_MULTISAMPLE_QUALITY_LEVELS, &msQualityLevels, sizeof(msQualityLevels)));
 	m_4xMsaaQuality = msQualityLevels.NumQualityLevels;
 	assert(m_4xMsaaQuality > 0 && "Unexpected MSAA quality level.");
-	m_4xMsaaState = true;
 }
 
 void Device::Release()

@@ -15,7 +15,7 @@ public:
 	// Getters
 	ID3D12CommandQueue* GetD3DCommandQueue() const { return m_pD3DCommandQueue; }
 
-	inline UINT GetLastCompletedFence()const { return m_currentFence; };
+	inline UINT GetLastCompletedFence()const { return m_pFence->GetCompletedValue(); };
 	HRESULT SetEventOnFenceCompletion(UINT currentFence, HANDLE eventHandle);
 
 private:

@@ -14,7 +14,7 @@ int CommandQueue::Initialize(Device* pDevice)
     queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
     queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
     ThrowIfFailed(pDevice->GetD3DDevice()->CreateCommandQueue(&queueDesc, __uuidof(ID3D12CommandQueue), (void**)&m_pD3DCommandQueue));
-    ThrowIfFailed(pDevice->GetD3DDevice()->CreateFence(0, D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence), (void**)m_pFence));
+    ThrowIfFailed(pDevice->GetD3DDevice()->CreateFence(0, D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence), (void**)&m_pFence));
 	return 0;
 }
 
@@ -30,28 +30,9 @@ void CommandQueue::Signal(UINT currentFence)
 
 void CommandQueue::Flush()
 {
-}
-
-int CommandQueue::Release()
-{
-    return 0;
-}
-
-HRESULT CommandQueue::SetEventOnFenceCompletion(UINT currentFence, HANDLE eventHandle)
-{
-    return m_pFence->SetEventOnCompletion(currentFence, eventHandle);
-}
-
-/*void CommandQueue::Flush()
-{
     m_currentFence++;
-
-    // Add an instruction to the command queue to set a new fence point.  Because we 
-    // are on the GPU timeline, the new fence point won't be set until the GPU finishes
-    // processing all the commands prior to this Signal().
-    ThrowIfFailed(m_pCommandQueue->Signal(m_pFence, m_currentFence));
-
-    // Wait until the GPU has completed commands up to this fence point.
+    ThrowIfFailed(m_pD3DCommandQueue->Signal(m_pFence, m_currentFence));
+    UINT64 fen = m_pFence->GetCompletedValue();
     if (m_pFence->GetCompletedValue() < m_currentFence)
     {
         HANDLE eventHandle = CreateEventEx(nullptr, nullptr, false, EVENT_ALL_ACCESS);
@@ -67,4 +48,14 @@ HRESULT CommandQueue::SetEventOnFenceCompletion(UINT currentFence, HANDLE eventH
         }
     }
 }
-*/
+
+int CommandQueue::Release()
+{
+    return 0;
+}
+
+HRESULT CommandQueue::SetEventOnFenceCompletion(UINT currentFence, HANDLE eventHandle)
+{
+    return m_pFence->SetEventOnCompletion(currentFence, eventHandle);
+}
+

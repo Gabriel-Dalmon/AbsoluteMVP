@@ -7,6 +7,7 @@ Renderer::Renderer()
 	m_pDevice = new Device();
 	m_pSwapChain = new SwapChain();
 	m_pViewPort = new D3D12_VIEWPORT();
+	m_pScissorRect = new tagRECT();
 }
 
 Renderer::~Renderer()
@@ -19,23 +20,42 @@ Renderer::~Renderer()
 void Renderer::Initialize(HINSTANCE hInstance, RendererDescriptor* rendererDescriptor)
 {
 	try {
+		EnableAdditionalD3D12Debug();
 		m_pWindow->Initialize(hInstance, rendererDescriptor);
 		ThrowIfFailed(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&m_pDxgiFactory));
 		m_pDevice->Initialize();
 		CreateFrameResources();
 		CreateCommandObjects();
-		m_pSwapChain->Initialize(m_pDxgiFactory, m_pDevice, m_pWindow);
+		m_pSwapChain->Initialize(m_pDxgiFactory, m_pCommandQueue, m_pDevice, m_pWindow);
 		RecoverDescriptorSize();
 		CreateDescriptorHeaps();
 		CreateRenderTargetView();
-		CreateDepthStencilView(rendererDescriptor);
 
+		// Open the command list to instruct the GPU during initialization
+		m_pCurrentFrameResource->ResetCommandAllocator();
+		m_pCommandList->Reset(m_pCurrentFrameResource->GetD3DCommandAllocator(), nullptr);
+
+		CreateDepthStencilView(rendererDescriptor);
 		SetViewport(rendererDescriptor->windowWidth, rendererDescriptor->windowHeight);
 		SetScissorRect(rendererDescriptor->windowWidth, rendererDescriptor->windowHeight);
+
+		ThrowIfFailed(m_pCommandList->Close());
+		ID3D12CommandList* cmdsLists[] = { m_pCommandList };
+		m_pCommandQueue->Execute(_countof(cmdsLists), cmdsLists);
+		m_pCommandQueue->Flush();
 	}
-	catch (HResultException& e) {
-		OutputDebugString(e.ToString().c_str());
+	catch (HResultException& error) {
+		OutputDebugString(error.ToString().c_str());
+		MessageBox(nullptr, error.ToString().c_str(), L"HRESULT ERROR", MB_OK);
 	}
+}
+
+void Renderer::EnableAdditionalD3D12Debug()
+{
+	ID3D12Debug* pDebugController;
+	ThrowIfFailed(D3D12GetDebugInterface(__uuidof(ID3D12Debug), (void**)&pDebugController)); //should throw error
+	pDebugController->EnableDebugLayer();
+	std::cout << "Debug Layer Enabled" << std::endl;
 }
 
 void Renderer::CreateFrameResources()
@@ -45,6 +65,7 @@ void Renderer::CreateFrameResources()
 		m_frameResources[i] = new FrameResource();
 		m_frameResources[i]->Initialize(m_pDevice->GetD3DDevice());
 	}
+	m_pCurrentFrameResource = m_frameResources[m_currentFrameResourceIndex];
 }
 
 void Renderer::CreateCommandObjects()
@@ -61,8 +82,8 @@ void Renderer::CreateCommandObjects()
 void Renderer::RecoverDescriptorSize()
 {
 	m_RTVDescriptorSize = m_pDevice->GetD3DDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	/*m_DSVDescriptorSize = m_pDevice->GetD3DDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-	m_CBVSRVUAVDescriptorSize = m_pDevice->GetD3DDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);*/
+	m_DSVDescriptorSize = m_pDevice->GetD3DDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+	/*m_CBVSRVUAVDescriptorSize = m_pDevice->GetD3DDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV); */
 }
 
 void Renderer::CreateDescriptorHeaps()
@@ -84,9 +105,9 @@ void Renderer::CreateDescriptorHeaps()
 
 void Renderer::CreateRenderTargetView()
 {
-	CD3DX12_CPU_DESCRIPTOR_HANDLE RTVHeapHandle(GetDepthStencilView());
+	CD3DX12_CPU_DESCRIPTOR_HANDLE RTVHeapHandle(GetCurrentBackBufferView());
 
-	for (UINT i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
+	for (int i = 0; i < SWAP_CHAIN_BUFFER_COUNT; i++)
 	{
 		m_pDevice->GetD3DDevice()->CreateRenderTargetView(m_pSwapChain->GetSwapChainBuffer()[i], nullptr, RTVHeapHandle);
 		RTVHeapHandle.Offset(1, m_RTVDescriptorSize);
@@ -189,10 +210,22 @@ void Renderer::UpdateBuffers()
 
 void Renderer::RenderFrame()
 {
-	// [...] Build and submit command lists for this frame.
+	ResetRendering();
 
-	m_pCurrentFrameResource->IncrementFence();
-	m_pCommandQueue->Signal(m_pCurrentFrameResource->GetFence());
+	D3D12_CPU_DESCRIPTOR_HANDLE currentBackBufferView = GetCurrentBackBufferView();
+	D3D12_CPU_DESCRIPTOR_HANDLE dephtStencilView = GetDepthStencilView();
+
+	m_pCommandList->RSSetViewports(1, m_pViewPort);
+	m_pCommandList->RSSetScissorRects(1, m_pScissorRect);	
+
+	m_pCommandList->ClearRenderTargetView(currentBackBufferView, Colors::LightSteelBlue, 0, nullptr);
+	m_pCommandList->ClearDepthStencilView(dephtStencilView, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+	m_pCommandList->OMSetRenderTargets(1, &currentBackBufferView, true, &dephtStencilView);
+
+	m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
+
+	CloseAndExecuteRendering();
 }
 
 void Renderer::Release()
@@ -225,3 +258,34 @@ void Renderer::UNSAFE_RemoveEntity(Entity* entity)
 	}
 }
 
+void Renderer::ResetRendering()
+{
+	m_pCurrentFrameResource->ResetCommandAllocator();
+	ID3D12CommandAllocator* cmdAlloc = m_pCurrentFrameResource->GetD3DCommandAllocator();
+	m_pCommandList->Reset(cmdAlloc, nullptr); //nullptr should be replaced with a pso
+	ID3D12Resource* currBackBuff = m_pSwapChain->GetCurrentBackBuffer();
+	CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(
+		currBackBuff,
+		D3D12_RESOURCE_STATE_PRESENT,
+		D3D12_RESOURCE_STATE_RENDER_TARGET
+	);
+	m_pCommandList->ResourceBarrier(1, &resourceBarrier);
+}
+
+void Renderer::CloseAndExecuteRendering()
+{
+	CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(m_pSwapChain->GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+	m_pCommandList->ResourceBarrier(1, &resourceBarrier);
+
+	m_pCommandList->Close();
+
+	ID3D12CommandList* cmdsLists[] = { m_pCommandList };
+	m_pCommandQueue->Execute(_countof(cmdsLists), cmdsLists);
+
+	ThrowIfFailed(m_pSwapChain->GetD3DSwapChain()->Present(0, 0));
+
+	m_pSwapChain->NextBackBuffer();
+	m_pCurrentFrameResource->IncrementFence();
+	m_pCommandQueue->Signal(m_pCurrentFrameResource->GetFence());
+
+}

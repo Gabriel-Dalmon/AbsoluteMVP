@@ -36,6 +36,11 @@ public:
 	void UNSAFE_RemoveEntity(Entity* entity) override;
 
 private:
+	void ResetRendering();
+	void CloseAndExecuteRendering();
+
+private:
+	void EnableAdditionalD3D12Debug();
 	void CreateFrameResources();
 	void CreateCommandObjects();
 	void RecoverDescriptorSize();
@@ -46,7 +51,8 @@ private:
 	void SetScissorRect(UINT clientWidth, UINT clientHeight);
 
 private:
-	inline D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView() { return m_pDSVHeap->GetCPUDescriptorHandleForHeapStart(); }
+	inline D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferView()const { return CD3DX12_CPU_DESCRIPTOR_HANDLE(m_pRTVHeap->GetCPUDescriptorHandleForHeapStart(), m_pSwapChain->GetCurrentBackBufferIndex(), m_RTVDescriptorSize); };
+	inline D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView()const { return m_pDSVHeap->GetCPUDescriptorHandleForHeapStart(); }
 
 private:
 	Window* m_pWindow = nullptr;
@@ -68,6 +74,7 @@ private:
 	ID3D12DescriptorHeap* m_pRTVHeap = nullptr;
 	UINT m_RTVDescriptorSize = 0;
 	ID3D12DescriptorHeap* m_pDSVHeap = nullptr;
+	UINT m_DSVDescriptorSize = 0;
 	ID3D12Resource* m_pDepthStencilBuffer = nullptr;
 
 	D3D12_VIEWPORT* m_pViewPort = nullptr;
