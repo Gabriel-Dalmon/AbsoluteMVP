@@ -16,6 +16,7 @@ public:
 	void FillEnemy(Entity* pEntity);
 	void FillBullet(Entity* pEntity);
 	void FillSkybox(Entity* pEntity);
+	void FillSphere(Entity* pEntity);
 
 	// Release
 	void Release();
