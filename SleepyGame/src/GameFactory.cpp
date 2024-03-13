@@ -171,3 +171,33 @@ void GameFactory::FillSkybox(Entity* pEntity)
 	shaderReference->Init(&ShaderRefDesc);
 	pEntity->AddComponent<ShaderReference*>(shaderReference);
 };
+
+void GameFactory::FillSphere(Entity* pEntity)
+{
+	Transform* transform = Component::CreateComponent<Transform>();
+	transform->Identity();
+	pEntity->AddComponent<Transform*>(transform);
+
+	MeshReferenceDescriptor MeshRefDesc;
+	MeshRefDesc.meshRef = m_pRessourceAllocator->CreateSphere(5.0f, 20, 20);
+	MeshRenderer* meshRef = Component::CreateComponent<MeshRenderer>();
+	meshRef->Init(&MeshRefDesc);
+	pEntity->AddComponent<MeshRenderer*>(meshRef);
+	std::cerr << typeid(*meshRef).name();
+
+	ShaderReferenceDescriptor ShaderRefDesc;
+
+	// for color only object :
+	ShaderRefDesc.PSO = m_PSOColor;
+	ShaderRefDesc.rootSignature = m_pRootSignatureColor;
+
+	// for textured object :
+	/*ShaderRefDesc.PSO = m_PSOTexture;
+	ShaderRefDesc.rootSignature = m_pRootSignatureTexture;
+
+	ShaderRefDesc.id = 2;
+	*/
+	ShaderReference* shaderReference = Component::CreateComponent<ShaderReference>(); 
+	shaderReference->Init(&ShaderRefDesc); 
+	pEntity->AddComponent<ShaderReference*>(shaderReference);
+}
