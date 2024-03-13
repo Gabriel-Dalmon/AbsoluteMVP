@@ -5,7 +5,8 @@ bool ColliderHandMade::collideTest(Entity* self, Entity* target)
 	XMVECTOR selfPos = XMLoadFloat3(&self->GetComponent<Transform*>()->m_positionVect);
 	XMVECTOR targetPos = XMLoadFloat3(&target->GetComponent<Transform*>()->m_positionVect);
 
-	XMVECTOR deltaPos = selfPos * selfPos - targetPos * targetPos;
+	XMVECTOR deltaPos = selfPos - targetPos;
+	deltaPos *= deltaPos;
 
 	float deltaRadius = self->GetComponent<ColliderHandMade*>()->m_radius + target->GetComponent<ColliderHandMade*>()->m_radius;
 

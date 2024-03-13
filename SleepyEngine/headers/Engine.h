@@ -54,7 +54,7 @@ class Velocity;
 class Collider;
 class ColliderOBB;
 class ColliderSphere;
-class ColliderHandmade;
+class ColliderHandMade;
 class Entity;
 class GameState;
 class Input;
