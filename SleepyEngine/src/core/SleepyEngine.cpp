@@ -341,7 +341,7 @@ int SleepyEngine::Run()
     Timer timer;
     timer.Init();
 
-    input.subscribe(KEY_B_PRESSED, &Timer::UpdateTimer, this);
+    input.subscribe(KEY_B_PRESSED, &Timer::UpdateTimer, &timer);
 
 
     Shader shader;
