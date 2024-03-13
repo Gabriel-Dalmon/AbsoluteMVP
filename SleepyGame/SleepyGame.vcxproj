@@ -152,6 +152,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="headers\SleepyGame.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="headers\TempFunction.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\EnemyScript.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="src\GameFactory.cpp" />
     <ClCompile Include="src\SleepyGame.cpp" />
     <ClCompile Include="src\Thread.cpp" />
+    <ClCompile Include="src\TempFunction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SleepyGame.rc" />
