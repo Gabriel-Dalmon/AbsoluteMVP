@@ -730,7 +730,7 @@ void SleepyEngine::Update()
     //        XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
     //        m_pObjectCB->CopyData(m_CBindex, objConstants);
     //    }
-    }
+    //}
 }
 
 //void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, ID3D12RootSignature* pRootSignature, Mesh* mesh)
