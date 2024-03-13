@@ -28,6 +28,7 @@
 #include <map>
 #include <float.h>
 #include <cmath>
+#include <functional>
 
 // DIRECTX
 #include <comdef.h> 

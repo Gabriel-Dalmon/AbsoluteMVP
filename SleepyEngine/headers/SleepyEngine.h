@@ -17,6 +17,8 @@ public:
     D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferView()const; 
     ID3D12Resource* GetCurrentBackBuffer()const;
     D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView()const;
+    Camera getCamera();
+    Timer getTimer();
 
     LRESULT MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     static SleepyEngine* GetApp();
@@ -127,4 +129,6 @@ private:
     POINT m_LastMousePos;
 
     static SleepyEngine* m_App;
+    Timer timer;
+    EventManager input;
 };

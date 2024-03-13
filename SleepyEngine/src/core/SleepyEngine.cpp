@@ -330,7 +330,6 @@ int SleepyEngine::Run()
 
     MSG msg = { 0 };
 
-    EventManager input;
     input.Init();
     input.subscribe(KEY_A_PRESSED, &func, "testA1");
 
@@ -338,12 +337,31 @@ int SleepyEngine::Run()
     
     input.unsubscribe("testA2");
 
-    Timer timer;
     timer.Init();
 
     input.subscribe(KEY_B_PRESSED, &Timer::UpdateTimer, &timer, "testModèle");
 
     input.trigger(KEY_A_PRESSED);
+
+    input.subscribe(KEY_Z_PRESSED, [this]() -> void {
+        this->getCamera().Walk(10.0f * this->getTimer().GetDeltaTime());
+        this->getCamera().UpdateViewMatrix();
+    }, "cameraForward");
+
+    input.subscribe(KEY_S_PRESSED, [this]() -> void {
+        this->getCamera().Walk(10.0f * this->getTimer().GetDeltaTime());
+        this->getCamera().UpdateViewMatrix();
+        }, "cameraBackward");
+
+    input.subscribe(KEY_Q_PRESSED, [this]() -> void {
+        this->getCamera().Strafe(-10.0f * this->getTimer().GetDeltaTime());
+        this->getCamera().UpdateViewMatrix();
+    }, "cameraLeft");
+
+    input.subscribe(KEY_D_PRESSED, [this]() -> void {
+        this->getCamera().Strafe(10.0f * this->getTimer().GetDeltaTime());
+        this->getCamera().UpdateViewMatrix();
+    }, "cameraRight");
 
 
     Shader shader;
@@ -419,6 +437,16 @@ ID3D12Resource* SleepyEngine::GetCurrentBackBuffer()const
 D3D12_CPU_DESCRIPTOR_HANDLE SleepyEngine::GetDepthStencilView()const
 {
     return m_pDsvHeap->GetCPUDescriptorHandleForHeapStart();
+}
+
+Camera SleepyEngine::getCamera()
+{
+    return m_Camera;
+}
+
+Timer SleepyEngine::getTimer()
+{
+    return timer;
 }
 
 void SleepyEngine::Release()
@@ -888,19 +916,5 @@ void SleepyEngine::OnMouseMove(WPARAM btnState, int x, int y)
 
 void SleepyEngine::OnKeyboardInput(Timer& timer)
 {
-    const float dt = timer.GetDeltaTime();
-
-    if (GetAsyncKeyState('Z') & 0x8000)
-        m_Camera.Walk(10.0f * dt);
-
-    if (GetAsyncKeyState('S') & 0x8000)
-        m_Camera.Walk(-10.0f * dt);
-
-    if (GetAsyncKeyState('Q') & 0x8000)
-        m_Camera.Strafe(-10.0f * dt);
-
-    if (GetAsyncKeyState('D') & 0x8000)
-        m_Camera.Strafe(10.0f * dt);
-
-    m_Camera.UpdateViewMatrix();
+    
 }

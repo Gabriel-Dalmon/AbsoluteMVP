@@ -24,7 +24,7 @@ public:
 	// Setter / Getter
 
 
-	void subscribe(EventName eventName, void(*callback)(), std::string id)
+	void subscribe(EventName eventName, std::function<void()>callback, std::string id)
 	{
 		eventCallbacksMap[eventName].push_back(new FunctionCommand(callback));
 		std::pair<EventName, AbstractCommand*> m = { eventName, eventCallbacksMap[eventName].back() };
