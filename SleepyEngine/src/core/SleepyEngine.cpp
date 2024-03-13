@@ -765,11 +765,15 @@ void SleepyEngine::DrawBis()
         m_pCommandList->IASetIndexBuffer(&mesh->IndexBufferView());
         m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-        CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_pCbvHeap->GetGPUDescriptorHandleForHeapStart()); //
-        tex.Offset(shaderRef->GetOffset(), m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)); //
-        m_pCommandList->SetGraphicsRootDescriptorTable(0, tex); //
+        
 
-        m_pCommandList->SetGraphicsRootConstantBufferView(1, m_pObjectCB->Resource()->GetGPUVirtualAddress());
+        if (shaderRef->GetPSO() == m_PSOTexture) {
+            CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_pCbvHeap->GetGPUDescriptorHandleForHeapStart()); //
+            tex.Offset(shaderRef->GetOffset(), m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)); //
+            m_pCommandList->SetGraphicsRootDescriptorTable(0, tex); //
+        }
+
+        m_pCommandList->SetGraphicsRootConstantBufferView(1, m_pObjectCB->Resource()->GetGPUVirtualAddress());//
 
         m_pCommandList->DrawIndexedInstanced(mesh->m_drawArgs["box"].IndexCount, 1, mesh->m_drawArgs["box"].StartIndexLocation, mesh->m_drawArgs["box"].BaseVertexLocation, 0);
     }
@@ -899,8 +903,6 @@ void SleepyEngine::CreateTexture(const wchar_t* fileName)
     m_Texture = texture.Get();
 
     texture.Detach();
-
-    //return pTexture;
 }
 
 ID3D12PipelineState* SleepyEngine::GetPSOTexture() {

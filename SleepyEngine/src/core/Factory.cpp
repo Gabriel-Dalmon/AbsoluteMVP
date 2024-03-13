@@ -30,7 +30,7 @@ void Factory::FillPlayer(Entity* pEntity)
 
 
 	MeshReferenceDescriptor MeshRefDesc;
-	MeshRefDesc.meshRef = m_pRessourceAllocator->getMesh("cube");
+	MeshRefDesc.meshRef = m_pRessourceAllocator->getMesh("crate");
 	MeshRenderer* meshRef = Component::CreateComponent<MeshRenderer>();
 	meshRef->Init(&MeshRefDesc);
 	pEntity->AddComponent<MeshRenderer*>(meshRef);
@@ -39,6 +39,7 @@ void Factory::FillPlayer(Entity* pEntity)
 	ShaderRefDesc.PSO = m_PSOTexture;
 	//ShaderRefDesc.PSO = m_PSOColor;
 	ShaderRefDesc.rootSignature = m_pRootSignatureTexture;
+	//ShaderRefDesc.rootSignature = m_pRootSignatureColor;
 	ShaderRefDesc.offset = 0;
 	ShaderReference* shaderReference = Component::CreateComponent<ShaderReference>();
 	shaderReference->Init(&ShaderRefDesc);
