@@ -30,7 +30,7 @@ void Factory::FillPlayer(Entity* pEntity)
 
 
 	MeshReferenceDescriptor MeshRefDesc;
-	MeshRefDesc.meshRef = m_pRessourceAllocator->getMesh("crate");
+	MeshRefDesc.meshRef = m_pRessourceAllocator->getMesh("sky");
 	MeshRenderer* meshRef = Component::CreateComponent<MeshRenderer>();
 	meshRef->Init(&MeshRefDesc);
 	pEntity->AddComponent<MeshRenderer*>(meshRef);

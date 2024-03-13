@@ -297,9 +297,11 @@ int SleepyEngine::Initialize()
 
 #if defined (DEBUG) || (_DEBUG)
     CreateTexture(L"../SleepyEngine/src/asset/t_box.dds");
+    CreateTexture(L"../SleepyEngine/src/asset/skybox.dds");
     CreateTexture(L"../SleepyEngine/src/asset/t_bricks.dds");
 #else
     CreateTexture(L"asset/t_box.dds");
+    CreateTexture(L"asset/skybox.dds");
     CreateTexture(L"asset/t_bricks.dds");
 #endif
 
