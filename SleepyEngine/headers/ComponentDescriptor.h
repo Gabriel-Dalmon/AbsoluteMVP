@@ -26,5 +26,5 @@ struct ShaderReferenceDescriptor : Descriptor
 {
 	ID3D12RootSignature* rootSignature;
 	ID3D12PipelineState* PSO;
-	int offset = 0;
+	int id = 0;
 };

@@ -12,7 +12,7 @@ public:
 	// SETTER / GETTER
 	ID3D12RootSignature* GetRootSignature() { return m_pRootSignature; }
 	ID3D12PipelineState* GetPSO() { return m_pPSO; }
-	int GetOffset() { return m_offset; };
+	int GetTexID() { return m_texID; };
 
 	// Release
 	void Release();
@@ -20,6 +20,6 @@ public:
 private:
 	ID3D12RootSignature* m_pRootSignature = nullptr;
 	ID3D12PipelineState* m_pPSO = nullptr;
-	int m_offset = 0;
+	int m_texID = 0;
 };
 

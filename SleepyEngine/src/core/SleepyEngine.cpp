@@ -297,8 +297,10 @@ int SleepyEngine::Initialize()
 
 #if defined (DEBUG) || (_DEBUG)
     CreateTexture(L"../SleepyEngine/src/asset/t_box.dds");
+    CreateTexture(L"../SleepyEngine/src/asset/t_bricks.dds");
 #else
     CreateTexture(L"asset/t_box.dds");
+    CreateTexture(L"asset/t_bricks.dds");
 #endif
 
     return 0;
@@ -308,7 +310,7 @@ int SleepyEngine::Initialize()
 void SleepyEngine::BuildDescriptorHeaps()
 {
     D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDesc;
-    cbvHeapDesc.NumDescriptors = 1;
+    cbvHeapDesc.NumDescriptors = 25;
     cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
     cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
     cbvHeapDesc.NodeMask = 0;
@@ -769,7 +771,7 @@ void SleepyEngine::DrawBis()
 
         if (shaderRef->GetPSO() == m_PSOTexture) {
             CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_pCbvHeap->GetGPUDescriptorHandleForHeapStart()); //
-            tex.Offset(shaderRef->GetOffset(), m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)); //
+            tex.Offset(shaderRef->GetTexID(), m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)); //
             m_pCommandList->SetGraphicsRootDescriptorTable(0, tex); //
         }
 
