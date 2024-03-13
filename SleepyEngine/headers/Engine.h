@@ -14,20 +14,24 @@
 #endif
 
 // STD
-#include <string>
-#include <iostream>
-#include <memory>
 #include <algorithm>
-#include <vector>
 #include <array>
-#include <unordered_map>
 #include <cstdint>
-#include <fstream>
-#include <sstream>
 #include <cassert>
-#include <map>
-#include <float.h>
 #include <cmath>
+#include <fcntl.h>
+#include <float.h>
+#include <fstream>
+#include <iostream>
+#include <io.h>
+#include <map>
+#include <memory>
+#include <sstream>
+#include <string>
+#include <time.h>
+#include <typeinfo>
+#include <vector>
+#include <unordered_map>
 
 // DIRECTX
 #include <comdef.h> 
@@ -67,6 +71,7 @@ class RessourceAllocator;
 
 // MACROS
 #define RELEASE(p) {if (p){ p->Release(); p = nullptr;}}
+#define DELETE(p) {if (p){ delete p; p = nullptr;}}
 #define MAX_LOADSTRING 100
 #define SWAP_CHAIN_BUFFER_COUNT 2
 

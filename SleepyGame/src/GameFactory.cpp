@@ -1,15 +1,23 @@
 #include "pch.h"
-#include "GameFactory.h"
+
+Entity* GameFactory::CreateEmptyEntity()
+{
+	Entity* entity = Entity::CreateEmptyEntity();
+	return entity;
+}
 
 void GameFactory::FillPlayer(Entity* pEntity)
 {
+	Transform* transform = Component::CreateComponent<Transform>();
+	transform->Identity();
+	pEntity->AddComponent<Transform*>(transform);
+
 	ColliderSphereDescriptor CSDesc;
 	CSDesc.center = { 0, 0, 0 };
 	CSDesc.radius = 1;
 	ColliderSphere* collider = Component::CreateComponent<ColliderSphere>();
 	collider->Init(&CSDesc);
 	pEntity->AddComponent<ColliderSphere*>(collider);
-
 
 	MeshReferenceDescriptor MeshRefDesc;
 	MeshRefDesc.meshRef = m_pRessourceAllocator->getMesh("cube");

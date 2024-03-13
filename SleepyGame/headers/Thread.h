@@ -1,9 +1,5 @@
 #pragma once
 
-#include <Windows.h>
-#include <vector>
-#define WIN32_LEAN_AND_MEAN
-
 class Thread
 {
 public:
@@ -19,5 +15,5 @@ public:
 	WSADATA m_wsaData;
 	HANDLE m_This;
 	HINSTANCE m_hInstance;
-	FILE* m_pConsoleOut;
+	FILE* m_pConsoleOut = nullptr;
 };

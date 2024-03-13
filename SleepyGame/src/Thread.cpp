@@ -1,7 +1,4 @@
 #include "pch.h"
-#include "thread.h"
-#include "GameFactory.h"
-
 
 std::vector<HANDLE> Thread::threadList = {};
 
@@ -41,6 +38,4 @@ void Thread::RunThread()
     engine.SetFactory(factory);
     engine.Initialize();
     engine.Run();
-    
-    engine.Release();
 }

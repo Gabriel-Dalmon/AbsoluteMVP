@@ -1,6 +1,6 @@
 #pragma once
 
-class Transform 
+class Transform : public Component
 {
 public:
 	Transform();
@@ -35,6 +35,8 @@ public:
 	void Rotate(float yaw, float pitch, float roll);
 	void SetScale(float x, float y, float z); 
 	void SetPosition(float x, float y, float z);
+
+	void LookAt(float x, float y, float z);
 
 	void Update();
 
