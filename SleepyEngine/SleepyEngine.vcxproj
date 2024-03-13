@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="headers\Camera.h" />
+    <ClInclude Include="headers\ColliderHandMade.h" />
     <ClInclude Include="headers\Collider.h" />
     <ClInclude Include="headers\ColliderOBB.h" />
     <ClInclude Include="headers\ColliderSphere.h" />
@@ -180,6 +181,7 @@
     <ClInclude Include="src\utils\d3dx12.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\components\ColliderHandmade.cpp" />
     <ClCompile Include="src\components\ComponentDescriptor.cpp" />
     <ClCompile Include="src\components\Velocity.cpp" />
     <ClCompile Include="src\core\Factory.cpp" />

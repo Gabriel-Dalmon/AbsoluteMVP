@@ -54,6 +54,7 @@ class Velocity;
 class Collider;
 class ColliderOBB;
 class ColliderSphere;
+class ColliderHandmade;
 class Entity;
 class GameState;
 class Input;
@@ -128,6 +129,7 @@ struct VertexTexture
 #include "Collider.h"
 #include "ColliderOBB.h"
 #include "ColliderSphere.h"
+#include "ColliderHandmade.h"
 #include "Entity.h"
 #include "GameState.h"
 #include "Input.h"
