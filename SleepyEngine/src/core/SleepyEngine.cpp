@@ -313,6 +313,7 @@ int SleepyEngine::Initialize()
     CreateTexture(L"asset/t_bricks.dds");
     CreateTexture(L"asset/t_skybox.dds");
 #endif
+    BlankInit();
 
     return 0;
 }
@@ -417,11 +418,13 @@ int SleepyEngine::Run()
     m_pCommandList->Reset(m_pDirectCmdListAlloc, nullptr);
 
     BuildBoxGeometryBis();
+    BlankPreLoop();
 
     m_pCommandList->Close();
     ID3D12CommandList* cmdsLists[] = { m_pCommandList };
     m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
     FlushCommandQueue();
+
 
 
     // Main message loop:
@@ -446,6 +449,7 @@ int SleepyEngine::Run()
             OnKeyboardInput(timer);
             Update();
             DrawBis();
+            BlankUpdate();
         }
         
     }

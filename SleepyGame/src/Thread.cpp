@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "TempFunction.h"
 
 std::vector<HANDLE> Thread::threadList = {};
 
@@ -29,7 +30,7 @@ void Thread::RunThread()
     // demander a Sylvain pourquoi il accepte printf et cerr mais pas cout 
     freopen_s(&m_pConsoleOut, "CONOUT$", "w", stdout);
     freopen_s(&m_pConsoleOut, "CONOUT$", "w", stderr);
-    SleepyEngine engine(m_hInstance);
+    TempFunction engine(m_hInstance);
 
     std::cout << "we summoned!" << std::endl;
     std::cerr << "we err!" << std::endl;
