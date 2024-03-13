@@ -332,16 +332,16 @@ int SleepyEngine::Run()
 
     EventManager input;
     input.Init();
-    input.subscribe(KEY_A_PRESSED, &func);
+    input.subscribe(KEY_A_PRESSED, &func, "testA1");
 
-    input.subscribe(KEY_A_RELEASED, &func2);
+    input.subscribe(KEY_A_RELEASED, &func2, "testA2");
     
-    //input.unsubscribe(KEY_A_RELEASED, new FunctionCommand(&func));
+    input.unsubscribe("testA2");
 
     Timer timer;
     timer.Init();
 
-    input.subscribe(KEY_B_PRESSED, &Timer::UpdateTimer, &timer);
+    input.subscribe(KEY_B_PRESSED, &Timer::UpdateTimer, &timer, "testModèle");
 
 
     Shader shader;

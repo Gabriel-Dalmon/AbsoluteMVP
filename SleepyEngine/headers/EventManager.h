@@ -24,32 +24,40 @@ public:
 	// Setter / Getter
 
 
-	void subscribe(EventName eventName, void(*callback)())
+	void subscribe(EventName eventName, void(*callback)(), std::string id)
 	{
 		eventCallbacksMap[eventName].push_back(new FunctionCommand(callback));
+		std::pair<EventName, AbstractCommand*> m = { eventName, eventCallbacksMap[eventName].back() };
+		callbacks.insert({ id, m });
 		std::cout << "Pushed Back" << eventName << "|" << eventCallbacksMap[eventName].size() << "\n";
 	}
 
 	template<typename T, typename baseClass>
-	void subscribe(EventName eventName, void(T::* methodPointer)(), baseClass base)
+	void subscribe(EventName eventName, void(T::* methodPointer)(), baseClass base, std::string id)
 	{
 		eventCallbacksMap[eventName].push_back(new MethodCommand<T>(base, methodPointer));
+		std::pair<EventName, AbstractCommand*> m = { eventName, eventCallbacksMap[eventName].back() };
+		callbacks.insert({ id, m });
 		std::cout << "Pushed Back" << eventName << "|" << eventCallbacksMap[eventName].size() << "\n";
 	}
 
 	//SHOULD BE TURNED BACK INTO A TEMPLATE FUNCTION - in order not to allocate a whole new command
-	void unsubscribe(EventName eventName, AbstractCommand* commandToDelete)
+	// I think it's done now?
+	void unsubscribe(std::string id)
 	{
-		std::cout << "Pre Removed" << eventName << "|" << eventCallbacksMap[eventName].size() << "\n";
-		std::vector<AbstractCommand*>* eventCommands = &eventCallbacksMap[eventName];
+		std::pair<EventName, AbstractCommand*> callRem = callbacks[id];
+		callbacks.erase(callbacks.find(id));
+		std::vector<AbstractCommand*>* eventCommands = &eventCallbacksMap[callRem.first];
+		std::cout << "Pre Removed" << callRem.first << "|" << eventCallbacksMap[callRem.first].size() << "\n";
 		int index = 0;
 		for (AbstractCommand* command : *eventCommands) {
-			if (commandToDelete->compareCommandsIdentifier(command->commandIdentifier)) {
+			if (callRem.second->compareCommandsIdentifier(command->commandIdentifier)) {
 				eventCommands->erase(eventCommands->begin() + index);
+				break;
 			}
 			index++;
 		}
-		std::cout << "Removed" << eventName << "|" << eventCallbacksMap[eventName].size() << "\n";
+		std::cout << "Removed" << callRem.first << "|" << eventCallbacksMap[callRem.first].size() << "\n";
 
 	}
 
@@ -70,6 +78,8 @@ private:
 	std::map<int, EventName> m_CodeToEventNamePressed;
 	std::map<int, EventName> m_CodeToEventNameReleased;
 	std::vector<int> m_EventPressControl;
+
+	std::map<std::string, std::pair<EventName, AbstractCommand*>> callbacks;
 };
 
 
