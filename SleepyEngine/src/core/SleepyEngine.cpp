@@ -50,6 +50,15 @@ SleepyEngine::SleepyEngine(HINSTANCE hInstance)
     m_hAppInstance = hInstance;
 }
 
+
+void SleepyEngine::BlankInit()
+{
+}
+
+void SleepyEngine::BlankUpdate()
+{
+}
+
 void SleepyEngine::InitD3D()
 {
 #if defined(DEBUG) || defined(_DEBUG)

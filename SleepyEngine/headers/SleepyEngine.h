@@ -65,8 +65,11 @@ private:
     void BuildBoxGeometryBis();
     void CreateTexture(const wchar_t* fileName);
 
+    // temp
+    void BlankInit();
+    void BlankUpdate();
 
-private:
+protected:
     WCHAR m_szTitle[MAX_LOADSTRING] = L"";                  // The title bar text
     WCHAR m_szWindowClass[MAX_LOADSTRING] = L"";            // the main window class name
 
