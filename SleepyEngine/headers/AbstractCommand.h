@@ -21,7 +21,7 @@ class AbstractCommand
 	public:
 		AbstractCommand() {};
 		~AbstractCommand() {};
-		virtual int execute(EventContext* context) = 0;
+		virtual int execute(/*EventContext* context*/) = 0;
 		virtual bool compareCommandsIdentifier(UniqueCommandIdentifier* commandIdentifier) = 0;
 		UniqueCommandIdentifier* commandIdentifier = nullptr;
 };

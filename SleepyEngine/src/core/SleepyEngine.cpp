@@ -316,6 +316,10 @@ void func() {
     std::cout << "Half a A press" << std::endl;
 }
 
+void func2() {
+    std::cout << "Parallel Universes" << std::endl;
+}
+
 int SleepyEngine::Run()
 {
     m_Transform = new Transform();
@@ -328,11 +332,16 @@ int SleepyEngine::Run()
 
     EventManager input;
     input.Init();
-    input.subscribe(KEY_A_RELEASED, new FunctionCommand(&func));
-    input.unsubscribe(KEY_A_RELEASED, new FunctionCommand(&func));
+    input.subscribe(KEY_A_PRESSED, &func);
+
+    input.subscribe(KEY_A_RELEASED, &func2);
+    
+    //input.unsubscribe(KEY_A_RELEASED, new FunctionCommand(&func));
 
     Timer timer;
     timer.Init();
+
+    input.subscribe(KEY_B_PRESSED, &SleepyEngine::InitD3D, this);
 
 
     Shader shader;
@@ -682,7 +691,6 @@ void SleepyEngine::BuildBoxGeometryBis()
 
 void SleepyEngine::Update()
 {
-    std::cout << "Update" << std::endl;
     // Convert Spherical to Cartesian coordinates.
     float x = mRadius * sinf(mPhi) * cosf(mTheta); 
     float z = mRadius * sinf(mPhi) * sinf(mTheta); 
@@ -726,7 +734,6 @@ void SleepyEngine::Update()
 //void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, ID3D12RootSignature* pRootSignature, Mesh* mesh)
 void SleepyEngine::Draw()
 {
-    std::cout << "Drawing" << std::endl;
     CD3DX12_RESOURCE_BARRIER barrier;
 
     barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
@@ -788,7 +795,6 @@ void SleepyEngine::Draw()
 
 void SleepyEngine::DrawBis()
 {
-    std::cout << "Drawing" << std::endl;
     CD3DX12_RESOURCE_BARRIER barrier;
 
     barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
@@ -860,10 +866,10 @@ void SleepyEngine::OnMouseUp(WPARAM btnState, int x, int y)
 
 void SleepyEngine::OnMouseMove(WPARAM btnState, int x, int y)
 {
-    std::cout << "Moov Boolet" << std::endl;
+    //std::cout << "Moov Boolet" << std::endl;
     if ((btnState & MK_LBUTTON) != 0)
     {
-        std::cout << "Cam" << std::endl;
+        //std::cout << "Cam" << std::endl;
         // Make each pixel correspond to a quarter of a degree.
         float dx = DirectX::XMConvertToRadians(0.25f * static_cast<float>(x - m_LastMousePos.x));
         float dy = DirectX::XMConvertToRadians(0.25f * static_cast<float>(y - m_LastMousePos.y));

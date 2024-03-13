@@ -24,9 +24,16 @@ public:
 	// Setter / Getter
 
 
-	void subscribe(EventName eventName, AbstractCommand* command)
+	void subscribe(EventName eventName, void(*callback)())
 	{
-		eventCallbacksMap[eventName].push_back(command);
+		eventCallbacksMap[eventName].push_back(new FunctionCommand(callback));
+		std::cout << "Pushed Back" << eventName << "|" << eventCallbacksMap[eventName].size() << "\n";
+	}
+
+	template<typename T, typename baseClass>
+	void subscribe(EventName eventName, void(T::* methodPointer)(), baseClass base)
+	{
+		eventCallbacksMap[eventName].push_back(new MethodCommand<T>(base, methodPointer));
 		std::cout << "Pushed Back" << eventName << "|" << eventCallbacksMap[eventName].size() << "\n";
 	}
 
@@ -59,8 +66,10 @@ private:
 	EventContext context;
 	std::unordered_map<EventName, std::vector<AbstractCommand*>> eventCallbacksMap;
 
-	std::map<int, int> m_InputList;
-	std::map<const char*, EventName> m_CodeToEventName;
+	std::vector<int> m_InputList;
+	std::map<int, EventName> m_CodeToEventNamePressed;
+	std::map<int, EventName> m_CodeToEventNameReleased;
+	std::map<EventName, int> m_EventPressControl;
 };
 
 

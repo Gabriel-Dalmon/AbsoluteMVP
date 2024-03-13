@@ -16,7 +16,7 @@ public:
 	};
 
 	~MethodCommand() {}
-	virtual int execute(EventContext* context) {
+	virtual int execute() {
 		(this->methodInstancePointer->*methodPointer)();
 		return 0;
 	};
