@@ -28,6 +28,7 @@
     <ClCompile Include="src\core\RessourceAllocator.cpp" />
     <ClCompile Include="src\components\ComponentDescriptor.cpp" />
     <ClCompile Include="src\utils\DDSTextureLoader.cpp" />
+    <ClCompile Include="src\components\Velocity.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Collider.h" />
@@ -71,6 +72,7 @@
     <ClInclude Include="headers\ComponentDescriptor.h" />
     <ClInclude Include="headers\RessourceAllocator.h" />
     <ClInclude Include="headers\DDSTextureLoader.h" />
+    <ClInclude Include="headers\Velocity.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SleepyEngine.rc" />

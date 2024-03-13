@@ -46,6 +46,7 @@
 class SleepyEngine;
 class Camera;
 class Component;
+class Velocity;
 class Collider;
 class ColliderOBB;
 class ColliderSphere;
@@ -89,6 +90,7 @@ struct VertexTexture
 #include "ComponentDescriptor.h"
 #include "Camera.h"
 #include "Component.h"
+#include "Velocity.h"
 #include "Collider.h"
 #include "ColliderOBB.h"
 #include "ColliderSphere.h"

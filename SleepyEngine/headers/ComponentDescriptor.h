@@ -28,3 +28,10 @@ struct ShaderReferenceDescriptor : Descriptor
 	ID3D12PipelineState* PSO;
 	int id = 0;
 };
+
+struct VelocityDescriptor
+{
+	float x = 0;
+	float y = 0;
+	float z = 0;
+};
