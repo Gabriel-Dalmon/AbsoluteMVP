@@ -6,7 +6,7 @@ public:
 	ColliderSphere();
 	~ColliderSphere();
 
-	void Init();
+	void Initialize(ColliderSphereDescriptor* pColliderSphere) {};
 
 	// BoundingSphere m_box;
 };

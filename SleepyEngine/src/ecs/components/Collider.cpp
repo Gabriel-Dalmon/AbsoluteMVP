@@ -4,8 +4,3 @@ Collider::Collider()
 {
 
 }
-
-void Collider::Initialize()
-{
-
-}

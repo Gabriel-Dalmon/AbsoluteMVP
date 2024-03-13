@@ -2,7 +2,7 @@
 
 struct SystemEntityData
 {
-	Entity* entity;
+	Entity* pEntity;
 };
 
 class System

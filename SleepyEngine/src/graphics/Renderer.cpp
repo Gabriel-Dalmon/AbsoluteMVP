@@ -30,6 +30,7 @@ void Renderer::Initialize(HINSTANCE hInstance, RendererDescriptor* rendererDescr
 		RecoverDescriptorSize();
 		CreateDescriptorHeaps();
 		CreateRenderTargetView();
+		CreateShaders();
 
 		// Open the command list to instruct the GPU during initialization
 		m_pCurrentFrameResource->ResetCommandAllocator();
@@ -178,6 +179,12 @@ void Renderer::SetScissorRect(UINT clientWidth, UINT clientHeight)
 	m_pScissorRect->bottom = clientHeight;
 }
 
+void Renderer::CreateShaders()
+{
+	m_pColorShader = new ShaderColor();
+	m_pColorShader->Initialize(m_pDevice);
+}
+
 void Renderer::Update(float deltaTime)
 {
 	WaitForFrameResource();
@@ -210,10 +217,72 @@ void Renderer::WaitForFrameResource()
 
 void Renderer::UpdateBuffers()
 {
+	/*
+	UpdateObjectCBs(gt);
+	UpdateMainPassCB(gt);
+	*/
 
+	auto currObjectCB = m_pCurrentFrameResource->GetObjectCB();
+	for (RendererEntityData* entityData : m_entitiesDataList)
+	{
+		if (entityData->pEntity->GetRemainingDirtyFramesCount() > 0)
+		{
+			XMMATRIX world = XMLoadFloat4x4(&entityData->pTransform->GetWorldMatrix());
+
+			ObjectConstants objConstants;
+			XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
+
+			currObjectCB->CopyData(entityData->ObjCBIndex, objConstants);
+
+			entityData->pEntity->DecrementRemainingDirtyFramesCount();
+		}
+	}
 }
 
 void Renderer::RenderFrame()
+{
+	ResetRendering();
+
+	D3D12_CPU_DESCRIPTOR_HANDLE currentBackBufferView = GetCurrentBackBufferView();
+	D3D12_CPU_DESCRIPTOR_HANDLE dephtStencilView = GetDepthStencilView();
+
+	m_pCommandList->RSSetViewports(1, m_pViewPort);
+	m_pCommandList->RSSetScissorRects(1, m_pScissorRect);
+
+	m_pCommandList->ClearRenderTargetView(currentBackBufferView, Colors::LightSteelBlue, 0, nullptr);
+	m_pCommandList->ClearDepthStencilView(dephtStencilView, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+	m_pCommandList->OMSetRenderTargets(1, &currentBackBufferView, true, &dephtStencilView);
+
+	ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvHeap }; // m_pCbv should be in frameresource
+	m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+
+	Mesh* pMesh;
+	ShaderReference* pShaderReference;
+	Shader* pShader;
+	for (RendererEntityData* entityData : m_entitiesDataList)
+	{
+		pMesh = entityData->pMeshReference->GetMesh();
+		pShaderReference = entityData->pShaderReference;
+		pShader = pShaderReference->GetShader();
+
+		m_pCommandList->SetGraphicsRootSignature(pShader->GetRootSignature());//
+		m_pCommandList->SetPipelineState(pShader->GetPipelineStateObject());//
+
+		m_pCommandList->IASetVertexBuffers(0, 1, &pMesh->VertexBufferView());
+		m_pCommandList->IASetIndexBuffer(&pMesh->IndexBufferView());
+		m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+		m_pCommandList->SetGraphicsRootConstantBufferView(0, m_pObjectCB->Resource()->GetGPUVirtualAddress());//
+
+
+		m_pCommandList->DrawIndexedInstanced(pMesh->m_drawArgs["box"].IndexCount, 1, pMesh->m_drawArgs["box"].StartIndexLocation, pMesh->m_drawArgs["box"].BaseVertexLocation, 0);
+	}
+
+	ExecuteRendering();
+}
+
+void Renderer::RenderFrameEmpty()
 {
 	ResetRendering();
 
@@ -242,7 +311,7 @@ void Renderer::RenderFrame()
 
 	m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
 
-	CloseAndExecuteRendering();
+	ExecuteRendering();
 }
 
 void Renderer::Release()
@@ -255,19 +324,19 @@ void Renderer::Release()
 
 void Renderer::UNSAFE_AddEntity(Entity* entity)
 {
-	RendererEntityData* entityData = new RendererEntityData();
-	entityData->entity = entity;
-	entityData->transform = entity->GetComponent<Transform>();
-	entityData->meshReference = entity->GetComponent<MeshReference>();
-	entityData->shaderReference = entity->GetComponent<ShaderReference>();
-	m_entitiesDataList.push_back(entityData);
+	RendererEntityData* pEntityData = new RendererEntityData();
+	pEntityData->pEntity = entity;
+	pEntityData->pTransform = entity->GetComponent<Transform>();
+	pEntityData->pMeshReference = entity->GetComponent<MeshReference>();
+	pEntityData->pShaderReference = entity->GetComponent<ShaderReference>();
+	m_entitiesDataList.push_back(pEntityData);
 }
 
 void Renderer::UNSAFE_RemoveEntity(Entity* entity)
 {
 	for (int i = 0; i < m_entitiesDataList.size(); i++)
 	{
-		if (m_entitiesDataList[i]->entity == entity)
+		if (m_entitiesDataList[i]->pEntity == entity)
 		{
 			delete m_entitiesDataList[i];
 			m_entitiesDataList.erase(m_entitiesDataList.begin() + i);
@@ -291,15 +360,15 @@ void Renderer::ResetRendering()
 	m_pCommandList->ResourceBarrier(1, &resourceBarrier);
 }
 
-void Renderer::CloseAndExecuteRendering()
+void Renderer::ExecuteRendering()
 {
 	CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(m_pSwapChain->GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 	m_pCommandList->ResourceBarrier(1, &resourceBarrier);
 
 	m_pCommandList->Close();
 
-	ID3D12CommandList* cmdsLists[] = { m_pCommandList };
-	m_pCommandQueue->Execute(_countof(cmdsLists), cmdsLists);
+	ID3D12CommandList* commandLists[] = { m_pCommandList };
+	m_pCommandQueue->Execute(_countof(commandLists), commandLists);
 
 	ThrowIfFailed(m_pSwapChain->GetD3DSwapChain()->Present(0, 0));
 

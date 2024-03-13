@@ -40,6 +40,8 @@
 #include <DirectXColors.h>
 #include <DirectXCollision.h>
 
+// JSON
+#include <json/json.h>
 
 // FORWARD DECLARATIONS
 class Utils;
@@ -59,6 +61,7 @@ class Collider;
 class ColliderOBB;
 class ColliderSphere;
 class CustomScript;
+class Velocity;
 
 class Entity;
 
@@ -68,12 +71,16 @@ class SwapChain;
 class CommandQueue;
 class FrameResource;
 class Shader;
+class ShaderColor;
 
 class Timer;
 class Camera;
 
 struct SystemEntityData;
 class System;
+
+class Factory;
+class ResourceAllocator;
 
 struct RendererEntityData;
 struct RendererDescriptor;
@@ -93,6 +100,47 @@ class SleepyEngine;
 // NAMESPACES
 using namespace DirectX;
 
+// STRUCTS
+struct Vertex
+{
+    Vertex() {}
+    Vertex(
+        const XMFLOAT3& p,
+        const XMFLOAT3& n,
+        const XMFLOAT3& t,
+        const XMFLOAT2& uv) :
+        Position(p),
+        Normal(n),
+        TangentU(t),
+        TexC(uv) {}
+    Vertex(
+        float px, float py, float pz,
+        float nx, float ny, float nz,
+        float tx, float ty, float tz,
+        float u, float v) :
+        Position(px, py, pz),
+        Normal(nx, ny, nz),
+        TangentU(tx, ty, tz),
+        TexC(u, v) {}
+
+    XMFLOAT3 Position = {0,0,0};
+    XMFLOAT3 Normal = { 0,0,0 };
+    XMFLOAT3 TangentU = { 0,0,0 };
+    XMFLOAT2 TexC = { 0,0 };
+};
+
+struct VertexColor
+{
+	XMFLOAT3 Pos;
+	XMFLOAT4 Color;
+};
+
+struct VertexTexture
+{
+	XMFLOAT3 Pos;
+	XMFLOAT2 Uv;
+};
+
 // Classes 
 #include "Resource.h"
 #include "Utils/d3dx12.h"
@@ -106,6 +154,7 @@ using namespace Sleepy;
 
 #include "Utils/UploadBuffer.h"
 
+#include "Components/ComponentsDescriptors.h"
 #include "ECS/Component.h"
 #include "Components/Transform.h"
 #include "Components/MeshReference.h"
@@ -114,6 +163,7 @@ using namespace Sleepy;
 #include "Components/ColliderOBB.h"
 #include "Components/ColliderSphere.h"
 #include "Components/CustomScript.h"
+#include "Components/Velocity.h"
 
 #include "ECS/Entity.h"
 
@@ -123,6 +173,7 @@ using namespace Sleepy;
 #include "Graphics/FrameResource.h"
 #include "Graphics/CommandQueue.h"
 #include "Graphics/Shader.h"
+#include "Graphics/ShaderColor.h"
 
 #include "Mesh.h"
 
@@ -130,6 +181,8 @@ using namespace Sleepy;
 #include "ECS/System.h"
 #include "Graphics/Renderer.h"
 
+#include "ECS/Factory.h"
+#include "Utils/ResourceAllocator.h"
 
 #include "Camera.h"
 #include "Core/Timer.h"

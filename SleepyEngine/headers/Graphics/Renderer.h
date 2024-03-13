@@ -2,9 +2,9 @@
 
 struct RendererEntityData : public SystemEntityData
 {
-	Transform* transform;
-	MeshReference* meshReference;
-	ShaderReference* shaderReference;
+	Transform* pTransform;
+	MeshReference* pMeshReference;
+	ShaderReference* pShaderReference;
 };
 
 struct RendererDescriptor
@@ -31,13 +31,14 @@ public:
 	void WaitForFrameResource();
 	void UpdateBuffers();
 	void RenderFrame();
+	void RenderFrameEmpty();
 
 	void UNSAFE_AddEntity(Entity* entity) override;
 	void UNSAFE_RemoveEntity(Entity* entity) override;
 
 private:
 	void ResetRendering();
-	void CloseAndExecuteRendering();
+	void ExecuteRendering();
 
 private:
 	void EnableAdditionalD3D12Debug();
@@ -49,6 +50,9 @@ private:
 	void CreateDepthStencilView(RendererDescriptor* rendererDescriptor);
 	void SetViewport(UINT clientWidth, UINT clientHeight);
 	void SetScissorRect(UINT clientWidth, UINT clientHeight);
+
+	// Temporary 
+	void CreateShaders(); // Shaders creation should be moved to the ResourceAllocator
 
 private:
 	inline D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferView()const { return CD3DX12_CPU_DESCRIPTOR_HANDLE(m_pRTVHeap->GetCPUDescriptorHandleForHeapStart(), m_pSwapChain->GetCurrentBackBufferIndex(), m_RTVDescriptorSize); };
@@ -80,6 +84,6 @@ private:
 	D3D12_VIEWPORT* m_pViewPort = nullptr;
 	tagRECT* m_pScissorRect = nullptr;
 
-
+	ShaderColor* m_pColorShader = nullptr;
 	std::vector<RendererEntityData*> m_entitiesDataList;
 };

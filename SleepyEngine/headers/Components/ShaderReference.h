@@ -7,7 +7,7 @@ public:
 	~ShaderReference() {};
 
 	// INIT
-	void Initialize() override;
+	void Initialize(ShaderReferenceDescriptor* pShaderReferenceDescriptor) {};
 
 	// SETTER / GETTER
 	Shader* GetShader() { return m_pShader; }

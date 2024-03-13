@@ -1,18 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="src\components\Collider.cpp" />
-    <ClCompile Include="src\components\ColliderOBB.cpp" />
-    <ClCompile Include="src\components\ColliderSphere.cpp" />
-    <ClCompile Include="src\components\CustomScript.cpp" />
-    <ClCompile Include="src\ecs\Component.cpp" />
-    <ClCompile Include="src\components\ShaderReference.cpp" />
+    <ClCompile Include="src\ecs\components\Collider.cpp" />
+    <ClCompile Include="src\ecs\components\ColliderOBB.cpp" />
+    <ClCompile Include="src\ecs\components\ColliderSphere.cpp" />
+    <ClCompile Include="src\ecs\components\Script.cpp" />
+    <ClCompile Include="src\ecs\components\Component.cpp" />
+    <ClCompile Include="src\ecs\components\ShaderReference.cpp" />
     <ClCompile Include="src\GameStates\GameState.cpp" />
     <ClCompile Include="src\core\Mesh.cpp" />
     <ClCompile Include="src\ecs\Entity.cpp" />
     <ClCompile Include="src\core\SleepyEngine.cpp" />
     <ClCompile Include="src\core\Timer.cpp" />
-    <ClCompile Include="src\components\Transform.cpp" />
+    <ClCompile Include="src\ecs\components\Transform.cpp" />
     <ClCompile Include="src\utils\D3DUtils.cpp" />
     <ClCompile Include="src\utils\HResultException.cpp" />
     <ClCompile Include="src\utils\MathHelper.cpp" />
@@ -25,9 +25,14 @@
     <ClCompile Include="src\core\Camera.cpp" />
     <ClCompile Include="src\ecs\System.cpp" />
     <ClCompile Include="src\utils\Utils.cpp" />
-    <ClCompile Include="src\components\MeshReference.cpp" />
+    <ClCompile Include="src\ecs\components\MeshReference.cpp" />
     <ClCompile Include="src\GameStates\EngineTestGameState.cpp" />
-    <ClCompile Include="src\graphics\Shader.cpp" />
+    <ClCompile Include="src\graphics\shaders\Shader.cpp" />
+    <ClCompile Include="src\ecs\Factory.cpp" />
+    <ClCompile Include="src\utils\ResourceAllocator.cpp" />
+    <ClCompile Include="src\graphics\shaders\ShaderColor.cpp" />
+    <ClCompile Include="src\ecs\components\Velocity.cpp" />
+    <ClCompile Include="src\ecs\components\ComponentsDescriptors.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Components\Collider.h" />
@@ -49,7 +54,7 @@
     <ClInclude Include="headers\Utils\UploadBuffer.h" />
     <ClInclude Include="headers\Utils\HResultException.h" />
     <ClInclude Include="headers\Components\ShaderReference.h" />
-    <ClInclude Include="headers\Components\CustomScript.h" />
+    <ClInclude Include="headers\Components\Script.h" />
     <ClInclude Include="src\utils\d3dx12.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="headers\Graphics\CommandQueue.h" />
@@ -69,6 +74,11 @@
     <ClInclude Include="headers\Components\MeshReference.h" />
     <ClInclude Include="headers\EngineTestGameState.h" />
     <ClInclude Include="headers\Graphics\Shader.h" />
+    <ClInclude Include="headers\ECS\Factory.h" />
+    <ClInclude Include="headers\Utils\ResourceAllocator.h" />
+    <ClInclude Include="headers\Graphics\ShaderColor.h" />
+    <ClInclude Include="headers\Components\Velocity.h" />
+    <ClInclude Include="headers\Components\ComponentsDescriptors.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SleepyEngine.rc" />
@@ -79,8 +89,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="SleepyEngine.aps" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="src\shaders\Color.hlsl" />
+    <Text Include="src\graphics\shaders\Color.hlsl" />
   </ItemGroup>
 </Project>
