@@ -11,15 +11,12 @@ SwapChain::~SwapChain()
 void SwapChain::Initialize(IDXGIFactory4* pDgxiFacotry, Device* pDevice, Window* pWindow)
 {
     CreateSwapChain(pDgxiFacotry, pDevice, pWindow);
+    BindSwapChainBuffers(pDevice);
 }
 
 void SwapChain::CreateSwapChain(IDXGIFactory4* pDgxiFacotry, Device* pDevice, Window* pWindow)
 {
-    if (m_pSwapChain)
-    {
-        m_pSwapChain->Release();
-        m_pSwapChain = nullptr;
-    }
+    RELEASE(m_pD3DSwapChain);
     DXGI_SWAP_CHAIN_DESC swapChainDescriptor;
     swapChainDescriptor.BufferDesc.Width = pWindow->GetWindowWidth();
     swapChainDescriptor.BufferDesc.Height = pWindow->GetWindowHeight();
@@ -36,15 +33,18 @@ void SwapChain::CreateSwapChain(IDXGIFactory4* pDgxiFacotry, Device* pDevice, Wi
     swapChainDescriptor.Windowed = true;
     swapChainDescriptor.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
     swapChainDescriptor.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
-    ThrowIfFailed(pDgxiFacotry->CreateSwapChain(pDevice->GetD3DDevice(), &swapChainDescriptor, &m_pSwapChain))
+    ID3D12Device* device = pDevice->GetD3DDevice();
+    HRESULT hr = pDgxiFacotry->CreateSwapChain(device, &swapChainDescriptor, &m_pD3DSwapChain);
 }
 
+void SwapChain::BindSwapChainBuffers(Device* pDevice)
+{
+    for (int i = 0; i < SWAP_CHAIN_BUFFER_COUNT; ++i) {
+        ThrowIfFailed(m_pD3DSwapChain->GetBuffer(i, __uuidof(ID3D12Resource), (void**)&m_swapChainBuffer[i]));
+    }
+}
 
 void SwapChain::Release()
 {
-    if (m_pSwapChain)
-    {
-		m_pSwapChain->Release();
-		m_pSwapChain = nullptr;
-	}
+    RELEASE(m_pD3DSwapChain);
 }

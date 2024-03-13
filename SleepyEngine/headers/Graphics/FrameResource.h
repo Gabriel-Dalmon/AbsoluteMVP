@@ -7,7 +7,7 @@ public:
 	~FrameResource();
 
 	void Initialize(ID3D12Device* pDevice);
-	void CleanUp();
+	void Release();
 
 	// GETTERS & SETTERS
 	unsigned __int64 GetFence() const { return m_currentFence; }

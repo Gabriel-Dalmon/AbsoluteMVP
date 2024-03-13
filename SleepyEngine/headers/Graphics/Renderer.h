@@ -9,8 +9,8 @@ struct RendererEntityData : public SystemEntityData
 
 struct RendererDescriptor
 {
-	int windowWidth = 400;
-	int windowHeight = 400;
+	UINT windowWidth = 400;
+	UINT windowHeight = 400;
 	LPCWSTR hAppTitle = L"SleepyEngine";
 	HICON hAppIcon = nullptr;
 	HICON hAppIconSmall = nullptr;
@@ -38,12 +38,15 @@ public:
 private:
 	void CreateFrameResources();
 	void CreateCommandObjects();
+	void RecoverDescriptorSize();
 	void CreateDescriptorHeaps();
 	void CreateRenderTargetView();
-	void CreateDepthStencilView();
-	void SetViewport();
-	void SetScissorRect();
+	void CreateDepthStencilView(RendererDescriptor* rendererDescriptor);
+	void SetViewport(UINT clientWidth, UINT clientHeight);
+	void SetScissorRect(UINT clientWidth, UINT clientHeight);
 
+private:
+	inline D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView() { return m_pDSVHeap->GetCPUDescriptorHandleForHeapStart(); }
 
 private:
 	Window* m_pWindow = nullptr;
@@ -62,8 +65,14 @@ private:
 	ID3D12GraphicsCommandList* m_pCommandList = nullptr;
 	ID3D12CommandAllocator* m_pCommandAllocator = nullptr;
 
-	ID3D12DescriptorHeap* m_pRtvHeap = nullptr;
-	ID3D12DescriptorHeap* m_pDsvHeap = nullptr;
+	ID3D12DescriptorHeap* m_pRTVHeap = nullptr;
+	UINT m_RTVDescriptorSize = 0;
+	ID3D12DescriptorHeap* m_pDSVHeap = nullptr;
+	ID3D12Resource* m_pDepthStencilBuffer = nullptr;
+
+	D3D12_VIEWPORT* m_pViewPort = nullptr;
+	tagRECT* m_pScissorRect = nullptr;
+
 
 	std::vector<RendererEntityData*> m_entitiesDataList;
 };
