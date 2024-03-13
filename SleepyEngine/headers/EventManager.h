@@ -61,6 +61,14 @@ public:
 
 	}
 
+	void trigger(EventName eventName)
+	{
+		for (int i = 0; i < eventCallbacksMap[eventName].size(); i++)
+		{
+			eventCallbacksMap[eventName][i]->execute();
+		}
+	}
+
 	void HandleEvents();
 
 	void OnKeyPressed(int key);

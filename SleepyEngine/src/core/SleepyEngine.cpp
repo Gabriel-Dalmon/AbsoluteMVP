@@ -343,6 +343,8 @@ int SleepyEngine::Run()
 
     input.subscribe(KEY_B_PRESSED, &Timer::UpdateTimer, &timer, "testModèle");
 
+    input.trigger(KEY_A_PRESSED);
+
 
     Shader shader;
     shader.Init();
