@@ -1,42 +1,22 @@
 #include "pch.h"
-#include "TempFunction.h"
 
-std::vector<HANDLE> Thread::threadList = {};
-
-Thread::Thread(HINSTANCE hInstance, FILE* consoleOut)
+void Thread::Initialize()
 {
-    m_hInstance = hInstance;
-    m_pConsoleOut = consoleOut;
-    CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)Thread::SummonThread, (void*)this, 0, NULL);
-    
+	m_hThread = CreateThread(NULL, 0, ThreadProc, (void*)this, 0, &m_ThreadId); 
+	WaitForSingleObject(m_hThread, INFINITE);
+	if (m_hThread == NULL) 
+	{
+		std::cout << "Error creating the Thread." << std::endl; 
+		return;
+	}
+	std::cout << "Thread created" << std::endl; 
+	return;
 }
-
-Thread::~Thread() {
-
-}
-
-void Thread::SummonThread(void* Instance)
+	
+DWORD CALLBACK Thread::ThreadProc(LPVOID lpParam)
 {
-    std::cout << "we summoned!" << std::endl;
-    Thread* This = (Thread*)Instance;
-    This->m_This = (HANDLE)Instance;
-    threadList.push_back(This->m_This);
-    This->RunThread();
-}
+	Thread* pThread = (Thread*)lpParam;
+	pThread->OnThread(pThread->hInstance); 
 
-void Thread::RunThread()
-{
-    OutputDebugStringA("ca marche\n");
-    // demander a Sylvain pourquoi il accepte printf et cerr mais pas cout 
-    freopen_s(&m_pConsoleOut, "CONOUT$", "w", stdout);
-    freopen_s(&m_pConsoleOut, "CONOUT$", "w", stderr);
-    TempFunction engine(m_hInstance);
-
-    std::cout << "we summoned!" << std::endl;
-    std::cerr << "we err!" << std::endl;
-
-    GameFactory* factory = new GameFactory;
-    engine.SetFactory(factory);
-    engine.Initialize();
-    engine.Run();
+	return 0;
 }

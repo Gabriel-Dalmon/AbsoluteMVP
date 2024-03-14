@@ -13,13 +13,26 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _CrtMemCheckpoint(&memStateInit);
 #endif
 
-    UNREFERENCED_PARAMETER(hPrevInstance);
-    UNREFERENCED_PARAMETER(lpCmdLine);
+    UNREFERENCED_PARAMETER(hPrevInstance); 
+    UNREFERENCED_PARAMETER(lpCmdLine); 
 
-    AllocConsole();
-    FILE consoleOut;
-    
-    Thread game(hInstance, &consoleOut);
+   /* AllocConsole();
+    FILE consoleOut;*/
+
+    /*GameApp* pGameApp = GameApp::Instance();
+    pGameApp->Initialize();
+    pGameApp->Release();*/
+    GameFactory* factory = new GameFactory();
+
+    SleepyEngine engine(hInstance);
+    engine.SetFactory(factory);
+    engine.Initialize();
+    engine.Run();
+
+
+    /*if (&consoleOut != 0)
+        fclose(&consoleOut);
+    FreeConsole();*/
 
 #ifdef _DEBUG
     _CrtMemState memStateEnd, memStateDiff;
@@ -29,12 +42,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         MessageBoxA(NULL, "MEMORY LEAKS", "DISCLAIMER", 0);
     }
 #endif 
-
-    while (true) {};
-
-    if (&consoleOut != 0)
-        fclose(&consoleOut);
-    FreeConsole();
+    
 
     return 0;
 }

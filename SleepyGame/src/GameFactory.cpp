@@ -201,3 +201,7 @@ void GameFactory::FillSphere(Entity* pEntity)
 	shaderReference->Init(&ShaderRefDesc); 
 	pEntity->AddComponent<ShaderReference*>(shaderReference);
 }
+
+void GameFactory::Release()
+{
+}

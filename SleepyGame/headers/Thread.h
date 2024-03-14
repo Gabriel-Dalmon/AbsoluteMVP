@@ -3,17 +3,18 @@
 class Thread
 {
 public:
-	Thread(HINSTANCE hInstance, FILE* consoleOut);
-	~Thread();
+	Thread() {};
+	~Thread() {};
 
-	static void SummonThread(void* functionAdress);
-	static std::vector<HANDLE> threadList;
+	// Init
+	void Initialize();
 
-	void RunThread();
+	virtual void OnThread(HINSTANCE hInstance) {};
 
 
-	WSADATA m_wsaData;
-	HANDLE m_This;
-	HINSTANCE m_hInstance;
-	FILE* m_pConsoleOut = nullptr;
+protected:
+	HINSTANCE hInstance;
+	HANDLE m_hThread; 
+	DWORD m_ThreadId; 
+	static DWORD WINAPI ThreadProc(LPVOID lpParam);
 };

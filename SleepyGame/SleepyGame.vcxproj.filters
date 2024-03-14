@@ -51,6 +51,12 @@
     <ClInclude Include="headers\BulletScript.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="headers\GameApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\ThreadApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\SleepyGame.cpp">
@@ -75,6 +81,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\BulletScript.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameApp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ThreadApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
