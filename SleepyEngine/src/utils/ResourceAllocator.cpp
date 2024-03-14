@@ -3,11 +3,14 @@
 
 
 
-void ResourceAllocator::Initialize(ID3D12Device* device, ID3D12GraphicsCommandList* commandList)
+void ResourceAllocator::Initialize(Device* pDevice, ID3D12CommandQueue* pCommandQueue)
 {
-    m_pDevice = device;
-    m_pCommandList = commandList;
+    m_pDevice = pDevice;
+    m_pCommandQueue = pCommandQueue;
     m_meshCollection = new std::map<std::string, Mesh*>;
+    // Create new command list and command allocator
+    m_pDevice->GetD3DDevice()->CreateCommandAllocator();
+    m_pDevice->GetD3DDevice()->CreateCommandList();
 }
 
 Mesh* ResourceAllocator::GetMesh(const std::string& name)
