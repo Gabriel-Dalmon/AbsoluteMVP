@@ -7,7 +7,7 @@ public:
 	~MeshReference() {};
 
 	// INIT
-	void Initialize(MeshReferenceDescriptor* desc) override;
+	void Initialize(MeshReferenceDescriptor* desc);
 
 	// SETTER / GETTER
 	Mesh* GetMesh() { return m_pMesh; }

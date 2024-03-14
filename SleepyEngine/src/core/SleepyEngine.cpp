@@ -3,6 +3,7 @@
 SleepyEngine::SleepyEngine()
 {
 	m_pTimer = new Timer();
+	m_pResourceAllocator = new ResourceAllocator();
 }
 
 SleepyEngine::~SleepyEngine()

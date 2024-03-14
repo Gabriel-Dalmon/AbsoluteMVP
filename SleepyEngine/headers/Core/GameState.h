@@ -7,7 +7,8 @@ public:
 	~GameState() {};
 
 	// INIT
-	void Initialize(HINSTANCE hAppInstance, RendererDescriptor* pRendererDescriptor);
+	// ResourceAllocator should receive its member variables differently.
+	void Initialize(HINSTANCE hAppInstance, RendererDescriptor* pRendererDescriptor, ResourceAllocator* pResourceAllocator); 
 	void Initialize(GameState* previousGameState);
 
 	// SETTER / GETTER

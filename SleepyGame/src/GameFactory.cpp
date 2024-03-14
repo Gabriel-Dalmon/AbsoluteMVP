@@ -9,7 +9,7 @@ Entity* GameFactory::CreateEmptyEntity()
 void GameFactory::FillPlayer(Entity* pEntity)
 {
 	Transform* transform = Component::CreateComponent<Transform>();
-	transform->Identity();
+	transform->Initialize();
 	pEntity->AddComponent<Transform*>(transform);
 
 	Velocity* velocity = Component::CreateComponent<Velocity>();
@@ -32,7 +32,7 @@ void GameFactory::FillPlayer(Entity* pEntity)
 
 	ShaderReferenceDescriptor ShaderRefDesc;
 
-	// for color only object :
+	/*// for color only object :
 	ShaderRefDesc.PSO = m_PSOColor;
 	ShaderRefDesc.rootSignature = m_pRootSignatureColor;
 
@@ -43,7 +43,7 @@ void GameFactory::FillPlayer(Entity* pEntity)
 	ShaderRefDesc.id = 1;
 	ShaderReference* shaderReference = Component::CreateComponent<ShaderReference>();
 	shaderReference->Initialize(&ShaderRefDesc);
-	pEntity->AddComponent<ShaderReference*>(shaderReference);
+	pEntity->AddComponent<ShaderReference*>(shaderReference);*/
 
 	//MeshRenderer* test = pEntity->GetComponent<MeshRenderer*>();
 
@@ -54,7 +54,7 @@ void GameFactory::FillPlayer(Entity* pEntity)
 void GameFactory::FillEnemy(Entity* pEntity)
 {
 	Transform* transform = Component::CreateComponent<Transform>();
-	transform->Identity();
+	transform->Initialize();
 	pEntity->AddComponent<Transform*>(transform);
 
 	Velocity* velocity = Component::CreateComponent<Velocity>();
@@ -77,7 +77,7 @@ void GameFactory::FillEnemy(Entity* pEntity)
 
 	ShaderReferenceDescriptor ShaderRefDesc;
 
-	// for color only object :
+	/*// for color only object :
 	ShaderRefDesc.PSO = m_PSOColor;
 	ShaderRefDesc.rootSignature = m_pRootSignatureColor;
 
@@ -88,14 +88,14 @@ void GameFactory::FillEnemy(Entity* pEntity)
 	ShaderRefDesc.id = 1; // chnage to id of enemy texture
 	ShaderReference* shaderReference = Component::CreateComponent<ShaderReference>();
 	shaderReference->Initialize(&ShaderRefDesc);
-	pEntity->AddComponent<ShaderReference*>(shaderReference);
+	pEntity->AddComponent<ShaderReference*>(shaderReference);*/
 };
 
 
 void GameFactory::FillBullet(Entity* pEntity)
 {
 	Transform* transform = Component::CreateComponent<Transform>();
-	transform->Identity();
+	transform->Initialize();
 	pEntity->AddComponent<Transform*>(transform);
 
 	VelocityDescriptor velocityDesc;
@@ -103,7 +103,7 @@ void GameFactory::FillBullet(Entity* pEntity)
 	velocityDesc.y = 1;
 	velocityDesc.z = 1;
 	Velocity* velocity = Component::CreateComponent<Velocity>();
-	velocity->Init(&velocityDesc);
+	velocity->Initialize(&velocityDesc);
 	pEntity->AddComponent<Velocity*>(velocity);
 
 	ColliderSphereDescriptor CSDesc;
@@ -128,7 +128,7 @@ void GameFactory::FillBullet(Entity* pEntity)
 
 	ShaderReferenceDescriptor ShaderRefDesc;
 
-	// for color only object :
+	/*// for color only object :
 	ShaderRefDesc.PSO = m_PSOColor;
 	ShaderRefDesc.rootSignature = m_pRootSignatureColor;
 
@@ -138,22 +138,22 @@ void GameFactory::FillBullet(Entity* pEntity)
 
 	//ShaderRefDesc.id = 1; // change to id of bullet texture
 	ShaderReference* shaderReference = Component::CreateComponent<ShaderReference>();
-	shaderReference->Init(&ShaderRefDesc);
-	pEntity->AddComponent<ShaderReference*>(shaderReference);
+	shaderReference->Initialize(&ShaderRefDesc);
+	pEntity->AddComponent<ShaderReference*>(shaderReference);*/
 };
 
 
 void GameFactory::FillSkybox(Entity* pEntity)
 {
 	Transform* transform = Component::CreateComponent<Transform>();
-	transform->Identity();
+	transform->Initialize();
 	pEntity->AddComponent<Transform*>(transform);
 
 	MeshReferenceDescriptor MeshRefDesc;
-	MeshRefDesc.meshRef = m_pRessourceAllocator->getMesh("sky"); // change to a bullet mesh
-	MeshRenderer* meshRef = Component::CreateComponent<MeshRenderer>();
-	meshRef->Init(&MeshRefDesc);
-	pEntity->AddComponent<MeshRenderer*>(meshRef);
+	MeshRefDesc.meshRef = m_pRessourceAllocator->GetMesh("sky"); // change to a bullet mesh
+	MeshReference* meshRef = Component::CreateComponent<MeshReference>();
+	meshRef->Initialize(&MeshRefDesc);
+	pEntity->AddComponent<MeshReference*>(meshRef);
 	std::cerr << typeid(*meshRef).name();
 
 	ShaderReferenceDescriptor ShaderRefDesc;
@@ -163,31 +163,31 @@ void GameFactory::FillSkybox(Entity* pEntity)
 	ShaderRefDesc.rootSignature = m_pRootSignatureColor;*/
 
 	// for textured object :
-	ShaderRefDesc.PSO = m_PSOTexture;
+	/*ShaderRefDesc.PSO = m_PSOTexture;
 	ShaderRefDesc.rootSignature = m_pRootSignatureTexture;
 
 	ShaderRefDesc.id = 2;
 	ShaderReference* shaderReference = Component::CreateComponent<ShaderReference>();
 	shaderReference->Init(&ShaderRefDesc);
-	pEntity->AddComponent<ShaderReference*>(shaderReference);
+	pEntity->AddComponent<ShaderReference*>(shaderReference);*/
 };
 
 void GameFactory::FillSphere(Entity* pEntity)
 {
-	Transform* transform = Component::CreateComponent<Transform>();
-	transform->Identity();
-	pEntity->AddComponent<Transform*>(transform);
+	Transform* pTransform = Component::CreateComponent<Transform>();
+	pTransform->Initialize();
+	pEntity->AddComponent<Transform>(pTransform);
 
 	MeshReferenceDescriptor MeshRefDesc;
 	MeshRefDesc.meshRef = m_pRessourceAllocator->CreateSphere(5.0f, 20, 20);
-	MeshRenderer* meshRef = Component::CreateComponent<MeshRenderer>();
-	meshRef->Init(&MeshRefDesc);
-	pEntity->AddComponent<MeshRenderer*>(meshRef);
-	std::cerr << typeid(*meshRef).name();
+	MeshReference* pMeshRef = Component::CreateComponent<MeshReference>();
+	pMeshRef->Initialize(&MeshRefDesc);
+	pEntity->AddComponent<MeshReference>(pMeshRef);
+	std::cerr << typeid(*pMeshRef).name();
 
 	ShaderReferenceDescriptor ShaderRefDesc;
 
-	// for color only object :
+	/*// for color only object :
 	ShaderRefDesc.PSO = m_PSOColor;
 	ShaderRefDesc.rootSignature = m_pRootSignatureColor;
 
@@ -196,8 +196,8 @@ void GameFactory::FillSphere(Entity* pEntity)
 	ShaderRefDesc.rootSignature = m_pRootSignatureTexture;
 
 	ShaderRefDesc.id = 2;
-	*/
+	
 	ShaderReference* shaderReference = Component::CreateComponent<ShaderReference>();
-	shaderReference->Init(&ShaderRefDesc);
-	pEntity->AddComponent<ShaderReference*>(shaderReference);
+	shaderReference->Initialize(&ShaderRefDesc);
+	pEntity->AddComponent<ShaderReference*>(shaderReference);*/
 }

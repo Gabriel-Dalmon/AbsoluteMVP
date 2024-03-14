@@ -6,21 +6,23 @@ public:
 	SleepyEngine();
 	~SleepyEngine();
 
-	template<typename T>
+	template<typename GameStateChildType, typename ECSFactoryChildType>
 	int Initialize(HINSTANCE hAppInstance, RendererDescriptor* pRendererDescriptor)
 	{
-		m_pCurrentGameState = dynamic_cast<GameState*>(new T());
-		if (m_pCurrentGameState == nullptr) // GameState must have a virtual method
+		// Should replace these runtime checks with concepts and requires clauses.
+		m_pCurrentGameState = dynamic_cast<GameState*>(new GameStateChildType());
+		m_pECSFactory = dynamic_cast<Factory*>(new ECSFactoryChildType());
+		if (m_pCurrentGameState == nullptr || m_pECSFactory == nullptr)
 		{
 			MessageBox(
 				nullptr, 
-				L"The default GameState type passed during the engine initialization is invalid. It should inherit the GameState class.", 
+				L"The types passed as templates are invalid. They should inherit the default GameState and Factory classes.", 
 				L"INITIALIZATION ERROR", 
 				MB_OK
 			);
 			return -1;
 		}
-		m_pCurrentGameState->Initialize(hAppInstance, pRendererDescriptor);
+		m_pCurrentGameState->Initialize(hAppInstance, pRendererDescriptor, m_pResourceAllocator);
 		m_pTimer->Initialize();
 		return 0;
 	};
@@ -31,6 +33,8 @@ public:
 
 private:
 	GameState* m_pCurrentGameState = nullptr;
+	Factory* m_pECSFactory = nullptr;
+	ResourceAllocator* m_pResourceAllocator = nullptr;
 	Timer* m_pTimer = nullptr;
 	bool m_isRunning = false;
 };

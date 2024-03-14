@@ -44,6 +44,9 @@ void Renderer::Initialize(HINSTANCE hInstance, RendererDescriptor* rendererDescr
 		ID3D12CommandList* cmdsLists[] = { m_pCommandList };
 		m_pCommandQueue->Execute(_countof(cmdsLists), cmdsLists);
 		m_pCommandQueue->Flush();
+
+		// To move out of the Renderer
+		m_pCamera->SetPosition(0.0f, 2.0f, -10.0f);
 	}
 	catch (HResultException& error) {
 		OutputDebugString(error.ToString().c_str());
@@ -203,39 +206,39 @@ void Renderer::WaitForFrameResource()
 	if (m_pCurrentFrameResource->GetFence() != 0 &&
 		m_pCommandQueue->GetLastCompletedFence() < m_pCurrentFrameResource->GetFence())
 	{
-		std::cout << "Waiting for frame resource to be ready. LastFence : " << m_pCommandQueue->GetLastCompletedFence() << "Fence : " << m_pCurrentFrameResource->GetFence() << m_currentFrameResourceIndex << std::endl;
 		HANDLE eventHandle = CreateEventEx(nullptr, false, false, EVENT_ALL_ACCESS);
 		ThrowIfFailed(m_pCommandQueue->SetEventOnFenceCompletion(m_pCurrentFrameResource->GetFence(), eventHandle));
 		WaitForSingleObject(eventHandle, INFINITE);
 		CloseHandle(eventHandle);
 	}
-	else
-	{
-		std::cout << "Frame resource is ready" << m_pCommandQueue->GetLastCompletedFence() << "Fence : " << m_pCurrentFrameResource->GetFence() << " Frame Resource : " << m_currentFrameResourceIndex << std::endl;
-	}
 }
+
 
 void Renderer::UpdateBuffers()
 {
-	/*
-	UpdateObjectCBs(gt);
-	UpdateMainPassCB(gt);
-	*/
+	auto currObjectCB = m_pCurrentFrameResource->GetEntitiesConstantsBuffers();
+	int i = 0;
+	XMMATRIX transformMatrix;
+	XMMATRIX worldViewProj;
+	XMMATRIX proj = XMLoadFloat4x4(&mProj);
+	XMMATRIX view = m_pCamera->GetView();
 
-	auto currObjectCB = m_pCurrentFrameResource->GetObjectCB();
 	for (RendererEntityData* entityData : m_entitiesDataList)
 	{
 		if (entityData->pEntity->GetRemainingDirtyFramesCount() > 0)
 		{
-			XMMATRIX world = XMLoadFloat4x4(&entityData->pTransform->GetWorldMatrix());
+			transformMatrix = XMLoadFloat4x4(&entityData->pTransform->GetTransformMatrix());
+			
+			worldViewProj = transformMatrix * view * proj;
 
-			ObjectConstants objConstants;
-			XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
+			EntityConstants entityConstants;
+			XMStoreFloat4x4(&entityConstants.transformMatrix, XMMatrixTranspose(transformMatrix));
 
-			currObjectCB->CopyData(entityData->ObjCBIndex, objConstants);
+			currObjectCB->CopyData(i, entityConstants);
 
 			entityData->pEntity->DecrementRemainingDirtyFramesCount();
 		}
+		i++;
 	}
 }
 
@@ -254,12 +257,13 @@ void Renderer::RenderFrame()
 
 	m_pCommandList->OMSetRenderTargets(1, &currentBackBufferView, true, &dephtStencilView);
 
-	ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvHeap }; // m_pCbv should be in frameresource
-	m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+	/*ID3D12DescriptorHeap* descriptorHeaps[] = {m_pCbvHeap}; // m_pCbv should be in frameresource
+	m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);*/ // For textures only ?
 
 	Mesh* pMesh;
 	ShaderReference* pShaderReference;
 	Shader* pShader;
+	D3D12_GPU_VIRTUAL_ADDRESS entitiesConstantsBuffers = m_pCurrentFrameResource->GetEntitiesConstantsBuffers()->Resource()->GetGPUVirtualAddress();
 	for (RendererEntityData* entityData : m_entitiesDataList)
 	{
 		pMesh = entityData->pMeshReference->GetMesh();
@@ -273,8 +277,7 @@ void Renderer::RenderFrame()
 		m_pCommandList->IASetIndexBuffer(&pMesh->IndexBufferView());
 		m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		m_pCommandList->SetGraphicsRootConstantBufferView(0, m_pObjectCB->Resource()->GetGPUVirtualAddress());//
-
+		m_pCommandList->SetGraphicsRootConstantBufferView(0, entitiesConstantsBuffers);//
 
 		m_pCommandList->DrawIndexedInstanced(pMesh->m_drawArgs["box"].IndexCount, 1, pMesh->m_drawArgs["box"].StartIndexLocation, pMesh->m_drawArgs["box"].BaseVertexLocation, 0);
 	}
@@ -372,12 +375,10 @@ void Renderer::ExecuteRendering()
 
 	ThrowIfFailed(m_pSwapChain->GetD3DSwapChain()->Present(0, 0));
 
-	std::cout << "Frame " << m_currentFrameResourceIndex << " presented" << std::endl;
 	m_pSwapChain->NextBackBuffer();
 	m_pCurrentFrameResource->IncrementFence();
 	if (m_currentFrameResourceIndex == 0)
 	{
 		m_pCommandQueue->Signal(m_pCurrentFrameResource->GetFence());
 	}
-	std::cout << "Next fence value : " << m_pCurrentFrameResource->GetFence() << " Currently on " << m_pCommandQueue->GetLastCompletedFence() << std::endl;
 }

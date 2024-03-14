@@ -27,7 +27,7 @@
     <ClInclude Include="SleepyGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameTestGameState.h">
+    <ClInclude Include="headers\GameStates\PlayGameState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="headers\pch.h">
@@ -42,12 +42,18 @@
     <ClInclude Include="headers\Utils\Thread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="headers\Scripts\PlayerScript.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\Scripts\EnemyScript.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SleepyGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameTestGameState.cpp">
+    <ClCompile Include="src\gamestates\PlayGameState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\GameFactory.cpp">
@@ -57,6 +63,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\utils\Thread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scripts\PlayerScript.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scripts\EnemyScript.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

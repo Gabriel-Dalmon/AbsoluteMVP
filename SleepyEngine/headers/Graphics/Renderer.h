@@ -84,6 +84,9 @@ private:
 	D3D12_VIEWPORT* m_pViewPort = nullptr;
 	tagRECT* m_pScissorRect = nullptr;
 
+	XMFLOAT4X4 mProj = MathHelper::Identity4x4();
+	Camera* m_pCamera = nullptr;
+
 	ShaderColor* m_pColorShader = nullptr;
 	std::vector<RendererEntityData*> m_entitiesDataList;
 };

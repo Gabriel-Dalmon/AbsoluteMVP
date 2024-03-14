@@ -7,7 +7,6 @@ Thread::Thread(HINSTANCE hInstance, FILE* consoleOut)
     m_hInstance = hInstance;
     m_pConsoleOut = consoleOut;
     CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)Thread::SummonThread, (void*)this, 0, NULL);
-
 }
 
 Thread::~Thread() {
@@ -34,8 +33,11 @@ void Thread::RunThread()
     std::cout << "we summoned!" << std::endl;
     std::cerr << "we err!" << std::endl;
 
-    GameFactory* factory = new GameFactory;
+    //GameFactory* factory = new GameFactory;
     //engine.SetFactory(factory);
-    engine.Initialize<PlayGameState>(hInstance, );
+    RendererDescriptor rendererDescriptor;
+    rendererDescriptor.windowWidth = 600;
+    rendererDescriptor.windowHeight = 600;
+    engine.Initialize<PlayGameState, GameFactory>(m_hInstance, &rendererDescriptor);
     engine.Run();
 }

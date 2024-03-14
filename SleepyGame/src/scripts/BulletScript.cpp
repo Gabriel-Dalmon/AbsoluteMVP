@@ -12,10 +12,10 @@ void BulletScript::OnScript()
 	std::cerr << "z : " << z << std::endl;
 	transform->SetPosition(x, y, z);
 
-
-	for (int i = 0; i < m_entities.size(); i++) {
+	// What is m_entities? Where is it coming from?
+	/*for (int i = 0; i < m_entities.size(); i++) {
 		for (int j = m_entities.size(); j >= i; i--) {
 			ColliderHandMade::collideTest(m_entities[i], m_entities[j]);
 		}
-	}
+	}*/
 }

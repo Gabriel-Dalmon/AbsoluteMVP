@@ -146,20 +146,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
-    <ClInclude Include="GameTestGameState.h" />
+    <ClInclude Include="headers\GameStates\PlayGameState.h" />
     <ClInclude Include="headers\GameFactory.h" />
     <ClInclude Include="headers\pch.h" />
     <ClInclude Include="headers\Scripts\BulletScript.h" />
+    <ClInclude Include="headers\Scripts\EnemyScript.h" />
+    <ClInclude Include="headers\Scripts\PlayerScript.h" />
     <ClInclude Include="headers\Utils\Thread.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SleepyGame.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GameTestGameState.cpp" />
+    <ClCompile Include="src\gamestates\PlayGameState.cpp" />
     <ClCompile Include="SleepyGame.cpp" />
     <ClCompile Include="src\GameFactory.cpp" />
     <ClCompile Include="src\scripts\BulletScript.cpp" />
+    <ClCompile Include="src\scripts\EnemyScript.cpp" />
+    <ClCompile Include="src\scripts\PlayerScript.cpp" />
     <ClCompile Include="src\utils\Thread.cpp" />
   </ItemGroup>
   <ItemGroup>

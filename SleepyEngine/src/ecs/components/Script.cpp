@@ -1,14 +1,14 @@
 #include "pch.h"
 
-CustomScript::CustomScript()
+Script::Script()
 {
 
 }
 
-void CustomScript::Initialize()
+void Script::Initialize(ScriptDescriptor* desc)
 {
 }
 
-void CustomScript::Release()
+void Script::Release()
 {
 }

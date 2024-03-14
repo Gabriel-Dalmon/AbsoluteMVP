@@ -11,6 +11,8 @@ public:
 
 	Mesh* GetMesh(const std::string& fileName);
 
+	Mesh* CreateSphere(float radius, uint32_t sliceCount, uint32_t stackCount);
+
 private:
 	std::map<std::string, Mesh*>* m_meshCollection;
 	ID3D12Device* m_pDevice;

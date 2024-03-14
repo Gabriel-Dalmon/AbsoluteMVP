@@ -60,7 +60,7 @@ class ShaderReference;
 class Collider;
 class ColliderOBB;
 class ColliderSphere;
-class CustomScript;
+class Script;
 class Velocity;
 
 class Entity;
@@ -162,7 +162,7 @@ using namespace Sleepy;
 #include "Components/Collider.h"
 #include "Components/ColliderOBB.h"
 #include "Components/ColliderSphere.h"
-#include "Components/CustomScript.h"
+#include "Components/Script.h"
 #include "Components/Velocity.h"
 
 #include "ECS/Entity.h"
