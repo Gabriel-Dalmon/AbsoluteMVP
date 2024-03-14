@@ -70,6 +70,7 @@ class CommandQueue;
 class FrameResource;
 class Shader;
 class ShaderColor;
+class ShaderTexture;
 
 class Timer;
 class Camera;
@@ -173,6 +174,7 @@ using namespace Sleepy;
 #include "Graphics/CommandQueue.h"
 #include "Graphics/Shader.h"
 #include "Graphics/ShaderColor.h"
+#include "Graphics/ShaderTexture.h"
 
 #include "Mesh.h"
 

@@ -35,6 +35,7 @@
     <ClCompile Include="src\ecs\components\ComponentsDescriptors.cpp" />
     <ClCompile Include="src\Physic\PhysicHandler.cpp" />
     <ClCompile Include="src\ecs\GameSystem.cpp" />
+    <ClCompile Include="src\graphics\shaders\ShaderTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Components\Collider.h" />
@@ -81,6 +82,7 @@
     <ClInclude Include="headers\Components\ComponentsDescriptors.h" />
     <ClInclude Include="headers\Physic\PhysicHandler.h" />
     <ClInclude Include="headers\ECS\GameSystem.h" />
+    <ClInclude Include="headers\Graphics\ShaderTexture.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SleepyEngine.rc" />
@@ -95,5 +97,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\graphics\shaders\Color.hlsl" />
+    <Text Include="src\graphics\shaders\Texture.hlsl" />
   </ItemGroup>
 </Project>

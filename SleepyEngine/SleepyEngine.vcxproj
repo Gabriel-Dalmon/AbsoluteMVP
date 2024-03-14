@@ -153,6 +153,7 @@
     <ClInclude Include="headers\Core\GameState.h" />
     <ClInclude Include="headers\Component.h" />
     <ClInclude Include="headers\Graphics\ShaderColor.h" />
+    <ClInclude Include="headers\Graphics\ShaderTexture.h" />
     <ClInclude Include="headers\Physic\PhysicHandler.h" />
     <ClInclude Include="headers\Utils\D3DUtils.h" />
     <ClInclude Include="headers\Engine.h" />
@@ -211,6 +212,7 @@
     <ClCompile Include="src\graphics\Renderer.cpp" />
     <ClCompile Include="src\graphics\shaders\Shader.cpp" />
     <ClCompile Include="src\graphics\shaders\ShaderColor.cpp" />
+    <ClCompile Include="src\graphics\shaders\ShaderTexture.cpp" />
     <ClCompile Include="src\graphics\SwapChain.cpp" />
     <ClCompile Include="src\graphics\Window.cpp" />
     <ClCompile Include="src\Physic\PhysicHandler.cpp" />
@@ -235,6 +237,11 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SleepyEngine.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\graphics\shaders\Texture.hlsl">
+      <FileType>Document</FileType>
+    </Text>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
