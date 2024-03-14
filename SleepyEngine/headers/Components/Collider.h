@@ -9,6 +9,10 @@ public:
 	// INIT
 	void Initialize() override;
 
+public:
+	float GetRadius() { return m_radius; };
+
 private:
+	float m_radius;
 };
 

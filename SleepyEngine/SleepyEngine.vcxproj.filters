@@ -33,11 +33,11 @@
     <ClCompile Include="src\graphics\shaders\ShaderColor.cpp" />
     <ClCompile Include="src\ecs\components\Velocity.cpp" />
     <ClCompile Include="src\ecs\components\ComponentsDescriptors.cpp" />
+    <ClCompile Include="src\Physic\PhysicHandler.cpp" />
+    <ClCompile Include="src\ecs\GameSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Components\Collider.h" />
-    <ClInclude Include="headers\Components\ColliderOBB.h" />
-    <ClInclude Include="headers\Components\ColliderSphere.h" />
     <ClInclude Include="headers\Core\GameState.h" />
     <ClInclude Include="headers\Component.h" />
     <ClInclude Include="headers\Utils\D3DUtils.h" />
@@ -79,6 +79,8 @@
     <ClInclude Include="headers\Graphics\ShaderColor.h" />
     <ClInclude Include="headers\Components\Velocity.h" />
     <ClInclude Include="headers\Components\ComponentsDescriptors.h" />
+    <ClInclude Include="headers\Physic\PhysicHandler.h" />
+    <ClInclude Include="headers\ECS\GameSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SleepyEngine.rc" />

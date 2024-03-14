@@ -15,6 +15,14 @@ void GameState::Initialize(HINSTANCE hAppInstance, RendererDescriptor* pRenderer
 	pRenderer->Initialize(hAppInstance, pRendererDescriptor);
 	pResourceAllocator->Initialize(pRenderer->GetDevice()->GetD3DDevice(), pRenderer->Get);
 	m_systemsList.push_back(pRenderer);
+
+	PhysicHandler* pPhysic = new PhysicHandler();
+	pPhysic->Initialize();
+	m_systemsList.push_back(pPhysic);
+
+	GameSystem* pGameSys = new GameSystem();
+	pGameSys->Initialize();
+	m_systemsList.push_back(pGameSys);
 }
 
 void GameState::Initialize(GameState* previousGameState)

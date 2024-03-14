@@ -58,8 +58,6 @@ class Transform;
 class MeshReference;
 class ShaderReference;
 class Collider;
-class ColliderOBB;
-class ColliderSphere;
 class Script;
 class Velocity;
 
@@ -85,6 +83,9 @@ class ResourceAllocator;
 struct RendererEntityData;
 struct RendererDescriptor;
 class Renderer;
+
+class PhysicHandler;
+class GameSysytem;
 
 class GameState;
 class EngineTestGameState;
@@ -160,8 +161,6 @@ using namespace Sleepy;
 #include "Components/MeshReference.h"
 #include "Components/ShaderReference.h"
 #include "Components/Collider.h"
-#include "Components/ColliderOBB.h"
-#include "Components/ColliderSphere.h"
 #include "Components/Script.h"
 #include "Components/Velocity.h"
 
@@ -183,6 +182,9 @@ using namespace Sleepy;
 
 #include "ECS/Factory.h"
 #include "Utils/ResourceAllocator.h"
+
+#include "Physic/PhysicHandler.h"
+#include "ECS/GameSystem.h"
 
 #include "Camera.h"
 #include "Core/Timer.h"
