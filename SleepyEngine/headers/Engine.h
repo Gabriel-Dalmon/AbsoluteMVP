@@ -74,6 +74,7 @@ class ShaderTexture;
 
 class Timer;
 class Camera;
+class CameraScript;
 
 struct SystemEntityData;
 class System;
@@ -164,6 +165,8 @@ using namespace Sleepy;
 #include "Components/Collider.h"
 #include "Components/Script.h"
 #include "Components/Velocity.h"
+#include "Components/Camera.h"
+#include "Components/CameraScript.h"
 
 #include "ECS/Entity.h"
 
@@ -188,7 +191,6 @@ using namespace Sleepy;
 #include "Physic/PhysicHandler.h"
 #include "ECS/GameSystem.h"
 
-#include "Camera.h"
 #include "Core/Timer.h"
 
 #include "Core/GameState.h"

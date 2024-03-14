@@ -2,8 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="src\ecs\components\Collider.cpp" />
-    <ClCompile Include="src\ecs\components\ColliderOBB.cpp" />
-    <ClCompile Include="src\ecs\components\ColliderSphere.cpp" />
     <ClCompile Include="src\ecs\components\Script.cpp" />
     <ClCompile Include="src\ecs\components\Component.cpp" />
     <ClCompile Include="src\ecs\components\ShaderReference.cpp" />
@@ -36,6 +34,8 @@
     <ClCompile Include="src\Physic\PhysicHandler.cpp" />
     <ClCompile Include="src\ecs\GameSystem.cpp" />
     <ClCompile Include="src\graphics\shaders\ShaderTexture.cpp" />
+    <ClCompile Include="src\ecs\components\Camera.cpp" />
+    <ClCompile Include="src\ecs\components\CameraScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Components\Collider.h" />
@@ -70,7 +70,6 @@
     <ClInclude Include="headers\ECS\Entity.h" />
     <ClInclude Include="headers\ECS\Component.h" />
     <ClInclude Include="headers\Engine.h" />
-    <ClInclude Include="headers\Camera.h" />
     <ClInclude Include="headers\Utils\Utils.h" />
     <ClInclude Include="headers\Components\MeshReference.h" />
     <ClInclude Include="headers\EngineTestGameState.h" />
@@ -83,6 +82,8 @@
     <ClInclude Include="headers\Physic\PhysicHandler.h" />
     <ClInclude Include="headers\ECS\GameSystem.h" />
     <ClInclude Include="headers\Graphics\ShaderTexture.h" />
+    <ClInclude Include="headers\Components\Camera.h" />
+    <ClInclude Include="headers\Components\CameraScript.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SleepyEngine.rc" />

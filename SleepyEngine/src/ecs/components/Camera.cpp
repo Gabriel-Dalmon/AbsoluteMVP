@@ -1,17 +1,4 @@
-//***************************************************************************************
-// Camera.h by Frank Luna (C) 2011 All Rights Reserved.
-//***************************************************************************************
-
 #include "pch.h"
-
-
-Camera::Camera()
-{
-}
-
-Camera::~Camera()
-{
-}
 
 XMVECTOR Camera::GetPosition()const
 {
@@ -109,27 +96,4 @@ float Camera::GetFarWindowWidth()const
 float Camera::GetFarWindowHeight()const
 {
 	return mFarWindowHeight;
-}
-
-XMMATRIX Camera::GetView()const
-{
-	//assert(!mViewDirty);
-	return XMLoadFloat4x4(&mView);
-}
-
-XMMATRIX Camera::GetProj()const
-{
-	return XMLoadFloat4x4(&mProj);
-}
-
-
-XMFLOAT4X4 Camera::GetView4x4f()const
-{
-	assert(!mViewDirty);
-	return mView;
-}
-
-XMFLOAT4X4 Camera::GetProj4x4f()const
-{
-	return mProj;
 }

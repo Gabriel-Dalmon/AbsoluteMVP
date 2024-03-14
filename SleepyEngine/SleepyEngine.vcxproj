@@ -139,7 +139,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="headers\Camera.h" />
+    <ClInclude Include="headers\Components\Camera.h" />
+    <ClInclude Include="headers\Components\CameraScript.h" />
     <ClInclude Include="headers\Components\Collider.h" />
     <ClInclude Include="headers\Components\ComponentsDescriptors.h" />
     <ClInclude Include="headers\Components\MeshReference.h" />
@@ -186,6 +187,8 @@
     <ClInclude Include="src\utils\d3dx12.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\ecs\components\Camera.cpp" />
+    <ClCompile Include="src\ecs\components\CameraScript.cpp" />
     <ClCompile Include="src\ecs\components\ComponentsDescriptors.cpp" />
     <ClCompile Include="src\ecs\components\MeshReference.cpp" />
     <ClCompile Include="src\ecs\components\Velocity.cpp" />
@@ -194,8 +197,6 @@
     <ClCompile Include="src\ecs\System.cpp" />
     <ClCompile Include="src\core\Camera.cpp" />
     <ClCompile Include="src\ecs\components\Collider.cpp" />
-    <ClCompile Include="src\ecs\components\ColliderOBB.cpp" />
-    <ClCompile Include="src\ecs\components\ColliderSphere.cpp" />
     <ClCompile Include="src\ecs\components\Script.cpp" />
     <ClCompile Include="src\ecs\components\Component.cpp" />
     <ClCompile Include="src\ecs\components\ShaderReference.cpp" />

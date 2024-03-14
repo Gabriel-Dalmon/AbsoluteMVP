@@ -47,3 +47,8 @@ struct ScriptDescriptor : Descriptor
 {
 	Entity* motherEntity;
 };
+
+struct ColliderDescriptor : Descriptor
+{
+	float radius;
+};

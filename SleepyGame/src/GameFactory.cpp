@@ -16,12 +16,11 @@ void GameFactory::FillPlayer(Entity* pEntity)
 	velocity->SetVelocity(0.0f, 0.0f, 0.0f);
 	pEntity->AddComponent<Velocity*>(velocity);
 
-	ColliderSphereDescriptor CSDesc;
-	CSDesc.center = { 0, 0, 0 };
+	ColliderDescriptor CSDesc;
 	CSDesc.radius = 1;
-	ColliderSphere* collider = Component::CreateComponent<ColliderSphere>();
+	Collider* collider = Component::CreateComponent<Collider>();
 	collider->Initialize(&CSDesc);
-	pEntity->AddComponent<ColliderSphere*>(collider);
+	pEntity->AddComponent<Collider*>(collider);
 
 	MeshReferenceDescriptor MeshRefDesc;
 	MeshRefDesc.meshRef = m_pRessourceAllocator->GetMesh("cube");
@@ -61,12 +60,11 @@ void GameFactory::FillEnemy(Entity* pEntity)
 	velocity->SetVelocity(0.0f, 0.0f, 0.0f);
 	pEntity->AddComponent<Velocity*>(velocity);
 
-	ColliderSphereDescriptor CSDesc;
-	CSDesc.center = { 0, 0, 0 };
+	ColliderDescriptor CSDesc;
 	CSDesc.radius = 1;
-	ColliderSphere* collider = Component::CreateComponent<ColliderSphere>();
+	Collider* collider = Component::CreateComponent<Collider>();
 	collider->Initialize(&CSDesc);
-	pEntity->AddComponent<ColliderSphere*>(collider);
+	pEntity->AddComponent<Collider*>(collider);
 
 	MeshReferenceDescriptor MeshRefDesc;
 	MeshRefDesc.meshRef = m_pRessourceAllocator->GetMesh("cube"); // change to an enemy mesh 
@@ -106,12 +104,11 @@ void GameFactory::FillBullet(Entity* pEntity)
 	velocity->Initialize(&velocityDesc);
 	pEntity->AddComponent<Velocity*>(velocity);
 
-	ColliderSphereDescriptor CSDesc;
-	CSDesc.center = { 0, 0, 0 };
+	ColliderDescriptor CSDesc;
 	CSDesc.radius = 1;
-	ColliderSphere* collider = Component::CreateComponent<ColliderSphere>();
+	Collider* collider = Component::CreateComponent<Collider>();
 	collider->Initialize(&CSDesc);
-	pEntity->AddComponent<ColliderSphere*>(collider);
+	pEntity->AddComponent<Collider*>(collider);
 
 	MeshReferenceDescriptor MeshRefDesc;
 	MeshRefDesc.meshRef = m_pRessourceAllocator->GetMesh("cube"); // change to a bullet mesh
@@ -174,7 +171,7 @@ void GameFactory::FillSkybox(Entity* pEntity)
 
 void GameFactory::FillSphere(Entity* pEntity)
 {
-	Transform* pTransform = Component::CreateComponent<Transform>();
+	/*Transform* pTransform = Component::CreateComponent<Transform>();
 	pTransform->Initialize();
 	pEntity->AddComponent<Transform>(pTransform);
 
@@ -185,7 +182,7 @@ void GameFactory::FillSphere(Entity* pEntity)
 	pEntity->AddComponent<MeshReference>(pMeshRef);
 	std::cerr << typeid(*pMeshRef).name();
 
-	ShaderReferenceDescriptor ShaderRefDesc;
+	ShaderReferenceDescriptor ShaderRefDesc;*/
 
 	/*// for color only object :
 	ShaderRefDesc.PSO = m_PSOColor;

@@ -1,6 +1,6 @@
 #pragma once
 
-class Camera
+class Camera : public Component
 {
 public:
 
@@ -21,6 +21,13 @@ public:
 	XMVECTOR GetLook()const;
 	XMFLOAT3 GetLook3f()const;
 
+	// Get View/Proj matrices.
+	XMMATRIX GetView()const;
+	XMMATRIX GetProj()const;
+
+	XMFLOAT4X4 GetView4x4f()const;
+	XMFLOAT4X4 GetProj4x4f()const;
+
 	// Get frustum properties.
 	float GetNearZ()const;
 	float GetFarZ()const;
@@ -34,32 +41,8 @@ public:
 	float GetFarWindowWidth()const;
 	float GetFarWindowHeight()const;
 
-	// Set frustum.
-	void SetLens(float fovY, float aspect, float zn, float zf);
 
-	// Define camera space via LookAt parameters.
-	void LookAt(FXMVECTOR pos, FXMVECTOR target, FXMVECTOR worldUp);
-	void LookAt(const XMFLOAT3& pos, const XMFLOAT3& target, const XMFLOAT3& up);
-
-	// Get View/Proj matrices.
-	XMMATRIX GetView()const;
-	XMMATRIX GetProj()const;
-
-	XMFLOAT4X4 GetView4x4f()const;
-	XMFLOAT4X4 GetProj4x4f()const;
-
-	// Strafe/Walk the camera a distance d.
-	void Strafe(float d);
-	void Walk(float d);
-
-	// Rotate the camera.
-	void Pitch(float angle);
-	void RotateY(float angle);
-
-	// After modifying camera position/orientation, call to rebuild the view matrix.
-	void UpdateViewMatrix();
-
-private:
+public:
 
 	// Camera coordinate system with coordinates relative to world space.
 	XMFLOAT3 mPosition = { 0.0f, 0.0f, 0.0f };
