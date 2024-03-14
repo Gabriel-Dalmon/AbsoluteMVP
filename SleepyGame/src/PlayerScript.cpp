@@ -2,33 +2,31 @@
 
 void PlayerScript::OnScript()
 {
-	CriticalDamage();
+	Update();
+}
+
+void PlayerScript::Update()
+{
 }
 
 void PlayerScript::Shoot()
 {
 	Entity* bullet = Entity::CreateEmptyEntity();
 	m_pGameFactory->FillBullet(bullet);
-	m_pGameState->AddEntity(bullet);
+	m_pGameState->AddEntity(bullet); 
 
-	// TO DO:
-	/*
-		bullet->SetDirection(x, y, z); Selon la direction de la caméra -> selon l'orientation de la souris
-		if (collision avec enemy)
-		{
-			m_health de enemy -= m_damage de player;
-			if (m_health de enemy == 0)
-			{
-				enemy->Die();
-				// Eventuellement changer de game state (pour un boss par exemple)
-			}
-		}
-	*/
+	Transform* CamTrans = m_pCamera->GetComponent<Transform*>();
+
+	bullet->GetComponent<Transform*>()->SetRotation(CamTrans);
 }
 
 void PlayerScript::UpdateHealth(float damage)
 {
 	m_health -= damage;
+	if (m_health <= 0)
+	{
+		Die();
+	}
 }
 
 void PlayerScript::CriticalDamage()
@@ -41,6 +39,7 @@ void PlayerScript::CriticalDamage()
 		m_damage *= 2;
 		Shoot();
 		m_damage = buffer;
+		return;
 	}
 	Shoot();
 }

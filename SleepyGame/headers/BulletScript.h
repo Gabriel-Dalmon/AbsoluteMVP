@@ -2,5 +2,12 @@
 
 class BulletScript : public Script
 {
-	void OnScript()override;
+public:
+	BulletScript() {};
+	~BulletScript() {};
+
+	// Script class override
+	void OnScript() override;
+
+private:
 };

@@ -12,8 +12,10 @@ public:
 	// OnScript()
 	void OnScript() override;
 
+	void Update();
+
 	void UpdateHealth(float damage);
-	void ShootAt();
+	void ShootAt(Entity* player);
 
 	void Die(); 
 
@@ -23,5 +25,7 @@ public:
 private:
 	float m_health = 100.0f;
 	float m_damage = 10.0f;
+
+	Entity* m_pPlayerEntity = nullptr;
 };
 
