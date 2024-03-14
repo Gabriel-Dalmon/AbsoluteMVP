@@ -3,14 +3,28 @@
 
 
 
-void ResourceAllocator::Initialize(Device* pDevice, ID3D12CommandQueue* pCommandQueue)
+void ResourceAllocator::Initialize(Device* pDevice, CommandQueue* pCommandQueue)
 {
     m_pDevice = pDevice;
     m_pCommandQueue = pCommandQueue;
     m_meshCollection = new std::map<std::string, Mesh*>;
-    // Create new command list and command allocator
-    m_pDevice->GetD3DDevice()->CreateCommandAllocator();
-    m_pDevice->GetD3DDevice()->CreateCommandList();
+
+    ID3D12Device* pD3DDevice = m_pDevice->GetD3DDevice();
+
+    pD3DDevice->CreateCommandAllocator(
+        D3D12_COMMAND_LIST_TYPE_DIRECT, 
+        __uuidof(ID3D12CommandAllocator), 
+        (void**)&m_pCommandAllocator)
+    );
+
+    pD3DDevice->CreateCommandList(
+        0, 
+        D3D12_COMMAND_LIST_TYPE_DIRECT, 
+        m_pCommandAllocator, 
+        nullptr, 
+        __uuidof(ID3D12CommandList), 
+        (void**)&m_pCommandList
+    );
 }
 
 Mesh* ResourceAllocator::GetMesh(const std::string& name)
@@ -94,7 +108,7 @@ Mesh* ResourceAllocator::GetMesh(const std::string& name)
 
         Mesh* mesh = new Mesh();
 
-        mesh->Init(m_pDevice, m_pCommandList, &vertices, &indices);
+        mesh->Initialize(m_pDevice, m_pCommandList, &vertices, &indices);
         m_meshCollection->insert(std::pair<std::string, Mesh*>(name, mesh));
 
         return mesh;
@@ -102,6 +116,8 @@ Mesh* ResourceAllocator::GetMesh(const std::string& name)
 
     return nullptr;
 }
+
+
 
 Mesh* ResourceAllocator::CreateSphere(float radius, uint32_t sliceCount, uint32_t stackCount)
 {

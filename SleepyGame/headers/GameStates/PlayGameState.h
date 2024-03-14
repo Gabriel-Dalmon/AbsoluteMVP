@@ -7,7 +7,8 @@ public:
 	~PlayGameState() {};
 
 	// INIT
-	void Init();
+	void Initialize();
+	void OnEngineCreated(Factory* pECSFactory) override;
 
 	// Entity linked functions
 	void CreatePlayer();

@@ -36,6 +36,11 @@ public:
 	void UNSAFE_AddEntity(Entity* entity) override;
 	void UNSAFE_RemoveEntity(Entity* entity) override;
 
+public:
+	// GETTERS / SETTERS
+	inline Device* GetDevice() { return m_pDevice; };
+	inline CommandQueue* GetCommandQueue() { return m_pCommandQueue; };
+
 private:
 	void ResetRendering();
 	void ExecuteRendering();
@@ -53,6 +58,8 @@ private:
 
 	// Temporary 
 	void CreateShaders(); // Shaders creation should be moved to the ResourceAllocator
+
+
 
 private:
 	inline D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferView()const { return CD3DX12_CPU_DESCRIPTOR_HANDLE(m_pRTVHeap->GetCPUDescriptorHandleForHeapStart(), m_pSwapChain->GetCurrentBackBufferIndex(), m_RTVDescriptorSize); };

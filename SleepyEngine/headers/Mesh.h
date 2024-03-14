@@ -1,5 +1,6 @@
 #pragma once
 
+
 struct Submesh
 {
 	UINT IndexCount = 0;
@@ -34,9 +35,9 @@ public:
 	~Mesh();
 
 	// Init
-	void Init(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, std::vector<Vertex>* vertices, std::vector<uint16_t>* indices);
-	void Init(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, std::vector<VertexTexture>* vertices, std::vector<uint16_t>* indices);
-	void Init(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, std::vector<VertexColor>* vertices, std::vector<uint16_t>* indices);
+	void Initialize(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, std::vector<Vertex>* vertices, std::vector<uint16_t>* indices);
+	void Initialize(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, std::vector<VertexTexture>* vertices, std::vector<uint16_t>* indices);
+	void Initialize(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, std::vector<VertexColor>* vertices, std::vector<uint16_t>* indices);
 
 	// Release
 	void Release();
@@ -48,9 +49,6 @@ public:
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_pGPUVertexBuffer = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_pGPUIndexBuffer = nullptr;
-
-	ID3D12Resource* m_pUploaderVertexBuffer = nullptr;
-	ID3D12Resource* m_pUploaderIndexBuffer = nullptr;
 
 
 	int m_vertexByteStride = 0;

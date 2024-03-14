@@ -1,7 +1,13 @@
 #include "pch.h"
 
-void PlayGameState::Init()
+void PlayGameState::Initialize()
 {
+	CreatePlayer();
+}
+
+void PlayGameState::OnEngineCreated(Factory* pECSFactory)
+{
+	m_pGameFactory = (GameFactory*)pECSFactory;
 }
 
 void PlayGameState::CreatePlayer()
