@@ -5,6 +5,9 @@ struct ObjectConstants
     XMFLOAT4X4 WorldViewProj = MathHelper::Identity4x4();
 };
 
+template<typename... argTypes>
+struct args {};
+
 
 class SleepyEngine
 {

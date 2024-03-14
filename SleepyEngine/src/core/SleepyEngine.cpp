@@ -4,6 +4,9 @@
 
 #include "resource.h"
 
+template<typename... argTypes>
+struct args {};
+
 //#include "Camera.h"
 //#include "Transform.h"
 //#include "Mesh.h"
@@ -316,8 +319,9 @@ void func() {
     std::cout << "Half a A press" << std::endl;
 }
 
-void func2() {
+void func2(SleepyEngine* eng) {
     std::cout << "Parallel Universes" << std::endl;
+    eng->GetApp()->Run();
 }
 
 int SleepyEngine::Run()
@@ -332,9 +336,18 @@ int SleepyEngine::Run()
 
     EventManager input;
     input.Init();
-    input.subscribe(KEY_A_PRESSED, &func, "testA1");
+    //input.subscribe(KEY_A_PRESSED, []() -> void{
+    //    std::cout << "AAAAAAAAAAAAAAAAAAAAA" << std::endl;
+    //}, "testA1");
 
-    input.subscribe(KEY_A_RELEASED, &func2, "testA2");
+    struct args
+    {
+        SleepyEngine* engine;
+
+    };
+    args args;
+    args.engine = this;
+    input.subscribe(KEY_A_RELEASED, &func2, "testA2", 1, (void*)&args);
     
     input.unsubscribe("testA2");
 
@@ -696,7 +709,7 @@ void SleepyEngine::Update()
     float z = mRadius * sinf(mPhi) * sinf(mTheta); 
     float y = mRadius * cosf(mPhi); 
 
-    // Build the view matrix.
+    //// Build the view matrix.
     XMVECTOR pos = XMVectorSet(x, y, z, 1.0f); 
     XMVECTOR target = XMVectorZero(); 
     XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f); 

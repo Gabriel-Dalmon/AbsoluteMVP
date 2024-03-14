@@ -3,6 +3,7 @@
 #include "EventsName.h"
 #include "FunctionCommand.h"
 #include "MethodCommand.h"
+#include <cstdarg>
 
 typedef enum EventCallbackReturn
 {
@@ -23,12 +24,13 @@ public:
 
 	// Setter / Getter
 
-
-	void subscribe(EventName eventName, void(*callback)(), std::string id)
+	template<class... Types>
+	void subscribe(EventName eventName, void(*callback)(Types... args), std::string id, int count=0, void* a)
 	{
-		eventCallbacksMap[eventName].push_back(new FunctionCommand(callback));
+		eventCallbacksMap[eventName].push_back(new FunctionCommand(callback, a));
 		std::pair<EventName, AbstractCommand*> m = { eventName, eventCallbacksMap[eventName].back() };
 		callbacks.insert({ id, m });
+		callbacks_args.insert({ id, a });
 		std::cout << "Pushed Back" << eventName << "|" << eventCallbacksMap[eventName].size() << "\n";
 	}
 
@@ -80,6 +82,5 @@ private:
 	std::vector<int> m_EventPressControl;
 
 	std::map<std::string, std::pair<EventName, AbstractCommand*>> callbacks;
+	std::map<std::string, void*> callbacks_args;
 };
-
-
