@@ -48,8 +48,11 @@ Mesh* RessourceAllocator::getMesh(const std::string& name)
                 JsonVertices[i]["coordinates"][2].asFloat()
                 ),
                 XMFLOAT2(
-                JsonVertices[i]["UV"][0].asFloat(),
-                JsonVertices[i]["UV"][1].asFloat()
+                //JsonVertices[i]["UV"][0].asFloat(),
+                //JsonVertices[i]["UV"][1].asFloat()
+
+                JsonVertices[i]["UV"][0].asFloat() / JsonVertices[i]["UV"][1].asFloat(),
+                JsonVertices[i]["UV"][2].asFloat() / JsonVertices[i]["UV"][3].asFloat()
                 ) }));
         }
 
