@@ -2,36 +2,30 @@
 
 void EnemyScript::OnScript()
 {
+	Update(); 
+	ShootAt(m_pPlayerEntity);
+}
+
+void EnemyScript::Update()
+{
+	m_pEntity->GetComponent<Transform*>()->LookAt(m_pPlayerEntity->GetComponent<Transform*>());
 }
 
 void EnemyScript::UpdateHealth(float damage)
 {
 	m_health -= damage;
+	if (m_health <= 0)
+	{
+		Die();
+	}
 }
 
-void EnemyScript::ShootAt()
+void EnemyScript::ShootAt(Entity* player)
 {
-	// TO DO:
-	/*
-		// Peut être mit dans une méthode plus spécifique type "LookAt(Entity* entity || Transform* transform)"
-		//
-		Vector playerPosition = Entity player->GetComponent<Transform*>()
-		Entity* bullet = Entity::CreateEmptyEntity();
-		Transform* transform = Component::CreateComponent<Transform*>();
-		bullet->AddComponent<Transform*>(transform);
-		bullet->SetDirection(transform->m_DirVect (normé));
-		//
-
-		if (collision avec le player)
-		{
-			UpdateHealth(m_damage de enemy);
-			if (m_health de player <= 0)
-			{
-				player->Die();
-				// Eventuellement changer de GameState
-			}
-		}
-	*/
+	XMFLOAT3 playerPosition = player->GetComponent<Transform*>()->m_positionVect;
+	Entity* bullet = Entity::CreateEmptyEntity();
+	Transform* transform = Component::CreateComponent<Transform>();
+	bullet->AddComponent<Transform*>(transform); 
 }
 
 void EnemyScript::Die()

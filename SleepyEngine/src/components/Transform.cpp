@@ -97,6 +97,23 @@ void Transform::SetPosition(float x, float y, float z)
 	XMStoreFloat4x4(&m_positionMatrix, mPosTemp); 
 }
 
+void Transform::SetRotation(Transform* transform)
+{
+	m_right = transform->m_right;
+	m_up = transform->m_up;
+	m_dir = transform->m_dir;
+	
+	m_currentRotateMatrix = transform->m_currentRotateMatrix;
+	m_currentRotateQuat = transform->m_currentRotateQuat;
+}
+
+void Transform::SetRotation(float x, float y, float z)
+{
+	m_right.x = x;
+	m_up.y = y;
+	m_dir.z = z;
+}
+
 void Transform::LookAt(float x, float y, float z)
 {
 	XMVECTOR up = XMVectorSet(0, 1, 0, 1);
@@ -121,5 +138,35 @@ void Transform::LookAt(float x, float y, float z)
 
 	XMStoreFloat4(&m_currentRotateQuat, q); 
 	XMStoreFloat4x4(&m_currentRotateMatrix, rotationMatrix); 
+}
+
+void Transform::LookAt(Transform* transform)
+{
+	XMVECTOR up = XMVectorSet(0, 1, 0, 1);
+	XMVECTOR trg = XMLoadFloat3(&transform->m_positionVect);
+
+	XMMATRIX m = XMMatrixLookAtLH(XMLoadFloat3(&m_positionVect), trg, up); 
+
+	// Si c'est une caméra qu'on doit regarder :
+	m = XMMatrixInverse(nullptr, m); 
+	//
+	// 
+	//XMFLOAT4X4 mm;
+	//XMStoreFloat4x4(&mm, m);
+	//mm._41 = 0.0f;
+	//mm._42 = 0.0f;
+	//mm._43 = 0.0f;
+	//m = XMLoadFloat4x4(&mm);
+	XMVECTOR q = XMQuaternionRotationMatrix(m);
+
+	XMMATRIX rotationMatrix;
+	rotationMatrix = XMMatrixRotationQuaternion(q);
+
+	XMStoreFloat3(&m_right, rotationMatrix.r[0]);
+	XMStoreFloat3(&m_up, rotationMatrix.r[1]);
+	XMStoreFloat3(&m_dir, rotationMatrix.r[2]);
+
+	XMStoreFloat4(&m_currentRotateQuat, q);
+	XMStoreFloat4x4(&m_currentRotateMatrix, rotationMatrix);
 }
 

@@ -35,8 +35,11 @@ public:
 	void Rotate(float yaw, float pitch, float roll);
 	void SetScale(float x, float y, float z); 
 	void SetPosition(float x, float y, float z);
+	void SetRotation(float x, float y, float z);
+	void SetRotation(Transform* transform);  
 
 	void LookAt(float x, float y, float z);
+	void LookAt(Transform* transform);
 
 	void Update();
 
