@@ -121,6 +121,11 @@ struct VertexTexture
 	XMFLOAT2 Uv;
 };
 
+struct ObjectConstants
+{
+    XMFLOAT4X4 WorldViewProj = MathHelper::Identity4x4();
+};
+
 // Classes 
 #include "ComponentDescriptor.h"
 #include "Camera.h"
@@ -130,22 +135,22 @@ struct VertexTexture
 #include "ColliderOBB.h"
 #include "ColliderSphere.h"
 #include "ColliderHandmade.h"
-#include "Entity.h"
 #include "GameState.h"
 #include "Input.h"
 #include "Menu.h"
+#include "UploadBuffer.h"
 #include "Mesh.h"
 #include "MeshRenderer.h"
 #include "Pause.h"
 #include "Script.h"
 #include "Shader.h"
+#include "Entity.h"
 #include "ShaderReference.h"
 #include "Timer.h"
 #include "Transform.h"
 #include "RessourceAllocator.h"
 #include "Factory.h"
 #include "tmpMeshGeo.h"
-#include "UploadBuffer.h"
 #include "PSO.h"
 #include "MathHelper.h"
 #include "DDSTextureLoader.h"

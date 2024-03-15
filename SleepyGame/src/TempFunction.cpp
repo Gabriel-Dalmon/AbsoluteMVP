@@ -30,18 +30,21 @@ void TempFunction::BlankPreLoop()
 
     Entity* bullet = Entity::CreateEmptyEntity();
     ((GameFactory*)m_pFactory)->FillBullet(bullet);
+    bullet->m_pObjectCB = new UploadBuffer<ObjectConstants>(m_pDevice, 1, true);
     m_entities.push_back(bullet);
     OutputDebugStringA("entity 'bullet' loaded\n");
 
     Entity* skybox = Entity::CreateEmptyEntity();
     ((GameFactory*)m_pFactory)->FillSkybox(skybox);
+    skybox->m_pObjectCB = new UploadBuffer<ObjectConstants>(m_pDevice, 1, true);
     m_entities.push_back(skybox);
     OutputDebugStringA("entity 'skybox' loaded\n");
 
-    Entity* sphere = Entity::CreateEmptyEntity();
+    /*Entity* sphere = Entity::CreateEmptyEntity();
     ((GameFactory*)m_pFactory)->FillSphere(sphere);
+    bullet->m_pObjectCB = new UploadBuffer<ObjectConstants>(m_pDevice, 1, true);
     m_entities.push_back(sphere);
-    OutputDebugStringA("entity 'sphere' loaded\n");
+    OutputDebugStringA("entity 'sphere' loaded\n");*/
 
     OutputDebugStringA("All entities loaded\n");
 }

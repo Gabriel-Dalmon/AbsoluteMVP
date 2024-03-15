@@ -677,6 +677,7 @@ void SleepyEngine::BuildBoxGeometryBis()
 
 void SleepyEngine::Update()
 {
+    for (Entity* entity : m_entities) {
     //std::cout << "Update" << std::endl;
     // Convert Spherical to Cartesian coordinates.
     float x = mRadius * sinf(mPhi) * cosf(mTheta); 
@@ -720,10 +721,9 @@ void SleepyEngine::Update()
     // Update the constant buffer with the latest worldViewProj matrix.
     ObjectConstants objConstants;
     XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
-    m_pObjectCB->CopyData(0, objConstants);
+    entity->m_pObjectCB->CopyData(0, objConstants);
 
     m_CBindex = 0;
-    for (Entity* entity : m_entities) {
         if (entity->GetComponent<Script*>() != nullptr) {
             ++m_CBindex;
             entity->GetComponent<Script*>()->OnScript();
@@ -734,7 +734,7 @@ void SleepyEngine::Update()
 
             // Update the constant buffer with the latest worldViewProj matrix.
             XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
-            m_pObjectCB->CopyData(m_CBindex, objConstants);
+            entity->m_pObjectCB->CopyData(m_CBindex, objConstants);
         }
     }
 }
@@ -794,10 +794,10 @@ void SleepyEngine::DrawBis()
             CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_pCbvHeap->GetGPUDescriptorHandleForHeapStart()); //
             tex.Offset(shaderRef->GetTexID(), m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)); //
             m_pCommandList->SetGraphicsRootDescriptorTable(0, tex); //
-            m_pCommandList->SetGraphicsRootConstantBufferView(1, m_pObjectCB->Resource()->GetGPUVirtualAddress());//
+            m_pCommandList->SetGraphicsRootConstantBufferView(1, entity->m_pObjectCB->Resource()->GetGPUVirtualAddress());//
         }
         else if (shaderRef->GetPSO() == m_PSOColor) {
-            m_pCommandList->SetGraphicsRootConstantBufferView(0, m_pObjectCB->Resource()->GetGPUVirtualAddress());//
+            m_pCommandList->SetGraphicsRootConstantBufferView(0, entity->m_pObjectCB->Resource()->GetGPUVirtualAddress());//
         }
 
 

@@ -12,6 +12,7 @@ private:
 public: // Create and kill entity
 	static Entity* CreateEmptyEntity();
 	void Release();
+	UploadBuffer<ObjectConstants>* m_pObjectCB = nullptr;
 
 public: // SETTER / GETTER	
 	template<typename T> 
