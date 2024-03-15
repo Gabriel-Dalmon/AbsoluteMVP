@@ -458,19 +458,24 @@ int SleepyEngine::Run()
                     m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
                     FlushCommandQueue();
 
-                    cd = 5;
+                    cd = 25;
                 }
             }
 
             for (int i = 0; i < m_entities.size(); i++) {
-                for (int j = m_entities.size()-1; j > i; j--) {
-                    if (Collider::collideTest(m_entities[i], m_entities[j])) {
-                        if((m_entities[i]->m_id == 1))
+                for (int j = 0; j < m_bullets.size();j++) {
+                //for (int j = m_entities.size()-1; j > i; j--) {
+                    if (Collider::collideTest(m_entities[i], m_bullets[j])) {
+                        if ((m_entities[i]->m_id == 1))
                         {
                             toRemove.push_back(m_entities[i]);
                             point++;
                         }
-                        if ((m_entities[j]->m_id == 1)) { toRemove.push_back(m_entities[j]); point++; }
+                        //if ((m_entities[j]->m_id == 1)) { toRemove.push_back(m_entities[j]); point++; }
+                        if ((m_bullets[j]->m_id == 1))
+                        { 
+                            toRemove.push_back(m_bullets[j]); point++;
+                        };
                         Score::score++;//point == 1 ? 1 : 0;
                     }
                 }
