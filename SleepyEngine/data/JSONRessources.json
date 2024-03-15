@@ -517,5 +517,38 @@
             //
 
         ]
+    },
+
+    "score": {
+        "type": "texture",
+
+        "vertices": [
+            {
+                "coordinates": [ -1, -1, -1 ],
+                "UV": [ 0, 0 ]
+            },
+            {
+                "coordinates": [ -1, 1, -1 ],
+                "UV": [ 0, 1 ]
+            },
+            {
+                "coordinates": [ 1, 1, -1 ],
+                "UV": [ 1, 1 ]
+            },
+            {
+                "coordinates": [ 1, -1, -1 ],
+                "UV": [ 1, 0 ]
+            }
+        ],
+        "indices": [
+            0,
+            2,
+            1,
+            0,
+            3,
+            2
+        ]
     }
 }
+
+

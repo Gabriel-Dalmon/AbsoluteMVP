@@ -12,6 +12,8 @@ public:
 	virtual void Update() {};
 
 	// SETTER / GETTER 
+	int GetTypeFlag() { return m_typeFlag; };
+
 
 	void Release();
 
@@ -29,6 +31,7 @@ public:
 	}
 
 protected:
+	int m_typeFlag;
 	Entity* m_pEntity = nullptr; 
 };
 

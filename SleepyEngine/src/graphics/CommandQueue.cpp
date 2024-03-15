@@ -23,7 +23,7 @@ void CommandQueue::Execute(unsigned int commandsListsCount, ID3D12CommandList* c
     m_pD3DCommandQueue->ExecuteCommandLists(commandsListsCount, commandsLists);
 }
 
-void CommandQueue::Signal(UINT currentFence)
+void CommandQueue::Signal(UINT64 currentFence)
 {
     m_pD3DCommandQueue->Signal(m_pFence, currentFence);
 }
@@ -54,7 +54,7 @@ int CommandQueue::Release()
     return 0;
 }
 
-HRESULT CommandQueue::SetEventOnFenceCompletion(UINT currentFence, HANDLE eventHandle)
+HRESULT CommandQueue::SetEventOnFenceCompletion(UINT64 currentFence, HANDLE eventHandle)
 {
     return m_pFence->SetEventOnCompletion(currentFence, eventHandle);
 }

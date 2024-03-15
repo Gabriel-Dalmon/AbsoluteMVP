@@ -4,16 +4,20 @@ Mesh::Mesh() {}
 
 Mesh::~Mesh() {}
 
-void Mesh::Init(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, std::vector<Vertex>* vertices, std::vector<uint16_t>* indices)
+// Should pass a mesh descriptor instead
+void Mesh::Initialize(int vertexByteStride, int vertexBufferByteSize, unsigned int indexCount, int indexBufferByteSize, ID3DBlob* pCPUVertexBuffer, ID3DBlob* pCPUIndexBuffer, ID3D12Resource* pGPUVertexBuffer, ID3D12Resource* pGPUIndexBuffer)
 {
-	m_vertexByteStride = sizeof(Vertex);
-	m_vertexBufferByteSize = sizeof(Vertex) * vertices->size();
-	m_indexCount = indices->size();
-	m_indexBufferByteSize = sizeof(uint16_t) * m_indexCount;
-	std::cout << "Index BSize" << m_indexBufferByteSize << std::endl;
-	
-	m_pGPUVertexBuffer = D3DUtils::CreateDefaultBuffer(device, commandList, vertices, m_vertexBufferByteSize, m_pUploaderVertexBuffer);
-	m_pGPUIndexBuffer = D3DUtils::CreateDefaultBuffer(device, commandList, vertices, m_indexBufferByteSize, m_pUploaderIndexBuffer);
+	m_vertexByteStride = vertexByteStride;
+	m_vertexBufferByteSize = vertexBufferByteSize;
+	m_indexCount = indexCount;
+	m_indexBufferByteSize = indexBufferByteSize;
+	m_CPUVertexBuffer = pCPUVertexBuffer;
+	m_CPUIndexBuffer = pCPUIndexBuffer;
+	m_pGPUVertexBuffer = pGPUVertexBuffer;
+	m_pGPUIndexBuffer = pGPUIndexBuffer;
+
+	m_startIndexLocation = 0;
+	m_baseVertexLocation = 0;
 }
 
 void Mesh::Release()
@@ -21,8 +25,6 @@ void Mesh::Release()
 	RELEASE(m_pEntity);
 	RELEASE(m_pGPUIndexBuffer);
 	RELEASE(m_pGPUVertexBuffer);
-	RELEASE(m_pUploaderIndexBuffer);
-	RELEASE(m_pUploaderVertexBuffer);
 }
 
 
@@ -46,7 +48,3 @@ D3D12_INDEX_BUFFER_VIEW Mesh::IndexBufferView()const
 
 	return ibv;
 }
-
-
-
-//D3D12_RESOURCE_DESC

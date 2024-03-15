@@ -5,6 +5,9 @@
 #pragma comment(lib, "D3D12.lib")
 #pragma comment(lib, "dxgi.lib")
 
+// JSON
+#include <json/json.h>
+
 // WINDOWS
 #include <Windows.h>
 #include <windowsx.h>
@@ -40,8 +43,7 @@
 #include <DirectXColors.h>
 #include <DirectXCollision.h>
 
-// JSON
-#include <json/json.h>
+
 
 // FORWARD DECLARATIONS
 class Utils;

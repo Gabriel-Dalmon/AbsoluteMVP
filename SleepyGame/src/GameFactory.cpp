@@ -10,26 +10,30 @@ void GameFactory::FillPlayer(Entity* pEntity)
 {
 	Transform* transform = Component::CreateComponent<Transform>();
 	transform->Initialize();
-	pEntity->AddComponent<Transform*>(transform);
+	pEntity->AddComponent<Transform>(transform);
 
 	Velocity* velocity = Component::CreateComponent<Velocity>();
 	velocity->SetVelocity(0.0f, 0.0f, 0.0f);
-	pEntity->AddComponent<Velocity*>(velocity);
+	pEntity->AddComponent<Velocity>(velocity);
 
-	ColliderDescriptor CSDesc;
-	CSDesc.radius = 1;
+	ColliderDescriptor CDesc;
+	CDesc.radius = 1;
 	Collider* collider = Component::CreateComponent<Collider>();
-	collider->Initialize(&CSDesc);
-	pEntity->AddComponent<Collider*>(collider);
+	collider->Initialize(&CDesc);
+	pEntity->AddComponent<Collider>(collider);
 
 	MeshReferenceDescriptor MeshRefDesc;
-	MeshRefDesc.meshRef = m_pRessourceAllocator->GetMesh("cube");
+	MeshRefDesc.pMeshReference = m_pRessourceAllocator->GetMesh("cube");
 	MeshReference* meshRef = Component::CreateComponent<MeshReference>();
 	meshRef->Initialize(&MeshRefDesc);
-	pEntity->AddComponent<MeshReference*>(meshRef);
+	pEntity->AddComponent<MeshReference>(meshRef);
 	std::cerr << typeid(*meshRef).name();
 
 	ShaderReferenceDescriptor ShaderRefDesc;
+	ShaderRefDesc.pShader = m_pShaderColor;
+	ShaderReference* pShaderReference = Component::CreateComponent<ShaderReference>();
+	pShaderReference->Initialize(&ShaderRefDesc);
+	pEntity->AddComponent<ShaderReference>(pShaderReference);
 
 	/*// for color only object :
 	ShaderRefDesc.PSO = m_PSOColor;
@@ -54,23 +58,23 @@ void GameFactory::FillEnemy(Entity* pEntity)
 {
 	Transform* transform = Component::CreateComponent<Transform>();
 	transform->Initialize();
-	pEntity->AddComponent<Transform*>(transform);
+	pEntity->AddComponent<Transform>(transform);
 
 	Velocity* velocity = Component::CreateComponent<Velocity>();
 	velocity->SetVelocity(0.0f, 0.0f, 0.0f);
-	pEntity->AddComponent<Velocity*>(velocity);
+	pEntity->AddComponent<Velocity>(velocity);
 
 	ColliderDescriptor CSDesc;
 	CSDesc.radius = 1;
 	Collider* collider = Component::CreateComponent<Collider>();
 	collider->Initialize(&CSDesc);
-	pEntity->AddComponent<Collider*>(collider);
+	pEntity->AddComponent<Collider>(collider);
 
 	MeshReferenceDescriptor MeshRefDesc;
-	MeshRefDesc.meshRef = m_pRessourceAllocator->GetMesh("cube"); // change to an enemy mesh 
+	MeshRefDesc.pMeshReference = m_pRessourceAllocator->GetMesh("cube"); // change to an enemy mesh 
 	MeshReference* meshRef = Component::CreateComponent<MeshReference>();
 	meshRef->Initialize(&MeshRefDesc);
-	pEntity->AddComponent<MeshReference*>(meshRef);
+	pEntity->AddComponent<MeshReference>(meshRef);
 	std::cerr << typeid(*meshRef).name();
 
 	ShaderReferenceDescriptor ShaderRefDesc;
@@ -94,7 +98,7 @@ void GameFactory::FillBullet(Entity* pEntity)
 {
 	Transform* transform = Component::CreateComponent<Transform>();
 	transform->Initialize();
-	pEntity->AddComponent<Transform*>(transform);
+	pEntity->AddComponent<Transform>(transform);
 
 	VelocityDescriptor velocityDesc;
 	velocityDesc.x = 1;
@@ -102,26 +106,26 @@ void GameFactory::FillBullet(Entity* pEntity)
 	velocityDesc.z = 1;
 	Velocity* velocity = Component::CreateComponent<Velocity>();
 	velocity->Initialize(&velocityDesc);
-	pEntity->AddComponent<Velocity*>(velocity);
+	pEntity->AddComponent<Velocity>(velocity);
 
 	ColliderDescriptor CSDesc;
 	CSDesc.radius = 1;
 	Collider* collider = Component::CreateComponent<Collider>();
 	collider->Initialize(&CSDesc);
-	pEntity->AddComponent<Collider*>(collider);
+	pEntity->AddComponent<Collider>(collider);
 
 	MeshReferenceDescriptor MeshRefDesc;
-	MeshRefDesc.meshRef = m_pRessourceAllocator->GetMesh("cube"); // change to a bullet mesh
+	MeshRefDesc.pMeshReference = m_pRessourceAllocator->GetMesh("cube"); // change to a bullet mesh
 	MeshReference* meshRef = Component::CreateComponent<MeshReference>();
 	meshRef->Initialize(&MeshRefDesc);
-	pEntity->AddComponent<MeshReference*>(meshRef);
+	pEntity->AddComponent<MeshReference>(meshRef);
 	std::cerr << typeid(*meshRef).name();
 
 	ScriptDescriptor scriptDesc;
 	scriptDesc.motherEntity = pEntity;
 	BulletScript* bulletScript = Component::CreateComponent<BulletScript>();
 	bulletScript->Initialize(&scriptDesc);
-	pEntity->AddComponent<BulletScript*>(bulletScript);
+	pEntity->AddComponent<BulletScript>(bulletScript);
 
 	ShaderReferenceDescriptor ShaderRefDesc;
 
@@ -144,13 +148,13 @@ void GameFactory::FillSkybox(Entity* pEntity)
 {
 	Transform* transform = Component::CreateComponent<Transform>();
 	transform->Initialize();
-	pEntity->AddComponent<Transform*>(transform);
+	pEntity->AddComponent<Transform>(transform);
 
 	MeshReferenceDescriptor MeshRefDesc;
-	MeshRefDesc.meshRef = m_pRessourceAllocator->GetMesh("sky"); // change to a bullet mesh
+	MeshRefDesc.pMeshReference = m_pRessourceAllocator->GetMesh("sky"); // change to a bullet mesh
 	MeshReference* meshRef = Component::CreateComponent<MeshReference>();
 	meshRef->Initialize(&MeshRefDesc);
-	pEntity->AddComponent<MeshReference*>(meshRef);
+	pEntity->AddComponent<MeshReference>(meshRef);
 	std::cerr << typeid(*meshRef).name();
 
 	ShaderReferenceDescriptor ShaderRefDesc;
@@ -168,7 +172,7 @@ void GameFactory::FillSkybox(Entity* pEntity)
 	shaderReference->Init(&ShaderRefDesc);
 	pEntity->AddComponent<ShaderReference*>(shaderReference);*/
 };
-
+/*
 void GameFactory::FillSphere(Entity* pEntity)
 {
 	/*Transform* pTransform = Component::CreateComponent<Transform>();
@@ -184,7 +188,7 @@ void GameFactory::FillSphere(Entity* pEntity)
 
 	ShaderReferenceDescriptor ShaderRefDesc;*/
 
-	/*// for color only object :
+	// for color only object :
 	ShaderRefDesc.PSO = m_PSOColor;
 	ShaderRefDesc.rootSignature = m_pRootSignatureColor;
 
@@ -196,5 +200,5 @@ void GameFactory::FillSphere(Entity* pEntity)
 	
 	ShaderReference* shaderReference = Component::CreateComponent<ShaderReference>();
 	shaderReference->Initialize(&ShaderRefDesc);
-	pEntity->AddComponent<ShaderReference*>(shaderReference);*/
-}
+	pEntity->AddComponent<ShaderReference*>(shaderReference);
+}*/

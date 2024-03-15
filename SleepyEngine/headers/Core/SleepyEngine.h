@@ -11,8 +11,8 @@ public:
 	{
 		// Should replace these runtime checks with concepts and requires clauses.
 		m_pCurrentGameState = dynamic_cast<GameState*>(new GameStateChildType());
-		m_pECSFactory = dynamic_cast<Factory*>(new ECSFactoryChildType());
-		if (m_pCurrentGameState == nullptr || m_pECSFactory == nullptr)
+		Factory* pECSFactory = dynamic_cast<Factory*>(new ECSFactoryChildType());
+		if (m_pCurrentGameState == nullptr || pECSFactory == nullptr)
 		{
 			MessageBox(
 				nullptr, 
@@ -22,7 +22,7 @@ public:
 			);
 			return -1;
 		}
-		m_pCurrentGameState->Initialize(hAppInstance, pRendererDescriptor, m_pResourceAllocator);
+		m_pCurrentGameState->Initialize(hAppInstance, pRendererDescriptor, m_pResourceAllocator, pECSFactory);
 		m_pTimer->Initialize();
 		return 0;
 	};
@@ -33,7 +33,6 @@ public:
 
 private:
 	GameState* m_pCurrentGameState = nullptr;
-	Factory* m_pECSFactory = nullptr;
 	ResourceAllocator* m_pResourceAllocator = nullptr;
 	Timer* m_pTimer = nullptr;
 	bool m_isRunning = false;

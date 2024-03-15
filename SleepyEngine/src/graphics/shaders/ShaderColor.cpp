@@ -3,14 +3,21 @@
 void ShaderColor::Initialize(Device* m_pDevice)
 {
 	CreateRootSignature(m_pDevice);
-	CompileVertexShader(L"Shaders/Color.hlsl");
-	CompilePixelShader(L"Shaders/Color.hlsl");
-	CreatePipelineStateObject(m_pDevice);
+
+#if defined (DEBUG) || (_DEBUG)
+	CompileVertexShader(L"../SleepyEngine/src/graphics/shaders/Color.hlsl");
+	CompilePixelShader(L"../SleepyEngine/src/graphics/shaders/Color.hlsl");
+#else
+	shaderTexture.CompileVS(L"Shaders/Color.hlsl");
+	shaderTexture.CompilePS(L"Shaders/Color.hlsl");
+#endif
+
 	m_pInputLayout =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
+	CreatePipelineStateObject(m_pDevice);
 }
 
 void ShaderColor::CreateRootSignature(Device* pDevice)

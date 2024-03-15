@@ -9,11 +9,11 @@ GameState::GameState()
 * The physic system must be manually added.
 * @return void
 */
-void GameState::Initialize(HINSTANCE hAppInstance, RendererDescriptor* pRendererDescriptor, ResourceAllocator* pResourceAllocator)
+void GameState::Initialize(HINSTANCE hAppInstance, RendererDescriptor* pRendererDescriptor, ResourceAllocator* pResourceAllocator, Factory* pECSFactory)
 {
 	Renderer* pRenderer = new Renderer();
 	pRenderer->Initialize(hAppInstance, pRendererDescriptor);
-	pResourceAllocator->Initialize(pRenderer->GetDevice()->GetD3DDevice(), pRenderer->Get);
+	pResourceAllocator->Initialize(pRenderer->GetDevice(), pRenderer->GetCommandQueue());
 	m_systemsList.push_back(pRenderer);
 
 	PhysicHandler* pPhysic = new PhysicHandler();
@@ -21,8 +21,10 @@ void GameState::Initialize(HINSTANCE hAppInstance, RendererDescriptor* pRenderer
 	m_systemsList.push_back(pPhysic);
 
 	GameSystem* pGameSys = new GameSystem();
-	pGameSys->Initialize();
 	m_systemsList.push_back(pGameSys);
+
+	pECSFactory->Initialize(pResourceAllocator, pRenderer->GetColorShader());
+	OnEngineCreated(pECSFactory);
 }
 
 void GameState::Initialize(GameState* previousGameState)

@@ -36,6 +36,12 @@ public:
 	void UNSAFE_AddEntity(Entity* entity) override;
 	void UNSAFE_RemoveEntity(Entity* entity) override;
 
+public:
+	// GETTERS / SETTERS
+	inline Device* GetDevice() { return m_pDevice; };
+	inline CommandQueue* GetCommandQueue() { return m_pCommandQueue; };
+	inline ShaderColor* GetColorShader() { return m_pColorShader; };
+
 private:
 	void ResetRendering();
 	void ExecuteRendering();

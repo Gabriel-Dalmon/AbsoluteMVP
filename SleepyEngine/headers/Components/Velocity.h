@@ -3,7 +3,7 @@
 class Velocity : public Component
 {
 public:
-	Velocity() {};
+	Velocity() { m_typeFlag = VELOCITY; };
 	~Velocity() {};
 
 	void Initialize(VelocityDescriptor* desc);

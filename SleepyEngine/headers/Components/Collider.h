@@ -7,6 +7,7 @@ public:
 	~Collider() {};
 
 	// INIT
+	void Initialize(ColliderDescriptor* pColliderDescriptor);
 	void Initialize(ColliderDescriptor* desc);
 
 public:
