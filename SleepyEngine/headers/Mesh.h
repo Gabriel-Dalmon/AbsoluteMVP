@@ -34,10 +34,8 @@ public:
 	Mesh();
 	~Mesh();
 
-	// Init
-	void Initialize(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, std::vector<Vertex>* vertices, std::vector<uint16_t>* indices);
-	void Initialize(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, std::vector<VertexTexture>* vertices, std::vector<uint16_t>* indices);
-	void Initialize(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, std::vector<VertexColor>* vertices, std::vector<uint16_t>* indices);
+	// Should pass a mesh descriptor instead
+	void Initialize(int vertexByteStride, int vertexBufferByteSize, unsigned int indexCount, int indexBufferByteSize, ID3DBlob* pCPUVertexBuffer, ID3DBlob* pCPUIndexBuffer, ID3D12Resource* pGPUVertexBuffer, ID3D12Resource* pGPUIndexBuffer);
 
 	// Release
 	void Release();
@@ -56,6 +54,9 @@ public:
 	DXGI_FORMAT IndexFormat = DXGI_FORMAT_R16_UINT;
 	int m_indexBufferByteSize = 0;
 	unsigned int m_indexCount;
+
+	UINT m_startIndexLocation;
+	INT m_baseVertexLocation;
 
 	D3D12_VERTEX_BUFFER_VIEW VertexBufferView()const;
 	D3D12_INDEX_BUFFER_VIEW IndexBufferView()const;

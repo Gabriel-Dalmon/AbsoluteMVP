@@ -13,11 +13,11 @@ public:
 
 	// SETTER / GETTER
 	template<typename T> 
-	void AddComponent(T component)   
+	void AddComponent(T* component)   
 	{
 		if (GetComponent<T>() != nullptr)
 			return;
-
+		m_compositionFlags |= component->GetTypeFlag();
 		m_componentsList.push_back(component); 
 	}
 
@@ -26,7 +26,7 @@ public:
 	{
 		for (int i = 0; i < m_componentsList.size(); i++)
 		{
-			if (dynamic_cast<T>(m_componentsList[i]) != NULL)
+			if (dynamic_cast<T*>(m_componentsList[i]) != NULL)
 			{
 				m_componentsList.erase(m_componentsList.begin() + i);
 			}
@@ -37,9 +37,9 @@ public:
 	T* GetComponent() {
 		for (int i = 0; i < m_componentsList.size(); i++)
 		{
-			if (dynamic_cast<T>(m_componentsList[i]) != NULL)  
+			if (dynamic_cast<T*>(m_componentsList[i]) != NULL)  
 			{
-				return &(T)m_componentsList[i];
+				return (T*)m_componentsList[i];
 			}
 		}
 		return nullptr; 

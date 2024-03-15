@@ -40,6 +40,7 @@ public:
 	// GETTERS / SETTERS
 	inline Device* GetDevice() { return m_pDevice; };
 	inline CommandQueue* GetCommandQueue() { return m_pCommandQueue; };
+	inline ShaderColor* GetColorShader() { return m_pColorShader; };
 
 private:
 	void ResetRendering();
@@ -58,8 +59,6 @@ private:
 
 	// Temporary 
 	void CreateShaders(); // Shaders creation should be moved to the ResourceAllocator
-
-
 
 private:
 	inline D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferView()const { return CD3DX12_CPU_DESCRIPTOR_HANDLE(m_pRTVHeap->GetCPUDescriptorHandleForHeapStart(), m_pSwapChain->GetCurrentBackBufferIndex(), m_RTVDescriptorSize); };

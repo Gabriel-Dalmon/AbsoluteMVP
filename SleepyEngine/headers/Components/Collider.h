@@ -7,7 +7,7 @@ public:
 	~Collider() {};
 
 	// INIT
-	void Initialize() override;
+	void Initialize(ColliderDescriptor* pColliderDescriptor);
 
 private:
 };

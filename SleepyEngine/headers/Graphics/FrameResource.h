@@ -8,7 +8,7 @@ struct EntityConstants
 class FrameResource
 {
 public:
-	FrameResource();
+	FrameResource(Device* pDevice, UINT objectCount);
 	~FrameResource();
 
 	void Initialize(ID3D12Device* pDevice);
@@ -21,7 +21,7 @@ public:
 	inline void IncrementFence() { ++m_currentFence;  };
 	inline void SetFence(UINT64 fence) { m_currentFence = fence; }
 	inline ID3D12CommandAllocator* GetD3DCommandAllocator()const { return m_pCommandAllocator; };
-	inline UploadBuffer<EntityConstants>* GetEntitiesConstantsBuffers()const { return EntitiesConstantsBuffers; };
+	inline UploadBuffer<EntityConstants>* GetEntitiesConstantsBuffers()const { return m_entitiesConstantsBuffers; };
 
 private:
 	ID3D12CommandAllocator* m_pCommandAllocator = nullptr;
@@ -29,5 +29,5 @@ private:
 
 	// Constant Buffers
 	//UploadBuffer<PassConstants>* PassCB = nullptr;
-	UploadBuffer<EntityConstants>* EntitiesConstantsBuffers = nullptr;
+	UploadBuffer<EntityConstants>* m_entitiesConstantsBuffers = nullptr;
 };

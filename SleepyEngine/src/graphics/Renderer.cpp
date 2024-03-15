@@ -8,6 +8,7 @@ Renderer::Renderer()
 	m_pSwapChain = new SwapChain();
 	m_pViewPort = new D3D12_VIEWPORT();
 	m_pScissorRect = new tagRECT();
+	m_pCamera = new Camera();
 }
 
 Renderer::~Renderer()
@@ -66,7 +67,7 @@ void Renderer::CreateFrameResources()
 {
 	for (int i = 0; i < SWAP_CHAIN_BUFFER_COUNT; ++i)
 	{
-		m_frameResources[i] = new FrameResource();
+		m_frameResources[i] = new FrameResource(m_pDevice, 100);
 		m_frameResources[i]->Initialize(m_pDevice->GetD3DDevice());
 	}
 	m_pCurrentFrameResource = m_frameResources[m_currentFrameResourceIndex];
@@ -279,7 +280,7 @@ void Renderer::RenderFrame()
 
 		m_pCommandList->SetGraphicsRootConstantBufferView(0, entitiesConstantsBuffers);//
 
-		m_pCommandList->DrawIndexedInstanced(pMesh->m_drawArgs["box"].IndexCount, 1, pMesh->m_drawArgs["box"].StartIndexLocation, pMesh->m_drawArgs["box"].BaseVertexLocation, 0);
+		m_pCommandList->DrawIndexedInstanced(pMesh->m_indexCount, 1, pMesh->m_startIndexLocation, pMesh->m_baseVertexLocation, 0);
 	}
 
 	ExecuteRendering();

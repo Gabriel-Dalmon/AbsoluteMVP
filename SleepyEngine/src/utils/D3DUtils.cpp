@@ -28,9 +28,9 @@ ID3DBlob* D3DUtils::CompileFromFile(const std::wstring& filename, const D3D_SHAD
 	return byteCode; 
 }
 
-Microsoft::WRL::ComPtr<ID3D12Resource> D3DUtils::CreateDefaultBuffer(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, const void* initData, UINT64 byteSize, ID3D12Resource*& uploadBuffer)
+ID3D12Resource* D3DUtils::CreateDefaultBuffer(ID3D12Device* device, ID3D12GraphicsCommandList* commandList, const void* initData, UINT64 byteSize, ID3D12Resource*& uploadBuffer)
 {
-	Microsoft::WRL::ComPtr<ID3D12Resource> defaultBuffer;
+	ID3D12Resource* defaultBuffer;
 
 	CD3DX12_HEAP_PROPERTIES heapProps = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 	CD3DX12_RESOURCE_DESC rossourceDesc = CD3DX12_RESOURCE_DESC::Buffer(byteSize);
@@ -60,12 +60,12 @@ Microsoft::WRL::ComPtr<ID3D12Resource> D3DUtils::CreateDefaultBuffer(ID3D12Devic
 	subResourceData.RowPitch = byteSize;
 	subResourceData.SlicePitch = subResourceData.RowPitch;
 
-	CD3DX12_RESOURCE_BARRIER tempBarrier = CD3DX12_RESOURCE_BARRIER::Transition(defaultBuffer.Get(), D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_COPY_DEST);
+	CD3DX12_RESOURCE_BARRIER tempBarrier = CD3DX12_RESOURCE_BARRIER::Transition(defaultBuffer, D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_COPY_DEST);
 	commandList->ResourceBarrier(1, &tempBarrier);
 
-	tempBarrier = CD3DX12_RESOURCE_BARRIER::Transition(defaultBuffer.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ);
+	tempBarrier = CD3DX12_RESOURCE_BARRIER::Transition(defaultBuffer, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ);
 
-	UpdateSubresources<1>(commandList, defaultBuffer.Get(), uploadBuffer, 0, 0, 1, &subResourceData);
+	UpdateSubresources<1>(commandList, defaultBuffer, uploadBuffer, 0, 0, 1, &subResourceData);
 	commandList->ResourceBarrier(1, &tempBarrier);
 
 	return defaultBuffer;

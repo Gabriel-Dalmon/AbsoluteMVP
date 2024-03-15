@@ -11,11 +11,13 @@ GameState::GameState()
 */
 void GameState::Initialize(HINSTANCE hAppInstance, RendererDescriptor* pRendererDescriptor, ResourceAllocator* pResourceAllocator, Factory* pECSFactory)
 {
-	OnEngineCreated(pECSFactory);
 	Renderer* pRenderer = new Renderer();
 	pRenderer->Initialize(hAppInstance, pRendererDescriptor);
 	pResourceAllocator->Initialize(pRenderer->GetDevice(), pRenderer->GetCommandQueue());
 	m_systemsList.push_back(pRenderer);
+
+	pECSFactory->Initialize(pResourceAllocator, pRenderer->GetColorShader());
+	OnEngineCreated(pECSFactory);
 }
 
 void GameState::Initialize(GameState* previousGameState)

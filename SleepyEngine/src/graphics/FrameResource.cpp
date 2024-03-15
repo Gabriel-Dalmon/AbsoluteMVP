@@ -1,7 +1,8 @@
 #include "pch.h"
 
-FrameResource::FrameResource()
+FrameResource::FrameResource(Device* pDevice, UINT objectCount)
 {
+	m_entitiesConstantsBuffers = new UploadBuffer<EntityConstants>(pDevice->GetD3DDevice(), objectCount, true);
 }
 
 FrameResource::~FrameResource()

@@ -7,7 +7,7 @@ public:
 	~PlayGameState() {};
 
 	// INIT
-	void Initialize();
+	void Initialize() {};
 	void OnEngineCreated(Factory* pECSFactory) override;
 
 	// Entity linked functions

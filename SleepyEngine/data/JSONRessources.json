@@ -164,7 +164,7 @@
             //
 
 
-            // face arrière
+            // face arriÃ¨re
             {
                 "coordinates": [ -1, -1, 1 ],
                 "UV": [ 0, 0 ]
@@ -224,7 +224,7 @@
             //
 
 
-            // face supérieur 
+            // face supÃ©rieur 
             {
                 "coordinates": [ -1, 1, -1 ],
                 "UV": [ 0, 0 ]
@@ -244,7 +244,7 @@
             //
 
 
-            // face inférieur 
+            // face infÃ©rieur 
             {
                 "coordinates": [ -1, -1, -1 ],
                 "UV": [ 0, 0 ]
@@ -277,7 +277,7 @@
             //
 
 
-            // Face arrière
+            // Face arriÃ¨re
             4,
             6,
             5,
@@ -307,7 +307,7 @@
             //
 
 
-            // Face supérieure
+            // Face supÃ©rieure
             16,
             17,
             18,
@@ -317,7 +317,7 @@
             //
 
 
-            // Face inférieure
+            // Face infÃ©rieure
             20,
             22,
             21,
@@ -354,7 +354,7 @@
             //
 
 
-            // face arrière
+            // face arriÃ¨re
             {
                 "coordinates": [ -500, -500, 500 ],
                 "UV": [ 0.75, 0.33 ]
@@ -414,7 +414,7 @@
             //
 
 
-            // face supérieur 
+            // face supÃ©rieur 
             {
                 "coordinates": [ -500, 500, -500 ],
                 "UV": [ 0.25, 0 ]
@@ -434,7 +434,7 @@
             //
 
 
-            // face inférieur 
+            // face infÃ©rieur 
             {
                 "coordinates": [ -500, -500, -500 ],
                 "UV": [ 0.25, 0.66 ]
@@ -467,7 +467,7 @@
             //
 
 
-            // Face arrière
+            // Face arriÃ¨re
             4,
             5,
             6,
@@ -497,7 +497,7 @@
             //
 
 
-            // Face supérieure
+            // Face supÃ©rieure
             16,
             18,
             17,
@@ -507,7 +507,7 @@
             //
 
 
-            // Face inférieure
+            // Face infÃ©rieure
             20,
             21,
             22,
@@ -517,5 +517,38 @@
             //
 
         ]
+    },
+
+    "score": {
+        "type": "texture",
+
+        "vertices": [
+            {
+                "coordinates": [ -1, -1, -1 ],
+                "UV": [ 0, 0 ]
+            },
+            {
+                "coordinates": [ -1, 1, -1 ],
+                "UV": [ 0, 1 ]
+            },
+            {
+                "coordinates": [ 1, 1, -1 ],
+                "UV": [ 1, 1 ]
+            },
+            {
+                "coordinates": [ 1, -1, -1 ],
+                "UV": [ 1, 0 ]
+            }
+        ],
+        "indices": [
+            0,
+            2,
+            1,
+            0,
+            3,
+            2
+        ]
     }
 }
+
+

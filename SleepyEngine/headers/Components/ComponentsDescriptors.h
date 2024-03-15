@@ -12,6 +12,11 @@ struct TransformDescriptor : Descriptor
 	float z = 0;
 };
 
+struct ColliderDescriptor : Descriptor
+{
+	float radius;
+};
+
 struct ColliderSphereDescriptor : Descriptor
 {
 	DirectX::XMFLOAT3 center;
@@ -26,13 +31,12 @@ struct ColliderOBBDescriptor : Descriptor
 
 struct MeshReferenceDescriptor : Descriptor
 {
-	Mesh* meshRef;
+	Mesh* pMeshReference;
 };
 
 struct ShaderReferenceDescriptor : Descriptor
 {
-	ID3D12RootSignature* rootSignature;
-	ID3D12PipelineState* PSO;
+	ShaderColor* pShader;
 	int id = 0;
 };
 

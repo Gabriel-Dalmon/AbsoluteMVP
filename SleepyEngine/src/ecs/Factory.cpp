@@ -4,7 +4,8 @@ Factory::Factory() {};
 
 Factory::~Factory() {};
 
-void Factory::Initialize(ResourceAllocator* pRessourceAllocator)
+void Factory::Initialize(ResourceAllocator* pRessourceAllocator, ShaderColor* pShaderColor)
 {
 	m_pRessourceAllocator = pRessourceAllocator;
+	m_pShaderColor = pShaderColor;
 }

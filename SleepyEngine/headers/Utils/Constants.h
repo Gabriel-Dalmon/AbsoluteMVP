@@ -10,5 +10,7 @@ typedef enum ComponentTypes
 	TRANSFORM = 1 << 0,
 	MESH_REFERENCE = 1 << 1,
 	SHADER_REFERENCE = 1 << 2,
+	VELOCITY = 1 << 3,
+	COLLIDER = 1 << 4,
 	COMPONENT_TYPES_COUNT	
 } ComponentType;
