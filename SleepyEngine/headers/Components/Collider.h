@@ -9,6 +9,9 @@ public:
 	// INIT
 	void Initialize(ColliderDescriptor* pColliderDescriptor);
 
-private:
-};
+public:
+	float GetRadius() { return m_radius; };
 
+private:
+	float m_radius;
+};

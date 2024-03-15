@@ -35,24 +35,19 @@ void GameFactory::FillPlayer(Entity* pEntity)
 	pShaderReference->Initialize(&ShaderRefDesc);
 	pEntity->AddComponent<ShaderReference>(pShaderReference);
 
-	/*// for color only object :
-	ShaderRefDesc.PSO = m_PSOColor;
-	ShaderRefDesc.rootSignature = m_pRootSignatureColor;
-
-	// for textured object :
-	//ShaderRefDesc.PSO = m_PSOTexture;
-	//ShaderRefDesc.rootSignature = m_pRootSignatureTexture;
-
-	ShaderRefDesc.id = 1;
-	ShaderReference* shaderReference = Component::CreateComponent<ShaderReference>();
-	shaderReference->Initialize(&ShaderRefDesc);
-	pEntity->AddComponent<ShaderReference*>(shaderReference);*/
-
-	//MeshRenderer* test = pEntity->GetComponent<MeshRenderer*>();
-
 	//shoot script here
 };
 
+void GameFactory::FillCamera(Entity* pEntity)
+{
+	Transform* transform = Component::CreateComponent<Transform>();
+	transform->Initialize();
+	pEntity->AddComponent<Transform>(transform);
+
+	Camera* camera = Component::CreateComponent<Camera>();
+	camera->Initialize();
+	pEntity->AddComponent<Camera>(camera);
+};
 
 void GameFactory::FillEnemy(Entity* pEntity)
 {

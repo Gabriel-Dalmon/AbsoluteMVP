@@ -76,11 +76,19 @@ void Transform::Rotate(float yaw, float pitch, float roll)
 	XMStoreFloat4x4(&m_currentRotateMatrix, rotationMatrix);
 }
 
+void Transform::SetScale(float x, float y, float z)
+{
+}
+
 void Transform::SetPosition(float x, float y, float z)
 {
 	XMMATRIX position = XMMatrixTranslation(x, y, z);
 	XMStoreFloat4x4(&m_positionMatrix, position);
 	(m_positionVect.x, m_positionVect.y, m_positionVect.z) = (x, y, z);
+}
+
+void Transform::LookAt(float x, float y, float z)
+{
 }
 
 void Transform::Update()

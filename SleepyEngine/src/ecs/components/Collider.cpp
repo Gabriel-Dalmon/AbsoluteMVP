@@ -7,5 +7,5 @@ Collider::Collider()
 
 void Collider::Initialize(ColliderDescriptor* pColliderDescriptor)
 {
-
+	m_radius = pColliderDescriptor->radius;
 }

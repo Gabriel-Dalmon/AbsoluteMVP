@@ -8,7 +8,7 @@ Renderer::Renderer()
 	m_pSwapChain = new SwapChain();
 	m_pViewPort = new D3D12_VIEWPORT();
 	m_pScissorRect = new tagRECT();
-	m_pCamera = new Camera();
+	m_pCamera = new TmpCamera();
 }
 
 Renderer::~Renderer()
@@ -26,10 +26,12 @@ void Renderer::Initialize(HINSTANCE hInstance, RendererDescriptor* rendererDescr
 		ThrowIfFailed(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&m_pDxgiFactory));
 		m_pDevice->Initialize();
 		CreateFrameResources();
+		CreateDescriptorHeaps();
+		BuildConstantBufferViews();
 		CreateCommandObjects();
 		m_pSwapChain->Initialize(m_pDxgiFactory, m_pCommandQueue, m_pDevice, m_pWindow);
 		RecoverDescriptorSize();
-		CreateDescriptorHeaps();
+		CreateRTVAndDSVDescriptorHeaps();
 		CreateRenderTargetView();
 		CreateShaders();
 
@@ -73,6 +75,53 @@ void Renderer::CreateFrameResources()
 	m_pCurrentFrameResource = m_frameResources[m_currentFrameResourceIndex];
 }
 
+void Renderer::CreateDescriptorHeaps()
+{
+	UINT objCount = 100;
+
+	// Need a CBV descriptor for each object for each frame resource,
+	// +1 for the perPass CBV for each frame resource.
+	UINT numDescriptors = (objCount) * SWAP_CHAIN_BUFFER_COUNT;
+
+	D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDesc;
+	cbvHeapDesc.NumDescriptors = numDescriptors;
+	cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	cbvHeapDesc.NodeMask = 0;
+	ThrowIfFailed(m_pDevice->GetD3DDevice()->CreateDescriptorHeap(&cbvHeapDesc, __uuidof(ID3D12DescriptorHeap), (void**)&m_pCBVHeap));
+}
+
+void Renderer::BuildConstantBufferViews()
+{
+	UINT objCBByteSize = (sizeof(EntityConstants) + 255) & ~255; // Calc Constant Buffer Byte Size
+
+	UINT objCount = 100;
+
+	// Need a CBV descriptor for each object for each frame resource.
+	for (int frameIndex = 0; frameIndex < SWAP_CHAIN_BUFFER_COUNT; ++frameIndex)
+	{
+		auto objectCB = m_frameResources[frameIndex]->GetEntitiesConstantsBuffers()->Resource();
+		for (UINT i = 0; i < objCount; ++i)
+		{
+			D3D12_GPU_VIRTUAL_ADDRESS cbAddress = objectCB->GetGPUVirtualAddress();
+
+			// Offset to the ith object constant buffer in the buffer.
+			cbAddress += i * objCBByteSize;
+
+			// Offset to the object cbv in the descriptor heap.
+			int heapIndex = frameIndex * objCount + i;
+			auto handle = CD3DX12_CPU_DESCRIPTOR_HANDLE(m_pCBVHeap->GetCPUDescriptorHandleForHeapStart());
+			handle.Offset(heapIndex, m_CBVSRVUAVDescriptorSize);
+
+			D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc;
+			cbvDesc.BufferLocation = cbAddress;
+			cbvDesc.SizeInBytes = objCBByteSize;
+
+			m_pDevice->GetD3DDevice()->CreateConstantBufferView(&cbvDesc, handle);
+		}
+	}
+}
+
 void Renderer::CreateCommandObjects()
 {
 	// Create the command queue.
@@ -88,10 +137,10 @@ void Renderer::RecoverDescriptorSize()
 {
 	m_RTVDescriptorSize = m_pDevice->GetD3DDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	m_DSVDescriptorSize = m_pDevice->GetD3DDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-	/*m_CBVSRVUAVDescriptorSize = m_pDevice->GetD3DDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV); */
+	m_CBVSRVUAVDescriptorSize = m_pDevice->GetD3DDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV); 
 }
 
-void Renderer::CreateDescriptorHeaps()
+void Renderer::CreateRTVAndDSVDescriptorHeaps()
 {
 	D3D12_DESCRIPTOR_HEAP_DESC RTVHeapDesc;
 	RTVHeapDesc.NumDescriptors = SWAP_CHAIN_BUFFER_COUNT;
@@ -214,7 +263,6 @@ void Renderer::WaitForFrameResource()
 	}
 }
 
-
 void Renderer::UpdateBuffers()
 {
 	auto currObjectCB = m_pCurrentFrameResource->GetEntitiesConstantsBuffers();
@@ -226,7 +274,7 @@ void Renderer::UpdateBuffers()
 
 	for (RendererEntityData* entityData : m_entitiesDataList)
 	{
-		if (entityData->pEntity->GetRemainingDirtyFramesCount() > 0)
+		if (entityData->pEntity->GetRemainingDirtyFramesCount() > 0 || true)
 		{
 			transformMatrix = XMLoadFloat4x4(&entityData->pTransform->GetTransformMatrix());
 			
@@ -247,38 +295,66 @@ void Renderer::RenderFrame()
 {
 	ResetRendering();
 
-	D3D12_CPU_DESCRIPTOR_HANDLE currentBackBufferView = GetCurrentBackBufferView();
-	D3D12_CPU_DESCRIPTOR_HANDLE dephtStencilView = GetDepthStencilView();
+	XMVECTORF32 color = Colors::LightSteelBlue;
+	switch (m_currentFrameResourceIndex)
+	{
+	case 1:
+		color = Colors::Gold;
+		break;
+	case 2:
+		color = Colors::OliveDrab;
+		break;
+	}
+
 
 	m_pCommandList->RSSetViewports(1, m_pViewPort);
 	m_pCommandList->RSSetScissorRects(1, m_pScissorRect);
 
-	m_pCommandList->ClearRenderTargetView(currentBackBufferView, Colors::LightSteelBlue, 0, nullptr);
+	ID3D12Resource* currBackBuff = m_pSwapChain->GetCurrentBackBuffer();
+	CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(
+		currBackBuff,
+		D3D12_RESOURCE_STATE_PRESENT,
+		D3D12_RESOURCE_STATE_RENDER_TARGET
+	);
+
+	m_pCommandList->ResourceBarrier(1, &resourceBarrier);
+
+
+	D3D12_CPU_DESCRIPTOR_HANDLE currentBackBufferView = GetCurrentBackBufferView();
+	D3D12_CPU_DESCRIPTOR_HANDLE dephtStencilView = GetDepthStencilView();
+	m_pCommandList->ClearRenderTargetView(currentBackBufferView, color, 0, nullptr);
 	m_pCommandList->ClearDepthStencilView(dephtStencilView, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
 	m_pCommandList->OMSetRenderTargets(1, &currentBackBufferView, true, &dephtStencilView);
 
-	/*ID3D12DescriptorHeap* descriptorHeaps[] = {m_pCbvHeap}; // m_pCbv should be in frameresource
-	m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);*/ // For textures only ?
+	ID3D12DescriptorHeap* descriptorHeaps[] = {m_pCBVHeap}; // m_pCbv should be in frameresource
+	m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps); // For textures only ?
 
 	Mesh* pMesh;
 	ShaderReference* pShaderReference;
 	Shader* pShader;
 	D3D12_GPU_VIRTUAL_ADDRESS entitiesConstantsBuffers = m_pCurrentFrameResource->GetEntitiesConstantsBuffers()->Resource()->GetGPUVirtualAddress();
+
+	UINT objCBByteSize = (sizeof(EntityConstants) + 255) & ~255;
+
+	auto objectCB = m_pCurrentFrameResource->GetEntitiesConstantsBuffers()->Resource();
+
 	for (RendererEntityData* entityData : m_entitiesDataList)
 	{
 		pMesh = entityData->pMeshReference->GetMesh();
 		pShaderReference = entityData->pShaderReference;
 		pShader = pShaderReference->GetShader();
 
-		m_pCommandList->SetGraphicsRootSignature(pShader->GetRootSignature());//
-		m_pCommandList->SetPipelineState(pShader->GetPipelineStateObject());//
+		m_pCommandList->SetGraphicsRootSignature(pShader->GetRootSignature());
+		m_pCommandList->SetPipelineState(pShader->GetPipelineStateObject());
 
-		m_pCommandList->IASetVertexBuffers(0, 1, &pMesh->VertexBufferView());
-		m_pCommandList->IASetIndexBuffer(&pMesh->IndexBufferView());
+		D3D12_VERTEX_BUFFER_VIEW vertexBufferView = pMesh->VertexBufferView();
+		D3D12_INDEX_BUFFER_VIEW indexBufferView = pMesh->IndexBufferView();
+		m_pCommandList->IASetVertexBuffers(0, 1, &vertexBufferView);
+		m_pCommandList->IASetIndexBuffer(&indexBufferView);
 		m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		m_pCommandList->SetGraphicsRootConstantBufferView(0, entitiesConstantsBuffers);//
+		m_pCommandList->SetGraphicsRootConstantBufferView(0, entitiesConstantsBuffers);
 
 		m_pCommandList->DrawIndexedInstanced(pMesh->m_indexCount, 1, pMesh->m_startIndexLocation, pMesh->m_baseVertexLocation, 0);
 	}
@@ -313,7 +389,7 @@ void Renderer::RenderFrameEmpty()
 
 	m_pCommandList->OMSetRenderTargets(1, &currentBackBufferView, true, &dephtStencilView);
 
-	m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
+	//m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
 
 	ExecuteRendering();
 }
@@ -350,18 +426,15 @@ void Renderer::UNSAFE_RemoveEntity(Entity* entity)
 
 void Renderer::ResetRendering()
 {
+	Shader* pShader = m_entitiesDataList[0]->pShaderReference->GetShader();
+
+
 	HRESULT hr = m_pCurrentFrameResource->ResetCommandAllocator();
 	ID3D12CommandAllocator* cmdAlloc = m_pCurrentFrameResource->GetD3DCommandAllocator();
-	hr = m_pCommandList->Reset(cmdAlloc, nullptr); //nullptr should be replaced with a pso
+	hr = m_pCommandList->Reset(cmdAlloc, pShader->GetPipelineStateObject()); //nullptr should be replaced with a pso
 	std::cout << hr << std::endl;
 
-	ID3D12Resource* currBackBuff = m_pSwapChain->GetCurrentBackBuffer();
-	CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(
-		currBackBuff,
-		D3D12_RESOURCE_STATE_PRESENT,
-		D3D12_RESOURCE_STATE_RENDER_TARGET
-	);
-	m_pCommandList->ResourceBarrier(1, &resourceBarrier);
+
 }
 
 void Renderer::ExecuteRendering()

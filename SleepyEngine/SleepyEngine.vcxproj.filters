@@ -22,7 +22,7 @@
     <ClCompile Include="src\graphics\Window.cpp" />
     <ClCompile Include="src\graphics\Renderer.cpp" />
     <ClCompile Include="src\graphics\CommandQueue.cpp" />
-    <ClCompile Include="src\core\Camera.cpp" />
+    <ClCompile Include="src\core\TmpCamera.cpp" />
     <ClCompile Include="src\ecs\System.cpp" />
     <ClCompile Include="src\utils\Utils.cpp" />
     <ClCompile Include="src\ecs\components\MeshReference.cpp" />
@@ -32,6 +32,9 @@
     <ClCompile Include="src\graphics\shaders\ShaderColor.cpp" />
     <ClCompile Include="src\ecs\components\Velocity.cpp" />
     <ClCompile Include="src\ecs\components\ComponentsDescriptors.cpp" />
+    <ClCompile Include="src\ecs\systems\PhysicSystem.cpp" />
+    <ClCompile Include="src\ecs\systems\GameplaySystem.cpp" />
+    <ClCompile Include="src\ecs\components\Camera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Components\Collider.h" />
@@ -68,7 +71,7 @@
     <ClInclude Include="headers\ECS\Entity.h" />
     <ClInclude Include="headers\ECS\Component.h" />
     <ClInclude Include="headers\Engine.h" />
-    <ClInclude Include="headers\Camera.h" />
+    <ClInclude Include="headers\TmpCamera.h" />
     <ClInclude Include="headers\Utils\Utils.h" />
     <ClInclude Include="headers\Components\MeshReference.h" />
     <ClInclude Include="headers\EngineTestGameState.h" />
@@ -78,6 +81,9 @@
     <ClInclude Include="headers\Graphics\ShaderColor.h" />
     <ClInclude Include="headers\Components\Velocity.h" />
     <ClInclude Include="headers\Components\ComponentsDescriptors.h" />
+    <ClInclude Include="headers\ECS\PhysicSystem.h" />
+    <ClInclude Include="headers\ECS\GameplaySystem.h" />
+    <ClInclude Include="headers\Components\Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SleepyEngine.rc" />

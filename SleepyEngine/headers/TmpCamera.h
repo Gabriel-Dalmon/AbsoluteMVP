@@ -1,11 +1,11 @@
 #pragma once
 
-class Camera
+class TmpCamera
 {
 public:
 
-	Camera();
-	~Camera();
+	TmpCamera();
+	~TmpCamera();
 
 	// Get/Set world camera position.
 	XMVECTOR GetPosition()const;

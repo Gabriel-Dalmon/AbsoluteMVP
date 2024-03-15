@@ -145,7 +145,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="headers\Camera.h" />
+    <ClInclude Include="headers\TmpCamera.h" />
+    <ClInclude Include="headers\Components\Camera.h" />
     <ClInclude Include="headers\Components\Collider.h" />
     <ClInclude Include="headers\Components\ColliderOBB.h" />
     <ClInclude Include="headers\Components\ColliderSphere.h" />
@@ -156,10 +157,12 @@
     <ClInclude Include="headers\ECS\Component.h" />
     <ClInclude Include="headers\ECS\Entity.h" />
     <ClInclude Include="headers\ECS\Factory.h" />
+    <ClInclude Include="headers\ECS\GameplaySystem.h" />
     <ClInclude Include="headers\ECS\System.h" />
     <ClInclude Include="headers\Core\GameState.h" />
     <ClInclude Include="headers\Component.h" />
     <ClInclude Include="headers\Graphics\ShaderColor.h" />
+    <ClInclude Include="headers\ECS\PhysicSystem.h" />
     <ClInclude Include="headers\Utils\D3DUtils.h" />
     <ClInclude Include="headers\Engine.h" />
     <ClInclude Include="headers\EngineTestGameState.h" />
@@ -191,12 +194,13 @@
     <ClInclude Include="src\utils\d3dx12.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\ecs\components\Camera.cpp" />
     <ClCompile Include="src\ecs\components\ComponentsDescriptors.cpp" />
     <ClCompile Include="src\ecs\components\MeshReference.cpp" />
     <ClCompile Include="src\ecs\components\Velocity.cpp" />
     <ClCompile Include="src\ecs\Factory.cpp" />
     <ClCompile Include="src\ecs\System.cpp" />
-    <ClCompile Include="src\core\Camera.cpp" />
+    <ClCompile Include="src\core\TmpCamera.cpp" />
     <ClCompile Include="src\ecs\components\Collider.cpp" />
     <ClCompile Include="src\ecs\components\ColliderOBB.cpp" />
     <ClCompile Include="src\ecs\components\ColliderSphere.cpp" />
@@ -209,6 +213,7 @@
     <ClCompile Include="src\core\SleepyEngine.cpp" />
     <ClCompile Include="src\core\Timer.cpp" />
     <ClCompile Include="src\ecs\components\Transform.cpp" />
+    <ClCompile Include="src\ecs\systems\GameplaySystem.cpp" />
     <ClCompile Include="src\graphics\CommandQueue.cpp" />
     <ClCompile Include="src\graphics\Device.cpp" />
     <ClCompile Include="src\graphics\FrameResource.cpp" />
@@ -217,6 +222,7 @@
     <ClCompile Include="src\graphics\shaders\ShaderColor.cpp" />
     <ClCompile Include="src\graphics\SwapChain.cpp" />
     <ClCompile Include="src\graphics\Window.cpp" />
+    <ClCompile Include="src\ecs\systems\PhysicSystem.cpp" />
     <ClCompile Include="src\utils\D3DUtils.cpp" />
     <ClCompile Include="src\utils\HResultException.cpp" />
     <ClCompile Include="src\utils\MathHelper.cpp" />

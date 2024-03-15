@@ -12,5 +12,6 @@ typedef enum ComponentTypes
 	SHADER_REFERENCE = 1 << 2,
 	VELOCITY = 1 << 3,
 	COLLIDER = 1 << 4,
+	SCRIPT = 1 << 5,
 	COMPONENT_TYPES_COUNT	
 } ComponentType;

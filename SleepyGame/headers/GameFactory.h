@@ -13,6 +13,7 @@ public:
 	Entity* CreateEmptyEntity();
 
 	void FillPlayer(Entity* pEntity);
+	void FillCamera(Entity* pEntity);
 	void FillEnemy(Entity* pEntity);
 	void FillBullet(Entity* pEntity);
 	void FillSkybox(Entity* pEntity);

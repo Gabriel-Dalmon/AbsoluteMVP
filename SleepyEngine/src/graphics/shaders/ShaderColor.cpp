@@ -8,8 +8,8 @@ void ShaderColor::Initialize(Device* m_pDevice)
 	CompileVertexShader(L"../SleepyEngine/src/graphics/shaders/Color.hlsl");
 	CompilePixelShader(L"../SleepyEngine/src/graphics/shaders/Color.hlsl");
 #else
-	shaderTexture.CompileVS(L"Shaders/Color.hlsl");
-	shaderTexture.CompilePS(L"Shaders/Color.hlsl");
+	CompileVertexShader(L"Shaders/Color.hlsl");
+	CompilePixelShader(L"Shaders/Color.hlsl");
 #endif
 
 	m_pInputLayout =

@@ -16,6 +16,10 @@ void GameState::Initialize(HINSTANCE hAppInstance, RendererDescriptor* pRenderer
 	pResourceAllocator->Initialize(pRenderer->GetDevice(), pRenderer->GetCommandQueue());
 	m_systemsList.push_back(pRenderer);
 
+	GameplaySystem* pGameplaySystem = new GameplaySystem();
+	pGameplaySystem->Initialize();
+	m_systemsList.push_back(pGameplaySystem);
+
 	pECSFactory->Initialize(pResourceAllocator, pRenderer->GetColorShader());
 	OnEngineCreated(pECSFactory);
 }

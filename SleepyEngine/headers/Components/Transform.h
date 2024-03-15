@@ -9,22 +9,22 @@ public:
 	// MEMBER VARIABLES
 public:
 	//scale
-	XMFLOAT3 m_scaleVect;
+	XMFLOAT3 m_scaleVect = { 0.f,0.f,0.f};
 	XMFLOAT4X4 m_scaleMatrix;
 
 	//orientation
-	XMFLOAT3 m_dir;
-	XMFLOAT3 m_right;
-	XMFLOAT3 m_up;
-	XMFLOAT4 m_currentRotateQuat;
-	XMFLOAT4X4 m_currentRotateMatrix;
+	XMFLOAT3 m_dir = { 0.f,0.f,0.f };
+	XMFLOAT3 m_right = { 0.f,0.f,0.f };
+	XMFLOAT3 m_up = { 0.f,0.f,0.f };
+	XMFLOAT4 m_currentRotateQuat = { 0.f,0.f,0.f,0.f };
+	XMFLOAT4X4 m_currentRotateMatrix = {};
 
 	//position
-	XMFLOAT3 m_positionVect;
-	XMFLOAT4X4 m_positionMatrix;
+	XMFLOAT3 m_positionVect = { 0.f,0.f,0.f };
+	XMFLOAT4X4 m_positionMatrix = {};
 
 	//"merged" matrix
-	XMFLOAT4X4 m_transformMatrix;
+	XMFLOAT4X4 m_transformMatrix = {};
 
 	// METHODES
 public:

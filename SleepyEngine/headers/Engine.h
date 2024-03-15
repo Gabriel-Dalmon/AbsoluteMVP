@@ -64,6 +64,7 @@ class ColliderOBB;
 class ColliderSphere;
 class Script;
 class Velocity;
+class Camera;
 
 class Entity;
 
@@ -76,7 +77,7 @@ class Shader;
 class ShaderColor;
 
 class Timer;
-class Camera;
+class TmpCamera;
 
 struct SystemEntityData;
 class System;
@@ -87,6 +88,8 @@ class ResourceAllocator;
 struct RendererEntityData;
 struct RendererDescriptor;
 class Renderer;
+
+class PhysicSystem;
 
 class GameState;
 class EngineTestGameState;
@@ -166,6 +169,7 @@ using namespace Sleepy;
 #include "Components/ColliderSphere.h"
 #include "Components/Script.h"
 #include "Components/Velocity.h"
+#include "Components/Camera.h"
 
 #include "ECS/Entity.h"
 
@@ -182,11 +186,13 @@ using namespace Sleepy;
 
 #include "ECS/System.h"
 #include "Graphics/Renderer.h"
+#include "ECS/PhysicSystem.h"
+#include "ECS/GameplaySystem.h"
 
 #include "ECS/Factory.h"
 #include "Utils/ResourceAllocator.h"
 
-#include "Camera.h"
+#include "TmpCamera.h"
 #include "Core/Timer.h"
 
 #include "Core/GameState.h"
