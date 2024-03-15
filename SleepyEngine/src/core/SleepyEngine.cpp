@@ -334,22 +334,20 @@ void SleepyEngine::BuildConstantBuffers()
 {
     m_pObjectCB = new UploadBuffer<ObjectConstants>(m_pDevice, 1, true);
 
-    //UINT objCBByteSize = ((sizeof(ObjectConstants) + 255) & ~255);
-    //
-    //D3D12_GPU_VIRTUAL_ADDRESS cbAddress = m_pObjectCB->Resource()->GetGPUVirtualAddress();
-    //// Offset to the ith object constant buffer in the buffer.
-    //int boxCBufIndex = 0;
-    //cbAddress += boxCBufIndex * objCBByteSize;
-    //
-    //D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc;
-    //cbvDesc.BufferLocation = cbAddress;
-    //cbvDesc.SizeInBytes = ((sizeof(ObjectConstants) + 255) & ~255);
-    //
-    //m_pDevice->CreateConstantBufferView(
-    //    &cbvDesc,
-    //    m_pCbvHeap->GetCPUDescriptorHandleForHeapStart());
-
-
+    UINT objCBByteSize = ((sizeof(ObjectConstants) + 255) & ~255);
+    
+    D3D12_GPU_VIRTUAL_ADDRESS cbAddress = m_pObjectCB->Resource()->GetGPUVirtualAddress();
+    // Offset to the ith object constant buffer in the buffer.
+    int boxCBufIndex = 0;
+    cbAddress += boxCBufIndex * objCBByteSize;
+    
+    D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc;
+    cbvDesc.BufferLocation = cbAddress;
+    cbvDesc.SizeInBytes = ((sizeof(ObjectConstants) + 255) & ~255);
+    
+    m_pDevice->CreateConstantBufferView(
+        &cbvDesc,
+        m_pCbvHeap->GetCPUDescriptorHandleForHeapStart());
 }
 
 int SleepyEngine::Run()
@@ -463,6 +461,20 @@ int SleepyEngine::Run()
             //        m_pObjectCB->CopyData(i+1, objConstants);
             //    }
             //}
+
+            auto currObjectCB = m_pObjectCB;
+            //for (Entity* e : m_entities)
+            for (int i = 1; i < m_entities.size(); i++)
+            {
+            // Only update the cbuffer data if the constants have changed.  
+            // This needs to be tracked per frame resource.
+                XMMATRIX world = XMLoadFloat4x4(&m_entities[i]->GetComponent<Transform*>()->m_transformMatrix);
+
+                ObjectConstants objConstants;
+                XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(world));
+
+                currObjectCB->CopyData(i, objConstants);
+            }
 
             OnKeyboardInput(timer);
             Update();
@@ -702,7 +714,7 @@ void SleepyEngine::Update()
     float yC = XMVectorGetY(m_Camera.GetPosition());  
     float zC = XMVectorGetZ(m_Camera.GetPosition());  
      
-    //m_Transform->LookAt(xC, yC, zC);
+    m_Transform->LookAt(xC, yC, zC);
 
     
 
