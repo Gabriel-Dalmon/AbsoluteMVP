@@ -27,6 +27,7 @@ public:
     virtual void BlankUpdate();
 
     std::vector<Entity*> m_entities;
+    std::vector<Entity*> m_bullets;
 
 protected:
     void InitWindow(int nCmdShow);

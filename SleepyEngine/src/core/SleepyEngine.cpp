@@ -405,7 +405,7 @@ int SleepyEngine::Run()
             //std::cout << m_Camera.GetPosition() << std::endl;
             //std::cout << m_Camera.GetView() << std::endl;
 
-            if (std::rand()%1200 == 1) {
+            if (std::rand() % 1200 == 1) {
 
                 maskX = std::rand() % 2 == 1 ? 1 : -1;
                 maskY = std::rand() % 2 == 1 ? 1 : -1;
@@ -427,7 +427,7 @@ int SleepyEngine::Run()
                 ThrowIfFailed(m_pCommandList->Close());
                 ID3D12CommandList* cmdsLists[] = { m_pCommandList };
                 m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
-                //FlushCommandQueue();
+                FlushCommandQueue();
             }
             
 
@@ -450,15 +450,15 @@ int SleepyEngine::Run()
                     
 
                     bullet->GetComponent<Velocity*>()->SetVelocity(XMVectorGetX(m_Camera.GetLook()), XMVectorGetY(m_Camera.GetLook()), XMVectorGetZ(m_Camera.GetLook()));
-                    m_entities.push_back(bullet);
+                    m_bullets.push_back(bullet);
                     bullet->m_pObjectCB = new UploadBuffer<ObjectConstants>(m_pDevice, 1, true);
 
                     ThrowIfFailed(m_pCommandList->Close());
                     ID3D12CommandList* cmdsLists[] = { m_pCommandList };
                     m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
-                    //FlushCommandQueue();
+                    FlushCommandQueue();
 
-                    cd = 500;
+                    cd = 5;
                 }
             }
 
@@ -748,6 +748,63 @@ void SleepyEngine::Update()
         entity->m_pObjectCB->CopyData(0, objConstants);
     }
 
+    for(int i = 0; i < m_bullets.size(); i++)
+    {
+        transform = m_bullets[i]->GetComponent<Transform*>();
+
+        //std::cout << "Update" << std::endl;
+        // Convert Spherical to Cartesian coordinates.
+        float x = mRadius * sinf(mPhi) * cosf(mTheta);
+        float z = mRadius * sinf(mPhi) * sinf(mTheta);
+        float y = mRadius * cosf(mPhi);
+
+        // Build the view matrix.
+        XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);
+        XMVECTOR target = XMVectorZero();
+        XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+
+        //XMMATRIX view = XMMatrixLookAtLH(pos, target, up); 
+        //XMStoreFloat4x4(&mView, view); 
+        XMMATRIX view = m_Camera.GetView();
+        XMStoreFloat4x4(&mView, view);
+
+        // Rotation essai 0:
+        // m_Transform.Identity();
+        //m_Transform->Rotate(.001f, .001f, .001f);
+        if (xS <= 1.f /*&& yS <= 1.f && zS <= 1.f*/)
+        {
+            xS += 0.005;
+            /*yS += 0.005;
+            zS += 0.005;*/
+            transform->SetScale(xS, yS, zS);
+            //std::cout << m_Transform->m_scaleVect.x << std::endl;
+        }
+
+        transform->SetPosition(
+            transform->m_positionVect.x + XMVectorGetX(m_bullets[i]->GetComponent<Velocity*>()->GetVelocity()),
+            transform->m_positionVect.y + XMVectorGetY(m_bullets[i]->GetComponent<Velocity*>()->GetVelocity()),
+            transform->m_positionVect.z + XMVectorGetZ(m_bullets[i]->GetComponent<Velocity*>()->GetVelocity())
+        );
+
+        float xC = XMVectorGetX(m_Camera.GetPosition());
+        float yC = XMVectorGetY(m_Camera.GetPosition());
+        float zC = XMVectorGetZ(m_Camera.GetPosition());
+
+        transform->LookAt(xC, yC, zC);
+
+        transform->Update();
+
+        XMMATRIX world = XMLoadFloat4x4(&transform->m_transformMatrix);
+        //XMMATRIX proj = XMLoadFloat4x4(&mProj);
+        XMMATRIX proj = m_Camera.GetProj();
+        XMMATRIX worldViewProj = world * view * proj;
+
+        // Update the constant buffer with the latest worldViewProj matrix.
+        ObjectConstants objConstants;
+        XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
+        m_bullets[i]->m_pObjectCB->CopyData(0, objConstants);
+    }
+
     // temp
     BlankUpdate();
 }
@@ -782,7 +839,7 @@ void SleepyEngine::DrawBis()
     m_pCommandList->OMSetRenderTargets(1, &currentBackBufferView, true, &dephtStencilView);
 
     Mesh* mesh;
-    for(Entity* entity : m_entities)
+    for (Entity* entity : m_entities)
     {
         mesh = entity->GetComponent<MeshRenderer*>()->GetMesh();
 
@@ -801,6 +858,29 @@ void SleepyEngine::DrawBis()
 
         //m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
         m_pCommandList->SetGraphicsRootConstantBufferView(0, entity->m_pObjectCB->Resource()->GetGPUVirtualAddress());
+
+        m_pCommandList->DrawIndexedInstanced(mesh->m_drawArgs["box"].IndexCount, 1, 0, 0, 0);
+    }
+
+    for(int i = 0; i < m_bullets.size(); i++)
+    {
+        mesh = m_bullets[i]->GetComponent<MeshRenderer*>()->GetMesh();
+
+        ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvHeap };
+        m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+
+        m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
+
+        D3D12_VERTEX_BUFFER_VIEW vertexBufferView = mesh->VertexBufferView();
+        D3D12_INDEX_BUFFER_VIEW indexBufferView = mesh->IndexBufferView();
+
+        m_pCommandList->IASetVertexBuffers(0, 1, &vertexBufferView);
+        m_pCommandList->IASetIndexBuffer(&indexBufferView);
+
+        m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+        //m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
+        m_pCommandList->SetGraphicsRootConstantBufferView(0, m_bullets[i]->m_pObjectCB->Resource()->GetGPUVirtualAddress());
 
         m_pCommandList->DrawIndexedInstanced(mesh->m_drawArgs["box"].IndexCount, 1, 0, 0, 0);
     }
