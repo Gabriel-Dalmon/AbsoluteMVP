@@ -363,11 +363,18 @@ int SleepyEngine::Run()
 
 
     Entity* uh = Entity::CreateEmptyEntity();
-    m_pFactory->FillBullet(uh);
+    m_pFactory->FillEnemy(uh);
     uh->GetComponent<Transform*>()->SetPosition(5.f, 5.f, 5.f);
     m_entities.push_back(uh);
+    uh->m_pObjectCB = new UploadBuffer<ObjectConstants>(m_pDevice, 1, true);
 
+    Entity* uhh = Entity::CreateEmptyEntity();
+    m_pFactory->FillEnemy(uhh);
+    uhh->GetComponent<Transform*>()->SetPosition(2.f, 2.f, 2.f);
+    m_entities.push_back(uhh);
+    uhh->m_pObjectCB = new UploadBuffer<ObjectConstants>(m_pDevice, 1, true);
 
+    
 
 
 
@@ -376,9 +383,17 @@ int SleepyEngine::Run()
     m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
     FlushCommandQueue();
 
+    int cd = 0;
+    std::vector<Entity*> toRemove;
+    int maskX;
+    int maskY;
+    int maskZ;
+    int point = 0;
+
     // Main message loop:
     while (msg.message != WM_QUIT)
     {
+        timer.UpdateTimer();
         if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
         {
         /*if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
@@ -389,6 +404,89 @@ int SleepyEngine::Run()
         else {
             //std::cout << m_Camera.GetPosition() << std::endl;
             //std::cout << m_Camera.GetView() << std::endl;
+
+            if (std::rand()%1200 == 1) {
+
+                maskX = std::rand() % 2 == 1 ? 1 : -1;
+                maskY = std::rand() % 2 == 1 ? 1 : -1;
+                maskZ = std::rand() % 2 == 1 ? 1 : -1;
+
+                m_pDirectCmdListAlloc->Reset();
+
+                m_pCommandList->Reset(m_pDirectCmdListAlloc, m_PSO);
+                m_pCommandList->RSSetViewports(1, m_pViewPort);
+                m_pCommandList->RSSetScissorRects(1, &m_scissorRect);
+
+                Entity* bullet = Entity::CreateEmptyEntity();
+                m_pFactory->FillEnemy(bullet);
+                bullet->GetComponent<Transform*>()->SetPosition(std::rand()%50 * maskX, std::rand()%20 * maskY, std::rand()%50 * maskZ);
+
+                m_entities.push_back(bullet);
+                bullet->m_pObjectCB = new UploadBuffer<ObjectConstants>(m_pDevice, 1, true);
+
+                ThrowIfFailed(m_pCommandList->Close());
+                ID3D12CommandList* cmdsLists[] = { m_pCommandList };
+                m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+                //FlushCommandQueue();
+            }
+            
+
+            cd -= 2 * timer.GetDeltaTime();
+            if (GetAsyncKeyState('E')) {
+                if(cd <=0 )
+                {
+                    m_pDirectCmdListAlloc->Reset();
+
+                    m_pCommandList->Reset(m_pDirectCmdListAlloc, m_PSO);
+                    m_pCommandList->RSSetViewports(1, m_pViewPort);
+                    m_pCommandList->RSSetScissorRects(1, &m_scissorRect);
+
+                    Entity* bullet = Entity::CreateEmptyEntity();
+                    m_pFactory->FillBullet(bullet);
+                    bullet->GetComponent<Transform*>()->SetPosition
+                    (   XMVectorGetX(m_Camera.GetPosition()),
+                        XMVectorGetY(m_Camera.GetPosition()),
+                        XMVectorGetZ(m_Camera.GetPosition()) );
+                    
+
+                    bullet->GetComponent<Velocity*>()->SetVelocity(XMVectorGetX(m_Camera.GetLook()), XMVectorGetY(m_Camera.GetLook()), XMVectorGetZ(m_Camera.GetLook()));
+                    m_entities.push_back(bullet);
+                    bullet->m_pObjectCB = new UploadBuffer<ObjectConstants>(m_pDevice, 1, true);
+
+                    ThrowIfFailed(m_pCommandList->Close());
+                    ID3D12CommandList* cmdsLists[] = { m_pCommandList };
+                    m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+                    //FlushCommandQueue();
+
+                    cd = 500;
+                }
+            }
+
+            for (int i = 0; i < m_entities.size(); i++) {
+                for (int j = m_entities.size()-1; j > i; j--) {
+                    if (Collider::collideTest(m_entities[i], m_entities[j])) {
+                        if((m_entities[i]->m_id == 1))
+                        {
+                            toRemove.push_back(m_entities[i]);
+                            point++;
+                        }
+                        if ((m_entities[j]->m_id == 1)) { toRemove.push_back(m_entities[j]); point++; }
+                        Score::score++;//point == 1 ? 1 : 0;
+                    }
+                }
+            }
+
+            for (Entity* entity : toRemove) {
+                for (int i = 0; i < m_entities.size(); i++)
+                {
+                    if (m_entities[i] == entity)
+                    {
+                        delete m_entities[i];
+                        m_entities.erase(m_entities.begin() + i);
+                    }
+                }
+            }
+
             timer.UpdateTimer();
 
             input.Update();
@@ -624,6 +722,13 @@ void SleepyEngine::Update()
             transform->SetScale(xS, yS, zS);
             //std::cout << m_Transform->m_scaleVect.x << std::endl;
         }
+
+        transform->SetPosition(
+            transform->m_positionVect.x + XMVectorGetX(entity->GetComponent<Velocity*>()->GetVelocity()),
+            transform->m_positionVect.y + XMVectorGetY(entity->GetComponent<Velocity*>()->GetVelocity()),
+            transform->m_positionVect.z + XMVectorGetZ(entity->GetComponent<Velocity*>()->GetVelocity())
+        );
+
         float xC = XMVectorGetX(m_Camera.GetPosition());
         float yC = XMVectorGetY(m_Camera.GetPosition());
         float zC = XMVectorGetZ(m_Camera.GetPosition());
@@ -640,7 +745,7 @@ void SleepyEngine::Update()
         // Update the constant buffer with the latest worldViewProj matrix.
         ObjectConstants objConstants;
         XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
-        m_pObjectCB->CopyData(0, objConstants);
+        entity->m_pObjectCB->CopyData(0, objConstants);
     }
 
     // temp
@@ -695,13 +800,7 @@ void SleepyEngine::DrawBis()
         m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
         //m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
-        m_pCommandList->SetGraphicsRootConstantBufferView(0, m_pObjectCB->Resource()->GetGPUVirtualAddress());
-
-        /* the following code is the one that comse from the book
-        * we would like to iterate in the submesh if we had one, maybe later
-        *pCommandList->DrawIndexedInstanced(
-        *	mesh->DrawArgs["box"].IndexCount,
-        *	1, 0, 0, 0);*/
+        m_pCommandList->SetGraphicsRootConstantBufferView(0, entity->m_pObjectCB->Resource()->GetGPUVirtualAddress());
 
         m_pCommandList->DrawIndexedInstanced(mesh->m_drawArgs["box"].IndexCount, 1, 0, 0, 0);
     }

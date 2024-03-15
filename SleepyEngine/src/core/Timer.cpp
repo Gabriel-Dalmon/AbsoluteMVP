@@ -49,7 +49,7 @@ void Timer::UpdateFPS(HWND Window)
 	FrameCount += 1;
 	if ((GetTotalTime() - FPSTimer) >= 1.f)
 	{
-		std::wstring title = L"FPS: " + std::to_wstring(FrameCount) + L" | Max FPS: " + std::to_wstring(MaxFPS);
+		std::wstring title = L"FPS: " + std::to_wstring(FrameCount) + L" | Max FPS: " + std::to_wstring(MaxFPS) + L" | Score : " + std::to_wstring(Score::score);
 
 		if (FrameCount > MaxFPS)
 			MaxFPS = FrameCount;

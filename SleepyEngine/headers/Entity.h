@@ -2,7 +2,7 @@
 
 class Entity
 {
-private:
+public:
 	Entity();
 	~Entity() {};
 
@@ -13,6 +13,9 @@ public: // Create and kill entity
 	int m_id = 0;
 	static Entity* CreateEmptyEntity();
 	void Release();
+
+
+	UploadBuffer<ObjectConstants>* m_pObjectCB = nullptr;
 
 public: // SETTER / GETTER	
 	template<typename T> 

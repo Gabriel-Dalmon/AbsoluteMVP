@@ -1,9 +1,6 @@
 #pragma once
 
-struct ObjectConstants
-{
-    XMFLOAT4X4 WorldViewProj = MathHelper::Identity4x4();
-};
+
 
 
 class SleepyEngine

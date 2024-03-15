@@ -84,14 +84,19 @@ struct Vertex
 	XMFLOAT4 Color;
 };
 
+struct ObjectConstants
+{
+	XMFLOAT4X4 WorldViewProj = MathHelper::Identity4x4();
+};
+
 // Classes 
 #include "ComponentDescriptor.h"
+#include "kek.h"
 #include "Camera.h"
 #include "Component.h"
 #include "Collider.h"
 #include "ColliderOBB.h"
 #include "ColliderSphere.h"
-#include "Entity.h"
 #include "GameState.h"
 #include "Input.h"
 #include "Menu.h"
@@ -104,9 +109,10 @@ struct Vertex
 #include "Timer.h"
 #include "Transform.h"
 #include "RessourceAllocator.h"
+#include "UploadBuffer.h"
+#include "Entity.h"
 #include "Factory.h"
 #include "tmpMeshGeo.h"
-#include "UploadBuffer.h"
 #include "PSO.h"
 #include "MathHelper.h"
 #include "SleepyEngine.h"

@@ -16,6 +16,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
+    std::srand(std::time(nullptr));
+
     AllocConsole();
     FILE consoleOut;
     
