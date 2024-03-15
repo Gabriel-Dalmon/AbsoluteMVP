@@ -329,9 +329,6 @@ void SleepyEngine::BuildConstantBuffers()
 
 int SleepyEngine::Run()
 {
-    m_Transform = new Transform();
-    m_Transform->Identity();  
-    m_Transform->SetScale(.5f, .5f, .5f);
 
     HACCEL hAccelTable = LoadAccelerators(m_hAppInstance, MAKEINTRESOURCE(IDC_SLEEPYENGINE));
 
@@ -363,6 +360,16 @@ int SleepyEngine::Run()
 
     m_PSO = InitPSO(shader.m_pInputLayout, m_pRootSignature, shader.m_pVSByteCode, shader.m_pPSByteCode, m_backBufferFormat, false, 0,
         DXGI_FORMAT_D24_UNORM_S8_UINT, m_pDevice, D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+
+
+    Entity* uh = Entity::CreateEmptyEntity();
+    m_pFactory->FillBullet(uh);
+    uh->GetComponent<Transform*>()->SetPosition(5.f, 5.f, 5.f);
+    m_entities.push_back(uh);
+
+
+
+
 
     ThrowIfFailed(m_pCommandList->Close());
     ID3D12CommandList* cmdsLists[] = { m_pCommandList };
@@ -573,51 +580,6 @@ void SleepyEngine::FlushCommandQueue()
     }
 }
 
-void SleepyEngine::BuildBoxGeometry()
-{
-    std::vector<Vertex> vertices =
-    {
-        Vertex({ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Red) }),
-        Vertex({ XMFLOAT3(-1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::White) }),
-        Vertex({ XMFLOAT3(+1.0f, +1.0f, -1.0f), XMFLOAT4(Colors::White) }),
-        Vertex({ XMFLOAT3(+1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::White) }),
-        Vertex({ XMFLOAT3(-1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::White) }),
-        Vertex({ XMFLOAT3(-1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::White) }),
-        Vertex({ XMFLOAT3(+1.0f, +1.0f, +1.0f), XMFLOAT4(Colors::White) }),
-        Vertex({ XMFLOAT3(+1.0f, -1.0f, +1.0f), XMFLOAT4(Colors::Blue) })
-    };
-
-    std::vector<uint16_t> indices =
-    {
-        // front face
-        0, 1, 2,
-        0, 2, 3,
-
-        // back face
-        4, 6, 5,
-        4, 7, 6,
-
-        // left face
-        4, 5, 1,
-        4, 1, 0,
-
-        // right face
-        3, 2, 6,
-        3, 6, 7,
-
-        // top face
-        1, 5, 6,
-        1, 6, 2,
-
-        // bottom face
-        4, 0, 3,
-        4, 3, 7
-    };
-
-    mBoxGeo = new Mesh();
-    mBoxGeo->Init(m_pDevice, m_pCommandList, &vertices, &indices);
-}
-
 void SleepyEngine::BuildBoxGeometryBis()
 {
     ////mBoxGeo = m_pAllocator->getMesh("pyramide");
@@ -630,50 +592,56 @@ void SleepyEngine::BuildBoxGeometryBis()
 
 void SleepyEngine::Update()
 {
-    //std::cout << "Update" << std::endl;
-    // Convert Spherical to Cartesian coordinates.
-    float x = mRadius * sinf(mPhi) * cosf(mTheta); 
-    float z = mRadius * sinf(mPhi) * sinf(mTheta); 
-    float y = mRadius * cosf(mPhi); 
-
-    // Build the view matrix.
-    XMVECTOR pos = XMVectorSet(x, y, z, 1.0f); 
-    XMVECTOR target = XMVectorZero(); 
-    XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f); 
-
-    //XMMATRIX view = XMMatrixLookAtLH(pos, target, up); 
-    //XMStoreFloat4x4(&mView, view); 
-    XMMATRIX view = m_Camera.GetView();
-    XMStoreFloat4x4(&mView, view);
-
-    // Rotation essai 0:
-    // m_Transform.Identity();
-    //m_Transform->Rotate(.001f, .001f, .001f);
-    if (xS <= 1.f /*&& yS <= 1.f && zS <= 1.f*/)
+    Transform* transform;
+    for(Entity* entity : m_entities)
     {
-        xS += 0.005;
-        /*yS += 0.005;
-        zS += 0.005;*/
-        m_Transform->SetScale(xS, yS, zS);
-        //std::cout << m_Transform->m_scaleVect.x << std::endl;
+        transform = entity->GetComponent<Transform*>();
+
+        //std::cout << "Update" << std::endl;
+        // Convert Spherical to Cartesian coordinates.
+        float x = mRadius * sinf(mPhi) * cosf(mTheta);
+        float z = mRadius * sinf(mPhi) * sinf(mTheta);
+        float y = mRadius * cosf(mPhi);
+
+        // Build the view matrix.
+        XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);
+        XMVECTOR target = XMVectorZero();
+        XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+
+        //XMMATRIX view = XMMatrixLookAtLH(pos, target, up); 
+        //XMStoreFloat4x4(&mView, view); 
+        XMMATRIX view = m_Camera.GetView();
+        XMStoreFloat4x4(&mView, view);
+
+        // Rotation essai 0:
+        // m_Transform.Identity();
+        //m_Transform->Rotate(.001f, .001f, .001f);
+        if (xS <= 1.f /*&& yS <= 1.f && zS <= 1.f*/)
+        {
+            xS += 0.005;
+            /*yS += 0.005;
+            zS += 0.005;*/
+            transform->SetScale(xS, yS, zS);
+            //std::cout << m_Transform->m_scaleVect.x << std::endl;
+        }
+        float xC = XMVectorGetX(m_Camera.GetPosition());
+        float yC = XMVectorGetY(m_Camera.GetPosition());
+        float zC = XMVectorGetZ(m_Camera.GetPosition());
+
+        transform->LookAt(xC, yC, zC);
+
+        transform->Update();
+
+        XMMATRIX world = XMLoadFloat4x4(&transform->m_transformMatrix);
+        //XMMATRIX proj = XMLoadFloat4x4(&mProj);
+        XMMATRIX proj = m_Camera.GetProj();
+        XMMATRIX worldViewProj = world * view * proj;
+
+        // Update the constant buffer with the latest worldViewProj matrix.
+        ObjectConstants objConstants;
+        XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
+        m_pObjectCB->CopyData(0, objConstants);
     }
-    float xC = XMVectorGetX(m_Camera.GetPosition());  
-    float yC = XMVectorGetY(m_Camera.GetPosition());  
-    float zC = XMVectorGetZ(m_Camera.GetPosition());  
-     
-    m_Transform->LookAt(xC, yC, zC);
-
-    m_Transform->Update();
-
-    XMMATRIX world = XMLoadFloat4x4(&m_Transform->m_transformMatrix);
-    //XMMATRIX proj = XMLoadFloat4x4(&mProj);
-    XMMATRIX proj = m_Camera.GetProj();
-    XMMATRIX worldViewProj = world * view * proj;
-
-    // Update the constant buffer with the latest worldViewProj matrix.
-    ObjectConstants objConstants;
-    XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
-    m_pObjectCB->CopyData(0, objConstants);
 
     // temp
     BlankUpdate();
@@ -682,63 +650,7 @@ void SleepyEngine::Update()
 //void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, ID3D12RootSignature* pRootSignature, Mesh* mesh)
 void SleepyEngine::Draw()
 {
-    std::cout << "Drawing" << std::endl;
-    CD3DX12_RESOURCE_BARRIER barrier;
-
-    barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-    D3D12_CPU_DESCRIPTOR_HANDLE currentBackBufferView = GetCurrentBackBufferView();
-    D3D12_CPU_DESCRIPTOR_HANDLE dephtStencilView = GetDepthStencilView();
-
-    m_pDirectCmdListAlloc->Reset();
-
-    m_pCommandList->Reset(m_pDirectCmdListAlloc, m_PSO);
-    m_pCommandList->RSSetViewports(1, m_pViewPort);
-    m_pCommandList->RSSetScissorRects(1, &m_scissorRect);
-
-    m_pCommandList->ResourceBarrier(1, &barrier);
-
-    m_pCommandList->ClearRenderTargetView(currentBackBufferView, Colors::LightSteelBlue, 0, nullptr);
-    m_pCommandList->ClearDepthStencilView(dephtStencilView, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
-
-    m_pCommandList->OMSetRenderTargets(1, &currentBackBufferView, true, &dephtStencilView);
-
-    ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvHeap };
-    m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
-
-    m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
- 
-    D3D12_VERTEX_BUFFER_VIEW vertexBufferView = mBoxGeo->VertexBufferView();
-    D3D12_INDEX_BUFFER_VIEW indexBufferView = mBoxGeo->IndexBufferView();
-    D3D12_VERTEX_BUFFER_VIEW vertexBufferViewBis = mBoxGeo->VertexBufferView();
-    D3D12_INDEX_BUFFER_VIEW indexBufferViewBis = mBoxGeo->IndexBufferView();
-
-    m_pCommandList->IASetVertexBuffers(0, 1, &vertexBufferView);
-    m_pCommandList->IASetIndexBuffer(&indexBufferView);
-
-    m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-    m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
-
-    /* the following code is the one that comse from the book
-    * we would like to iterate in the submesh if we had one, maybe later
-    *pCommandList->DrawIndexedInstanced(
-    *	mesh->DrawArgs["box"].IndexCount,
-    *	1, 0, 0, 0);*/
-    UINT indexCount = mBoxGeo->m_drawArgs["box"].IndexCount;
-    UINT indexCountBis = mBoxGeo->m_drawArgs["box"].IndexCount;
-    m_pCommandList->DrawIndexedInstanced(indexCount, 1, 0, 0, 0);
-
-    barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-    m_pCommandList->ResourceBarrier(1, &barrier);
-
-    m_pCommandList->Close();
-
-    ID3D12CommandList* cmdsLists[] = { m_pCommandList };
-    m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
-
-    ThrowIfFailed(m_pSwapChain->Present(0, 0));
-    m_currentBackBufferOffset = (m_currentBackBufferOffset + 1) % SWAP_CHAIN_BUFFER_COUNT;
-    FlushCommandQueue();
+    
 }
 
 
@@ -764,29 +676,35 @@ void SleepyEngine::DrawBis()
 
     m_pCommandList->OMSetRenderTargets(1, &currentBackBufferView, true, &dephtStencilView);
 
-    ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvHeap };
-    m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+    Mesh* mesh;
+    for(Entity* entity : m_entities)
+    {
+        mesh = entity->GetComponent<MeshRenderer*>()->GetMesh();
 
-    m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
+        ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvHeap };
+        m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
-    D3D12_VERTEX_BUFFER_VIEW vertexBufferView = mBoxGeo->VertexBufferView();
-    D3D12_INDEX_BUFFER_VIEW indexBufferView = mBoxGeo->IndexBufferView();
+        m_pCommandList->SetGraphicsRootSignature(m_pRootSignature);
 
-    m_pCommandList->IASetVertexBuffers(0, 1, &vertexBufferView);
-    m_pCommandList->IASetIndexBuffer(&indexBufferView);
+        D3D12_VERTEX_BUFFER_VIEW vertexBufferView = mesh->VertexBufferView();
+        D3D12_INDEX_BUFFER_VIEW indexBufferView = mesh->IndexBufferView();
 
-    m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        m_pCommandList->IASetVertexBuffers(0, 1, &vertexBufferView);
+        m_pCommandList->IASetIndexBuffer(&indexBufferView);
 
-    //m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
-    m_pCommandList->SetGraphicsRootConstantBufferView(0, m_pObjectCB->Resource()->GetGPUVirtualAddress());
+        m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    /* the following code is the one that comse from the book
-    * we would like to iterate in the submesh if we had one, maybe later
-    *pCommandList->DrawIndexedInstanced(
-    *	mesh->DrawArgs["box"].IndexCount,
-    *	1, 0, 0, 0);*/
+        //m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
+        m_pCommandList->SetGraphicsRootConstantBufferView(0, m_pObjectCB->Resource()->GetGPUVirtualAddress());
 
-    m_pCommandList->DrawIndexedInstanced(mBoxGeo->m_drawArgs["box"].IndexCount, 1, 0, 0, 0);
+        /* the following code is the one that comse from the book
+        * we would like to iterate in the submesh if we had one, maybe later
+        *pCommandList->DrawIndexedInstanced(
+        *	mesh->DrawArgs["box"].IndexCount,
+        *	1, 0, 0, 0);*/
+
+        m_pCommandList->DrawIndexedInstanced(mesh->m_drawArgs["box"].IndexCount, 1, 0, 0, 0);
+    }
 
     barrier = CD3DX12_RESOURCE_BARRIER::Transition(GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
     m_pCommandList->ResourceBarrier(1, &barrier);

@@ -10,6 +10,7 @@ private:
 	void Init();
 
 public: // Create and kill entity
+	int m_id = 0;
 	static Entity* CreateEmptyEntity();
 	void Release();
 

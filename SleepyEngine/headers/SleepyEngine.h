@@ -29,6 +29,8 @@ public:
     virtual void BlankInit();
     virtual void BlankUpdate();
 
+    std::vector<Entity*> m_entities;
+
 protected:
     void InitWindow(int nCmdShow);
     ATOM RegisterWindowClass();
@@ -60,7 +62,7 @@ protected:
     void SetScissorRect();
     void BuildDescriptorHeaps();
     void BuildConstantBuffers();
-    void BuildBoxGeometry();
+    void BuildBoxGeometry() {};
     void BuildBoxGeometryBis();
 
 

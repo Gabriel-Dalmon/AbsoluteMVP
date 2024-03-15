@@ -7,7 +7,11 @@ public:
 	~Collider() {};
 
 	// INIT
-	void Init() override;
+	void Init(ColliderDescriptor*);
+
+	float m_radius;
+
+	static bool collideTest(Entity* self, Entity* target);
 
 private:
 };

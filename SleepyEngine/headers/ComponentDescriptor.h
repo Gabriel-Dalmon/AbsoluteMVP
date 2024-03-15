@@ -10,9 +10,8 @@ struct Descriptor {
 //
 //};
 
-struct ColliderSphereDescriptor : Descriptor
+struct ColliderDescriptor : Descriptor
 {
-	DirectX::XMFLOAT3 center;
 	float radius;
 };
 
