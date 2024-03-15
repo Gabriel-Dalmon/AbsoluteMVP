@@ -774,37 +774,55 @@ void SleepyEngine::DrawBis()
 
     Mesh* mesh;
     ShaderReference* shaderRef;
+    int feur = 2;
     for (Entity* entity : m_entities)
     {
         mesh = entity->GetComponent<MeshRenderer*>()->GetMesh();
         shaderRef = entity->GetComponent<ShaderReference*>();
 
 
+        //ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvHeap };
+        //m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+
+        //m_pCommandList->SetGraphicsRootSignature(shaderRef->GetRootSignature());//
+        ////m_pCommandList->SetGraphicsRootSignature(m_pRootSignatureTexture);
+
+        //m_pCommandList->SetPipelineState(shaderRef->GetPSO());//
+        m_pCommandList->SetPipelineState(m_PSOColor);
+
+        //
+        //m_pCommandList->IASetVertexBuffers(0, 1, &mesh->VertexBufferView());
+        //m_pCommandList->IASetIndexBuffer(&mesh->IndexBufferView());
+        //m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+        //
+
+        //if (shaderRef->GetPSO() == m_PSOTexture) {
+        //    CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_pCbvHeap->GetGPUDescriptorHandleForHeapStart()); //
+        //    tex.Offset(shaderRef->GetTexID(), m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)); //
+        //    m_pCommandList->SetGraphicsRootDescriptorTable(0, tex); //
+        //    m_pCommandList->SetGraphicsRootConstantBufferView(1, m_pObjectCB->Resource()->GetGPUVirtualAddress());//
+        //}
+        //else if (shaderRef->GetPSO() == m_PSOColor) {
+        //    //m_pCommandList->SetGraphicsRootConstantBufferView(0, m_pObjectCB->Resource()->GetGPUVirtualAddress());//
+        //    m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
+        //}
+
         ID3D12DescriptorHeap* descriptorHeaps[] = { m_pCbvHeap };
         m_pCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
-        m_pCommandList->SetGraphicsRootSignature(shaderRef->GetRootSignature());//
-        //m_pCommandList->SetGraphicsRootSignature(m_pRootSignatureTexture);
+        m_pCommandList->SetGraphicsRootSignature(m_pRootSignatureColor);
 
-        m_pCommandList->SetPipelineState(shaderRef->GetPSO());//
-        //m_pCommandList->SetPipelineState(m_PSOTexture);
+        D3D12_VERTEX_BUFFER_VIEW vertexBufferView = mesh->VertexBufferView();
+        D3D12_INDEX_BUFFER_VIEW indexBufferView = mesh->IndexBufferView();
 
-        
-        m_pCommandList->IASetVertexBuffers(0, 1, &mesh->VertexBufferView());
-        m_pCommandList->IASetIndexBuffer(&mesh->IndexBufferView());
+        m_pCommandList->IASetVertexBuffers(0, 1, &vertexBufferView);
+        m_pCommandList->IASetIndexBuffer(&indexBufferView);
+
         m_pCommandList->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-        
-
-        if (shaderRef->GetPSO() == m_PSOTexture) {
-            CD3DX12_GPU_DESCRIPTOR_HANDLE tex(m_pCbvHeap->GetGPUDescriptorHandleForHeapStart()); //
-            tex.Offset(shaderRef->GetTexID(), m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)); //
-            m_pCommandList->SetGraphicsRootDescriptorTable(0, tex); //
-            m_pCommandList->SetGraphicsRootConstantBufferView(1, m_pObjectCB->Resource()->GetGPUVirtualAddress());//
-        }
-        else if (shaderRef->GetPSO() == m_PSOColor) {
-            m_pCommandList->SetGraphicsRootConstantBufferView(0, m_pObjectCB->Resource()->GetGPUVirtualAddress());//
-        }
+        m_pCommandList->SetGraphicsRootDescriptorTable(0, m_pCbvHeap->GetGPUDescriptorHandleForHeapStart());
+        //m_pCommandList->SetGraphicsRootConstantBufferView(0, m_pObjectCB->Resource()->GetGPUVirtualAddress());
 
 
         m_pCommandList->DrawIndexedInstanced(mesh->m_drawArgs["box"].IndexCount, 1, mesh->m_drawArgs["box"].StartIndexLocation, mesh->m_drawArgs["box"].BaseVertexLocation, 0);
