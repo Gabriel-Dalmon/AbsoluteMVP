@@ -313,7 +313,6 @@ void SleepyEngine::BuildConstantBuffers()
 }
 
 void func(EventContext context) {
-    context.engine->GetApp();
     std::cout << "Half a A press" << std::endl;
 }
 
@@ -342,7 +341,7 @@ int SleepyEngine::Run()
     
     m_Input.unsubscribe("testA2");
 
-    //m_Input.subscribe(KEY_B_PRESSED, &Timer::UpdateTimer, &m_Timer, "testModèle");
+    m_Input.subscribe(KEY_B_PRESSED, &Timer::UpdateTimer, &m_Timer, "testModèle");
 
     /*const float dt = timer.GetDeltaTime();
 
@@ -378,29 +377,24 @@ int SleepyEngine::Run()
 
     m_Input.subscribe(KEY_D_PRESSED, [](EventContext context) -> void {
         (*context.engine->GetCameraDir())[1] += 10.f;
-        //context.engine->GetCamera().Strafe(10.f * context.engine->GetTimer().GetDeltaTime());
         }, cont, "cameraRight_0");
 
     // Camera Released
     m_Input.subscribe(KEY_Z_RELEASED, [](EventContext context) -> void {
         (*context.engine->GetCameraDir())[0] -= 10.f;
-        //context.engine->GetCamera().Walk(10.f * context.engine->GetTimer().GetDeltaTime());
-        }, cont, "cameraForwards_0");
+        }, cont, "cameraForwards_1");
 
     m_Input.subscribe(KEY_S_RELEASED, [](EventContext context) -> void {
         (*context.engine->GetCameraDir())[0] += 10.f;
-        //context.engine->GetCamera().Walk(-10.f * context.engine->GetTimer().GetDeltaTime());
-        }, cont, "cameraBackwards_0");
+        }, cont, "cameraBackwards_1");
 
     m_Input.subscribe(KEY_Q_RELEASED, [](EventContext context) -> void {
         (*context.engine->GetCameraDir())[1] += 10.f;
-        //context.engine->GetCamera().Strafe(-10.f * context.engine->GetTimer().GetDeltaTime());
-        }, cont, "cameraLeft_0");
+        }, cont, "cameraLeft_1");
 
     m_Input.subscribe(KEY_D_RELEASED, [](EventContext context) -> void {
         (*context.engine->GetCameraDir())[1] -= 10.f;
-        //context.engine->GetCamera().Strafe(10.f * context.engine->GetTimer().GetDeltaTime());
-        }, cont, "cameraRight_0");
+        }, cont, "cameraRight_1");
 
     EventContext context;
     context.engine = this;
@@ -605,9 +599,28 @@ LRESULT SleepyEngine::MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
         PostQuitMessage(0);
         break;
     case WM_LBUTTONDOWN:
+        EventContext args;
+        args.engine = this;
+        args.params["btnState"] = (void*)wParam;
+        args.params["x"] = (void*)GET_X_LPARAM(lParam);
+        args.params["y"] = (void*)GET_Y_LPARAM(lParam);
+        m_Input.trigger(MOUSE_LEFT_PRESSED, &args);
+        return 0;
     case WM_MBUTTONDOWN:
+        EventContext args;
+        args.engine = this;
+        args.params["btnState"] = (void*)wParam;
+        args.params["x"] = (void*)GET_X_LPARAM(lParam);
+        args.params["y"] = (void*)GET_Y_LPARAM(lParam);
+        m_Input.trigger(MOUSE_MIDDLE_PRESSED, &args);
+        return 0;
     case WM_RBUTTONDOWN:
-        OnMouseDown(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+        EventContext args;
+        args.engine = this;
+        args.params["btnState"] = (void*)wParam;
+        args.params["x"] = (void*)GET_X_LPARAM(lParam);
+        args.params["y"] = (void*)GET_Y_LPARAM(lParam);
+        m_Input.trigger(MOUSE_RIGHT_PRESSED, &args);
         return 0;
     case WM_LBUTTONUP:
     case WM_MBUTTONUP:
