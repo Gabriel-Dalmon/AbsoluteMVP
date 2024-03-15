@@ -463,6 +463,12 @@ int SleepyEngine::Run()
             //        m_pObjectCB->CopyData(i+1, objConstants);
             //    }
             //}
+            
+            for (Entity* entity : m_entities) {
+                if (entity->GetComponent<Script*>() != nullptr) {
+                    entity->GetComponent<Script*>()->OnScript();
+                }
+            }
 
             OnKeyboardInput(timer);
             Update();
@@ -716,21 +722,21 @@ void SleepyEngine::Update()
     XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
     m_pObjectCB->CopyData(0, objConstants);
 
-    //m_CBindex = 0;
-    //for (Entity* entity : m_entities) {
-    //    if (entity->GetComponent<Script*>() != nullptr) {
-    //        ++m_CBindex;
-    //        entity->GetComponent<Script*>()->OnScript();
-    //        entity->GetComponent<Transform*>()->Update();
+    m_CBindex = 0;
+    for (Entity* entity : m_entities) {
+        if (entity->GetComponent<Script*>() != nullptr) {
+            ++m_CBindex;
+            entity->GetComponent<Script*>()->OnScript();
+            entity->GetComponent<Transform*>()->Update();
 
-    //        world = XMLoadFloat4x4(&entity->GetComponent<Transform*>()->m_transformMatrix);
-    //        worldViewProj = world * view * proj;
+            world = XMLoadFloat4x4(&entity->GetComponent<Transform*>()->m_transformMatrix);
+            worldViewProj = world * view * proj;
 
-    //        // Update the constant buffer with the latest worldViewProj matrix.
-    //        XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
-    //        m_pObjectCB->CopyData(m_CBindex, objConstants);
-    //    }
-    //}
+            // Update the constant buffer with the latest worldViewProj matrix.
+            XMStoreFloat4x4(&objConstants.WorldViewProj, XMMatrixTranspose(worldViewProj));
+            m_pObjectCB->CopyData(m_CBindex, objConstants);
+        }
+    }
 }
 
 //void SleepyEngine::Draw(ID3D12DescriptorHeap* pCBVHeap, ID3D12RootSignature* pRootSignature, Mesh* mesh)

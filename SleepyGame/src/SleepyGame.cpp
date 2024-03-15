@@ -24,7 +24,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     pGameApp->Release();*/
     GameFactory* factory = new GameFactory();
 
-    SleepyEngine engine(hInstance);
+    TempFunction engine(hInstance);
     engine.SetFactory(factory);
     engine.Initialize();
     engine.Run();

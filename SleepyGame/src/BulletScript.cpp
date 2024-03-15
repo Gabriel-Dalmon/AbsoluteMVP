@@ -10,6 +10,7 @@ void BulletScript::OnScript()
 	std::cerr << "x : " << x << std::endl;
 	std::cerr << "y : " << y << std::endl;
 	std::cerr << "z : " << z << std::endl;
+	OutputDebugString(L"%d");
 	transform->SetPosition(x, y, z);
 
 
