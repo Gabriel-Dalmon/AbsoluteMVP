@@ -67,6 +67,7 @@ class Timer;
 class Transform;
 class Factory;
 class RessourceAllocator;
+class Velocity;
 
 // MACROS
 #define RELEASE(p) {if (p){ p->Release(); p = nullptr;}}

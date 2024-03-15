@@ -288,7 +288,7 @@ int SleepyEngine::Initialize()
     BuildBoxGeometryBis();
 
     // temp 
-    BlankInit();
+    
 
     return 0;
 }
@@ -368,6 +368,8 @@ int SleepyEngine::Run()
     ID3D12CommandList* cmdsLists[] = { m_pCommandList };
     m_pCommandQueue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
     FlushCommandQueue();
+
+    BlankInit();
 
     // Main message loop:
     while (msg.message != WM_QUIT)

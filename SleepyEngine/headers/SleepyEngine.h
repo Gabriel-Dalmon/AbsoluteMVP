@@ -138,4 +138,6 @@ protected:
 
     RessourceAllocator* m_pAllocator;
     Factory* m_pFactory;
+
+    std::vector<Entity*> m_entities;
 };

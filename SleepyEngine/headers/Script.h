@@ -4,7 +4,6 @@ class Script : public Component
 {
 public:
 	Script();
-	~Script() {};
 
 	// INIT
 	void Init() override;
@@ -13,6 +12,8 @@ public:
 	virtual void OnScript() {};
 
 	void Release();
+
+	Entity m_pEntity;
 
 private:
 
