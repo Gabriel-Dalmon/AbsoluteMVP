@@ -26,6 +26,9 @@ public:
 
     void Release();
 
+    virtual void BlankInit();
+    virtual void BlankUpdate();
+
 protected:
     void InitWindow(int nCmdShow);
     ATOM RegisterWindowClass();
@@ -60,9 +63,7 @@ protected:
     void BuildBoxGeometry();
     void BuildBoxGeometryBis();
 
-    // blank init & update 
-    void BlankInit();
-    void BlankUpdate();
+
 
 
 protected:
