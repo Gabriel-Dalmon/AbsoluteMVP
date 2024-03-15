@@ -17,6 +17,9 @@ public:
     D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferView()const; 
     ID3D12Resource* GetCurrentBackBuffer()const;
     D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView()const;
+    Camera GetCamera();
+    std::vector<float>* GetCameraDir();
+    Timer GetTimer();
 
     LRESULT MsgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     static SleepyEngine* GetApp();
@@ -30,7 +33,8 @@ private:
     void FlushCommandQueue();
     void Draw();
     void DrawBis();
-    void Update();
+    void Update(Timer m_Timer);
+    void UpdateCamera(Timer m_Timer);
 
     void OnMouseDown(WPARAM btnState, int x, int y);
     void OnMouseUp(WPARAM btnState, int x, int y);
@@ -80,6 +84,7 @@ private:
     D3D12_VIEWPORT* m_pViewPort = new D3D12_VIEWPORT();
 
     Camera m_Camera;
+    std::vector<float> m_CameraDirControl = { 0.f, 0.f};
 
     UINT m_4xMsaaQuality = 0;
     bool m_4xMsaaState = false;
@@ -127,4 +132,7 @@ private:
     POINT m_LastMousePos;
 
     static SleepyEngine* m_App;
+
+    EventManager m_Input;
+    Timer m_Timer;
 };

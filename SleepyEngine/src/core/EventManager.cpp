@@ -270,7 +270,8 @@ void EventManager::OnKeyPressed(int key)
 		{
 			for (int i = 0; i < eventCallbacksMap[pairs.second].size(); i++)
 			{
-				eventCallbacksMap[pairs.second][i]->execute();
+				AbstractCommand* command = eventCallbacksMap[pairs.second][i];
+				command->execute(eventCallbacksContextMap[command]);
 			}
 			break;
 		}
@@ -286,7 +287,8 @@ void EventManager::OnKeyReleased(int key)
 		{
 			for (int i = 0; i < eventCallbacksMap[pairs.second].size(); i++)
 			{
-				eventCallbacksMap[pairs.second][i]->execute();
+				AbstractCommand* command = eventCallbacksMap[pairs.second][i];
+				command->execute(eventCallbacksContextMap[command]);
 			}
 			break;
 		}

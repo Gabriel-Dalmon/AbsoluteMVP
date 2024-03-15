@@ -27,6 +27,7 @@
     <ClCompile Include="src\core\AbstractCommand.cpp" />
     <ClCompile Include="src\core\FunctionCommand.cpp" />
     <ClCompile Include="src\core\MethodCommand.cpp" />
+    <ClCompile Include="headers\EventContext.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Collider.h" />

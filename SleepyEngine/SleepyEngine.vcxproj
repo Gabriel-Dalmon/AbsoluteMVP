@@ -179,6 +179,7 @@
     <ClInclude Include="headers\System.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="headers\EventContext.h" />
     <ClCompile Include="src\core\AbstractCommand.cpp" />
     <ClCompile Include="src\core\FunctionCommand.cpp" />
     <ClCompile Include="src\core\MethodCommand.cpp" />

@@ -312,11 +312,12 @@ void SleepyEngine::BuildConstantBuffers()
 
 }
 
-void func() {
+void func(EventContext context) {
+    context.engine->GetApp();
     std::cout << "Half a A press" << std::endl;
 }
 
-void func2() {
+void func2(EventContext context) {
     std::cout << "Parallel Universes" << std::endl;
 }
 
@@ -330,20 +331,80 @@ int SleepyEngine::Run()
 
     MSG msg = { 0 };
 
-    EventManager input;
-    input.Init();
-    input.subscribe(KEY_A_PRESSED, &func, "testA1");
+    m_Input.Init();
+    m_Timer.Init();
 
-    input.subscribe(KEY_A_RELEASED, &func2, "testA2");
+    EventContext cont;
+    cont.engine = this;
+    m_Input.subscribe(KEY_A_PRESSED, &func, cont, "testA1");
+
+    m_Input.subscribe(KEY_A_RELEASED, &func2, cont, "testA2");
     
-    input.unsubscribe("testA2");
+    m_Input.unsubscribe("testA2");
 
-    Timer timer;
-    timer.Init();
+    //m_Input.subscribe(KEY_B_PRESSED, &Timer::UpdateTimer, &m_Timer, "testModèle");
 
-    input.subscribe(KEY_B_PRESSED, &Timer::UpdateTimer, &timer, "testModèle");
+    /*const float dt = timer.GetDeltaTime();
 
-    input.trigger(KEY_A_PRESSED);
+    if (GetAsyncKeyState('Z') & 0x8000)
+        m_Camera.Walk(10.0f * dt);
+
+    if (GetAsyncKeyState('S') & 0x8000)
+        m_Camera.Walk(-10.0f * dt);
+
+    if (GetAsyncKeyState('Q') & 0x8000)
+        m_Camera.Strafe(-10.0f * dt);
+
+    if (GetAsyncKeyState('D') & 0x8000)
+        m_Camera.Strafe(10.0f * dt);
+
+    m_Camera.UpdateViewMatrix();*/
+
+    // Camera Pressed
+    m_Input.subscribe(KEY_Z_PRESSED, [](EventContext context) -> void {
+        (*context.engine->GetCameraDir())[0] += 10.f;
+        //context.engine->GetCamera().Walk(10.f * context.engine->GetTimer().GetDeltaTime());
+    }, cont, "cameraForwards_0");
+
+    m_Input.subscribe(KEY_S_PRESSED, [](EventContext context) -> void {
+        (*context.engine->GetCameraDir())[0] -= 10.f;
+        //context.engine->GetCamera().Walk(-10.f * context.engine->GetTimer().GetDeltaTime());
+        }, cont, "cameraBackwards_0");
+
+    m_Input.subscribe(KEY_Q_PRESSED, [](EventContext context) -> void {
+        (*context.engine->GetCameraDir())[1] -= 10.f;
+        //context.engine->GetCamera().Strafe(-10.f * context.engine->GetTimer().GetDeltaTime());
+        }, cont, "cameraLeft_0");
+
+    m_Input.subscribe(KEY_D_PRESSED, [](EventContext context) -> void {
+        (*context.engine->GetCameraDir())[1] += 10.f;
+        //context.engine->GetCamera().Strafe(10.f * context.engine->GetTimer().GetDeltaTime());
+        }, cont, "cameraRight_0");
+
+    // Camera Released
+    m_Input.subscribe(KEY_Z_RELEASED, [](EventContext context) -> void {
+        (*context.engine->GetCameraDir())[0] -= 10.f;
+        //context.engine->GetCamera().Walk(10.f * context.engine->GetTimer().GetDeltaTime());
+        }, cont, "cameraForwards_0");
+
+    m_Input.subscribe(KEY_S_RELEASED, [](EventContext context) -> void {
+        (*context.engine->GetCameraDir())[0] += 10.f;
+        //context.engine->GetCamera().Walk(-10.f * context.engine->GetTimer().GetDeltaTime());
+        }, cont, "cameraBackwards_0");
+
+    m_Input.subscribe(KEY_Q_RELEASED, [](EventContext context) -> void {
+        (*context.engine->GetCameraDir())[1] += 10.f;
+        //context.engine->GetCamera().Strafe(-10.f * context.engine->GetTimer().GetDeltaTime());
+        }, cont, "cameraLeft_0");
+
+    m_Input.subscribe(KEY_D_RELEASED, [](EventContext context) -> void {
+        (*context.engine->GetCameraDir())[1] -= 10.f;
+        //context.engine->GetCamera().Strafe(10.f * context.engine->GetTimer().GetDeltaTime());
+        }, cont, "cameraRight_0");
+
+    EventContext context;
+    context.engine = this;
+    m_Input.trigger(KEY_A_PRESSED, &context);
 
 
     Shader shader;
@@ -384,16 +445,17 @@ int SleepyEngine::Run()
         else {
             //std::cout << m_Camera.GetPosition() << std::endl;
             //std::cout << m_Camera.GetView() << std::endl;
-            timer.UpdateTimer();
+            m_Timer.UpdateTimer();
 
-            input.HandleEvents();
+            m_Input.HandleEvents();
 
-            timer.UpdateFPS(mhMainWnd);
+            m_Timer.UpdateFPS(mhMainWnd);
 
-            OnKeyboardInput(timer);
-            Update();
+            OnKeyboardInput(m_Timer);
+            Update(m_Timer);
             DrawBis();
         }
+        UpdateCamera(m_Timer);
         
     }
     Release();
@@ -419,6 +481,21 @@ ID3D12Resource* SleepyEngine::GetCurrentBackBuffer()const
 D3D12_CPU_DESCRIPTOR_HANDLE SleepyEngine::GetDepthStencilView()const
 {
     return m_pDsvHeap->GetCPUDescriptorHandleForHeapStart();
+}
+
+Camera SleepyEngine::GetCamera()
+{
+    return m_Camera;
+}
+
+Timer SleepyEngine::GetTimer()
+{
+    return m_Timer;
+}
+
+std::vector<float>* SleepyEngine::GetCameraDir()
+{
+    return &m_CameraDirControl;
 }
 
 void SleepyEngine::Release()
@@ -690,8 +767,21 @@ void SleepyEngine::BuildBoxGeometryBis()
     mBoxGeoBis->DrawArgs["box"] = submesh;
 }
 
+void SleepyEngine::UpdateCamera(Timer m_Timer)
+{
+    std::cout << "(" << m_CameraDirControl[0] << ", " << m_CameraDirControl[1] << ")" << std::endl;
+    if (m_CameraDirControl[0] != 0)
+    {
+        m_Camera.Walk(m_CameraDirControl[0] * m_Timer.GetDeltaTime());
+    }
+    if (m_CameraDirControl[1] != 0)
+    {
+        m_Camera.Strafe(m_CameraDirControl[1] * m_Timer.GetDeltaTime());
+    }
+    m_Camera.UpdateViewMatrix();
+}
 
-void SleepyEngine::Update()
+void SleepyEngine::Update(Timer m_Timer)
 {
     // Convert Spherical to Cartesian coordinates.
     float x = mRadius * sinf(mPhi) * cosf(mTheta); 
@@ -888,19 +978,5 @@ void SleepyEngine::OnMouseMove(WPARAM btnState, int x, int y)
 
 void SleepyEngine::OnKeyboardInput(Timer& timer)
 {
-    const float dt = timer.GetDeltaTime();
-
-    if (GetAsyncKeyState('Z') & 0x8000)
-        m_Camera.Walk(10.0f * dt);
-
-    if (GetAsyncKeyState('S') & 0x8000)
-        m_Camera.Walk(-10.0f * dt);
-
-    if (GetAsyncKeyState('Q') & 0x8000)
-        m_Camera.Strafe(-10.0f * dt);
-
-    if (GetAsyncKeyState('D') & 0x8000)
-        m_Camera.Strafe(10.0f * dt);
-
-    m_Camera.UpdateViewMatrix();
+    
 }

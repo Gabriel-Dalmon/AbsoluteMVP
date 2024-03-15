@@ -3,6 +3,7 @@
 #include "EventsName.h"
 #include "FunctionCommand.h"
 #include "MethodCommand.h"
+#include "EventContext.h"
 
 typedef enum EventCallbackReturn
 {
@@ -24,11 +25,12 @@ public:
 	// Setter / Getter
 
 
-	void subscribe(EventName eventName, void(*callback)(), std::string id)
+	void subscribe(EventName eventName, void(*callback)(EventContext context),EventContext context ,std::string id)
 	{
 		eventCallbacksMap[eventName].push_back(new FunctionCommand(callback));
 		std::pair<EventName, AbstractCommand*> m = { eventName, eventCallbacksMap[eventName].back() };
 		callbacks.insert({ id, m });
+		eventCallbacksContextMap.insert({ eventCallbacksMap[eventName].back(), context });
 		std::cout << "Pushed Back" << eventName << "|" << eventCallbacksMap[eventName].size() << "\n";
 	}
 
@@ -52,6 +54,7 @@ public:
 		int index = 0;
 		for (AbstractCommand* command : *eventCommands) {
 			if (callRem.second->compareCommandsIdentifier(command->commandIdentifier)) {
+				eventCallbacksContextMap.erase(eventCallbacksContextMap.find(command));
 				eventCommands->erase(eventCommands->begin() + index);
 				break;
 			}
@@ -61,11 +64,11 @@ public:
 
 	}
 
-	void trigger(EventName eventName)
+	void trigger(EventName eventName, EventContext* context)
 	{
 		for (int i = 0; i < eventCallbacksMap[eventName].size(); i++)
 		{
-			eventCallbacksMap[eventName][i]->execute();
+			eventCallbacksMap[eventName][i]->execute(*context);
 		}
 	}
 
@@ -81,13 +84,14 @@ private:
 
 	EventContext context;
 	std::unordered_map<EventName, std::vector<AbstractCommand*>> eventCallbacksMap;
+	std::unordered_map<AbstractCommand*, EventContext> eventCallbacksContextMap;
 
 	std::vector<int> m_InputList;
 	std::map<int, EventName> m_CodeToEventNamePressed;
 	std::map<int, EventName> m_CodeToEventNameReleased;
 	std::vector<int> m_EventPressControl;
 
-	std::map<std::string, std::pair<EventName, AbstractCommand*>> callbacks;
+	std::unordered_map<std::string, std::pair<EventName, AbstractCommand*>> callbacks;
 };
 
 
